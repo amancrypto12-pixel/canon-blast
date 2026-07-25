@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ball Blast Cannon Blitz Mania</title>
+    <meta name="description" content="An exciting arcade game where you blast falling numbered shapes with a cannon.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-layer">
+            <div class="top-bar">
+                <div class="level-info glass-panel">
+                    <span class="lvl-label">Lvl</span>
+                    <span id="level-value">1</span>
+                    <div class="progress-bar-bg"><div id="progress-bar-fill"></div></div>
+                </div>
+                <div class="stats glass-panel">
+                    <div class="stat"><span class="icon coin-icon">🟡</span> <span id="coin-value">0</span></div>
+                    <div class="stat"><span class="icon gem-icon">💎</span> <span id="gem-value">0</span></div>
+                </div>
+                <button id="pause-btn" class="glass-btn">⏸</button>
+            </div>
+            
+            <div id="game-over-screen" class="overlay glass-panel hidden">
+                <h1>Game Over</h1>
+                <p>Score: <span id="final-score">0</span></p>
+                <button id="restart-btn" class="primary-btn">Restart</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
