@@ -1,323 +1,382 @@
+// --- TELEGRAM & INIT ---
+let isTelegram = false;
+try {
+    if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+        isTelegram = true;
+    }
+} catch(e) {}
+
+// --- ASSET LOADER ---
+const assets = {};
+let assetsLoaded = false;
+fetch('assets.json').then(r => r.json()).then(manifest => {
+    let promises = [];
+    for (let key in manifest) {
+        let img = new Image();
+        img.src = manifest[key];
+        assets[key] = img;
+        promises.push(new Promise(resolve => {
+            img.onload = resolve;
+            img.onerror = resolve; // Continue even if one fails
+        }));
+    }
+    Promise.all(promises).then(() => {
+        assetsLoaded = true;
+        initUIAssets();
+        requestAnimationFrame(gameLoop);
+    });
+});
+
+function initUIAssets() {
+    document.getElementById('hud-coin-img').src = assets['coin'].src;
+    document.getElementById('hud-gem-img').src = assets['gem'].src;
+    document.getElementById('hud-pause-img').src = assets['pause'].src;
+}
+
+// --- CANVAS SETUP ---
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
 let cw, ch;
 function resize() {
-    cw = canvas.width = canvas.parentElement.clientWidth;
-    ch = canvas.height = canvas.parentElement.clientHeight;
+    // PDF spec: scale to devicePixelRatio, responsive max ~480px
+    const rect = canvas.parentElement.getBoundingClientRect();
+    cw = rect.width;
+    ch = rect.height;
+    
+    // Handle High DPI
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = cw * dpr;
+    canvas.height = ch * dpr;
+    ctx.scale(dpr, dpr);
 }
 window.addEventListener('resize', resize);
 resize();
 
-// Assets
-const images = {
-    bg: new Image(),
-    player: new Image(),
-    projectile: new Image(),
-    enemyHex: new Image(),
-    enemySnake: new Image()
-};
-
-images.bg.src = 'assert/Mountain_range_on_grass_hills_202607252258.jpeg';
-// Randomly picked PNGs for game entities
-images.player.src = 'assert/17834282-e0de-47af-a6c4-1ccd9aa28a03.png'; 
-images.projectile.src = 'assert/1a8d8f71-a573-4efd-9f84-eb0254f615b2.png';
-// Known entity images
-images.enemyHex.src = 'assert/Red_hexagon_game_token_energy_202607252339-removebg-preview.png';
-images.enemySnake.src = 'assert/Cyber_snake_head_robotic_design_202607252339 - Edited.png';
-
-// Game State
+// --- GAME LOGIC ---
 let gameState = {
     running: true,
-    score: 0,
-    coins: 0,
-    level: 1,
+    waveProgress: 0,
+    ultimateCharge: 0,
+    ultActiveTimer: 0,
     lastTime: 0
 };
 
-// UI Elements
-const scoreEl = document.getElementById('final-score');
-const coinsEl = document.getElementById('coin-value');
-const levelEl = document.getElementById('level-value');
-const gameOverScreen = document.getElementById('game-over-screen');
+// Cannon Base Stats (PDF 3.1)
+let stats = {
+    fireInterval: 260,
+    damage: 8,
+    multishot: 1,
+    bulletSpeed: 640,
+    sideShot: false
+};
 
-// Game Objects
 const player = {
     x: cw / 2,
-    y: ch - 50,
-    width: 80,
-    height: 80,
-    shootTimer: 0,
-    shootInterval: 150 // ms between shots
+    shootTimer: 0
 };
 
 const projectiles = [];
-const shapes = [];
-const floatingTexts = [];
-
-// Input
-let targetX = player.x;
-let isDragging = false;
-
-function bindInput() {
-    canvas.addEventListener('mousedown', (e) => { isDragging = true; updateTargetX(e.clientX); });
-    canvas.addEventListener('mousemove', (e) => { if(isDragging) updateTargetX(e.clientX); });
-    canvas.addEventListener('mouseup', () => isDragging = false);
-    canvas.addEventListener('mouseleave', () => isDragging = false);
-
-    canvas.addEventListener('touchstart', (e) => { isDragging = true; updateTargetX(e.touches[0].clientX); }, {passive: true});
-    canvas.addEventListener('touchmove', (e) => { if(isDragging) updateTargetX(e.touches[0].clientX); }, {passive: true});
-    canvas.addEventListener('touchend', () => isDragging = false);
-}
-bindInput();
-
-function updateTargetX(clientX) {
-    const rect = canvas.getBoundingClientRect();
-    targetX = clientX - rect.left;
-    if (targetX < player.width/2) targetX = player.width/2;
-    if (targetX > cw - player.width/2) targetX = cw - player.width/2;
-}
-
-// Spawning
+const blocks = [];
+const particles = [];
 let spawnTimer = 0;
-function spawnShape(difficulty) {
-    const radius = 30 + Math.random() * 30; // Radius for collision
-    const hp = Math.floor(Math.random() * 10 * difficulty) + 5;
+
+// Apply shop stats
+window.applyStats = function() {
+    const mods = getPlayerStats(); // from shop.js
+    stats.fireInterval = 260 * mods.fireRateMult;
+    stats.damage = 8 * mods.dmgMult;
+    stats.multishot = mods.multishot;
+    stats.sideShot = mods.sideShot;
+};
+if(window.getPlayerStats) applyStats();
+
+window.updateHUD = function() {
+    document.getElementById('coin-value').innerText = playerSave.coins;
+    document.getElementById('gem-value').innerText = playerSave.gems;
+    document.getElementById('level-value').innerText = playerSave.level;
     
-    // 10% chance to spawn the snake head instead of hexagon
-    const isSnake = Math.random() > 0.9;
+    // Wave Progress (PDF 3.4)
+    const waveTarget = 8 + Math.floor(playerSave.level * 1.4);
+    let pPct = (gameState.waveProgress / waveTarget) * 100;
+    document.getElementById('wave-progress-fill').style.width = `${Math.min(100, Math.max(0, pPct))}%`;
     
-    shapes.push({
-        x: Math.random() * (cw - radius*2) + radius,
+    // Ultimate (PDF 3.5)
+    let uPct = (gameState.ultimateCharge / 100) * 100;
+    document.getElementById('ult-progress-fill').style.width = `${Math.min(100, uPct)}%`;
+    
+    const ultBtn = document.getElementById('ult-btn');
+    if (gameState.ultimateCharge >= 100) {
+        ultBtn.classList.remove('disabled');
+    } else {
+        ultBtn.classList.add('disabled');
+    }
+};
+
+// --- INPUT ---
+let isDragging = false;
+canvas.addEventListener('mousedown', (e) => { isDragging = true; updatePlayerX(e); });
+canvas.addEventListener('mousemove', (e) => { if(isDragging) updatePlayerX(e); });
+canvas.addEventListener('mouseup', () => isDragging = false);
+canvas.addEventListener('touchstart', (e) => { isDragging = true; updatePlayerX(e.touches[0]); }, {passive: true});
+canvas.addEventListener('touchmove', (e) => { if(isDragging) updatePlayerX(e.touches[0]); }, {passive: true});
+canvas.addEventListener('touchend', () => isDragging = false);
+
+function updatePlayerX(e) {
+    const rect = canvas.getBoundingClientRect();
+    player.x = e.clientX - rect.left;
+    // Free horizontal position (PDF 2.1)
+    if (player.x < 30) player.x = 30;
+    if (player.x > cw - 30) player.x = cw - 30;
+}
+
+// --- SPAWNERS ---
+function spawnBlock() {
+    const hpBase = 10 + playerSave.level * 4; // PDF 3.2
+    
+    // Roll type (PDF 3.2 Special blocks)
+    let roll = Math.random() * 100;
+    let type = 'normal';
+    let hp = hpBase * (0.7 + Math.random() * 1.1); // random(0.7, 1.8)
+    
+    if (roll < 6) { type = 'bomb'; hp = hpBase * 0.6; }
+    else if (roll < 11) { type = 'heal'; hp = hpBase * 0.6; }
+    else if (roll < 15) { type = 'mystery'; hp = hpBase * 0.6; }
+    
+    hp = Math.floor(hp);
+    if(hp < 1) hp = 1;
+
+    const radius = 34 + Math.min(24, Math.floor(hp / 12));
+    const fallSpeed = 34 + (Math.random() * 14) + playerSave.level * 0.6;
+
+    blocks.push({
+        x: radius + Math.random() * (cw - radius*2),
         y: -radius,
         radius: radius,
-        vx: (Math.random() - 0.5) * 4,
-        vy: 0,
         hp: hp,
         maxHp: hp,
-        isSnake: isSnake,
+        type: type,
+        speed: fallSpeed,
         markedForDeletion: false
     });
 }
 
-function spawnFloatingText(x, y, text, color) {
-    floatingTexts.push({
-        x: x,
-        y: y,
-        text: text,
-        color: color,
-        alpha: 1,
-        vy: -2,
-        decay: 0.02
-    });
-}
-
-function gameOver() {
-    gameState.running = false;
-    gameOverScreen.classList.remove('hidden');
-    scoreEl.innerText = gameState.score;
-}
-
-document.getElementById('restart-btn').addEventListener('click', () => {
-    gameState.running = true;
-    gameState.score = 0;
-    gameState.level = 1;
-    player.x = cw / 2;
-    targetX = cw / 2;
-    projectiles.length = 0;
-    shapes.length = 0;
-    floatingTexts.length = 0;
-    gameOverScreen.classList.add('hidden');
-    requestAnimationFrame(gameLoop);
+// --- ULTIMATE ---
+document.getElementById('ult-btn').addEventListener('click', () => {
+    if (gameState.ultimateCharge >= 100) {
+        gameState.ultimateCharge = 0;
+        gameState.ultActiveTimer = 0.9; // 900ms duration
+        updateHUD();
+    }
 });
 
-// Main Loop
+// --- MAIN LOOP ---
 function gameLoop(timestamp) {
-    if (!gameState.running) return;
+    if (!assetsLoaded) { requestAnimationFrame(gameLoop); return; }
     
-    const dt = timestamp - gameState.lastTime;
+    const dt = (timestamp - gameState.lastTime) / 1000; // in seconds
     gameState.lastTime = timestamp;
 
-    update(dt);
-    draw();
+    if (gameState.running) {
+        update(dt);
+        draw();
+    }
 
     requestAnimationFrame(gameLoop);
 }
 
 function update(dt) {
-    // Player movement
-    player.x += (targetX - player.x) * 0.2;
-    player.y = ch - player.height / 2 - 20;
+    updateHUD();
 
-    // Shooting
-    player.shootTimer -= dt;
-    if (player.shootTimer <= 0) {
-        projectiles.push({
-            x: player.x,
-            y: player.y - player.height/2,
-            vy: -15,
-            radius: 15,
-            markedForDeletion: false
+    // Ultimate logic (PDF 3.5: deals 400 dmg/sec within 60px of X)
+    if (gameState.ultActiveTimer > 0) {
+        gameState.ultActiveTimer -= dt;
+        blocks.forEach(b => {
+            if (Math.abs(b.x - player.x) < 60) {
+                b.hp -= 400 * dt;
+            }
         });
-        player.shootTimer = player.shootInterval;
+    }
+
+    // Shooting (PDF 2.2 auto-fires fixed interval)
+    player.shootTimer -= dt * 1000; // to ms
+    if (player.shootTimer <= 0 && gameState.ultActiveTimer <= 0) { // Don't shoot normal bullets while ult
+        for(let i=0; i<stats.multishot; i++) {
+            let offset = (i - (stats.multishot-1)/2) * 15;
+            projectiles.push({ x: player.x + offset, y: ch - 70, vx: 0, vy: -stats.bulletSpeed });
+        }
+        player.shootTimer = stats.fireInterval;
     }
 
     // Update Projectiles
     projectiles.forEach(p => {
-        p.y += p.vy;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
         if (p.y < -50) p.markedForDeletion = true;
     });
 
-    // Update Shapes
-    const gravity = 0.15;
-    shapes.forEach(s => {
-        s.vy += gravity;
-        s.x += s.vx;
-        s.y += s.vy;
-
-        // Bounce walls
-        if (s.x - s.radius < 0) { s.x = s.radius; s.vx *= -1; }
-        if (s.x + s.radius > cw) { s.x = cw - s.radius; s.vx *= -1; }
+    // Update Blocks
+    blocks.forEach(b => {
+        b.y += b.speed * dt;
         
-        // Bounce floor
-        if (s.y + s.radius > ch - 10) {
-            s.y = ch - 10 - s.radius;
-            s.vy *= -0.9;
-        }
-
-        // Collision with player
-        const dx = s.x - player.x;
-        const dy = s.y - player.y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < s.radius + player.width/2 * 0.6) {
-            gameOver();
+        // Block reaches bottom (PDF 3.4)
+        if (b.y - b.radius > ch) {
+            b.markedForDeletion = true;
+            gameState.waveProgress = Math.max(0, gameState.waveProgress - 1);
         }
     });
 
-    // Collisions: Projectiles vs Shapes
+    // Collisions
     projectiles.forEach(p => {
-        shapes.forEach(s => {
-            if (p.markedForDeletion || s.markedForDeletion) return;
-            const dx = p.x - s.x;
-            const dy = p.y - s.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            
-            if (dist < s.radius + p.radius) {
+        if(p.markedForDeletion) return;
+        blocks.forEach(b => {
+            if (b.markedForDeletion) return;
+            const dx = p.x - b.x;
+            const dy = p.y - b.y;
+            if (Math.sqrt(dx*dx + dy*dy) < b.radius + 10) {
                 p.markedForDeletion = true;
-                s.hp -= 1;
+                b.hp -= stats.damage; // PDF 3.1
                 
-                if (s.hp <= 0) {
-                    s.markedForDeletion = true;
-                    spawnFloatingText(s.x, s.y, `+${s.maxHp}`, '#4ade80');
-                    gameState.score += s.maxHp;
-                    gameState.coins += Math.floor(s.maxHp / 5);
-                    coinsEl.innerText = gameState.coins;
-                    
-                    // Split
-                    if (s.radius > 35 && !s.isSnake) {
-                        for(let i=0; i<2; i++) {
-                            shapes.push({
-                                x: s.x + (i===0?-10:10),
-                                y: s.y,
-                                radius: s.radius * 0.7,
-                                vx: s.vx + (i===0?-2:2),
-                                vy: -5,
-                                hp: Math.ceil(s.maxHp / 2),
-                                maxHp: Math.ceil(s.maxHp / 2),
-                                isSnake: false,
-                                markedForDeletion: false
-                            });
-                        }
-                    }
-                }
+                // Ultimate gain per damage (PDF 3.5)
+                let dmgDone = Math.min(stats.damage, b.hp + stats.damage);
+                if(b.type === 'heal') dmgDone *= 1.5; // PDF 3.2 heal block bonus
+                
+                gameState.ultimateCharge = Math.min(100, gameState.ultimateCharge + (dmgDone * 0.15));
             }
         });
     });
 
-    // Update Floating Texts
-    floatingTexts.forEach(ft => {
-        ft.y += ft.vy;
-        ft.alpha -= ft.decay;
+    // Death logic
+    blocks.forEach(b => {
+        if (b.hp <= 0 && !b.markedForDeletion) {
+            b.markedForDeletion = true;
+            
+            // Special Death Effects (PDF 3.2)
+            if (b.type === 'bomb') {
+                blocks.forEach(ob => {
+                    if (Math.sqrt((ob.x-b.x)**2 + (ob.y-b.y)**2) <= 140) ob.hp -= 999;
+                });
+            } else if (b.type === 'mystery') {
+                if (Math.random() < 0.3) playerSave.gems += 3;
+                else playerSave.coins += 40;
+            }
+            
+            // Currency (PDF 3.3)
+            const mods = getPlayerStats();
+            let c = Math.round((b.maxHp / 3) * mods.coinMult);
+            playerSave.coins += c;
+            
+            // Progress
+            gameState.waveProgress++;
+            const waveTarget = 8 + Math.floor(playerSave.level * 1.4);
+            if (gameState.waveProgress >= waveTarget) {
+                playerSave.level++;
+                gameState.waveProgress = 0;
+                playerSave.gems++;
+            }
+            saveGame();
+        }
     });
 
     // Cleanup
     for (let i = projectiles.length - 1; i >= 0; i--) if (projectiles[i].markedForDeletion) projectiles.splice(i, 1);
-    for (let i = shapes.length - 1; i >= 0; i--) if (shapes[i].markedForDeletion) shapes.splice(i, 1);
-    for (let i = floatingTexts.length - 1; i >= 0; i--) if (floatingTexts[i].alpha <= 0) floatingTexts.splice(i, 1);
+    for (let i = blocks.length - 1; i >= 0; i--) if (blocks[i].markedForDeletion) blocks.splice(i, 1);
 
-    // Spawning Logic
-    spawnTimer -= dt;
+    // Spawning (PDF 3.2 spawn interval)
+    spawnTimer -= dt * 1000;
     if (spawnTimer <= 0) {
-        spawnShape(gameState.level);
-        spawnTimer = 2000 - Math.min(gameState.level * 100, 1500);
-        gameState.level = Math.floor(gameState.score / 100) + 1;
-        levelEl.innerText = gameState.level;
+        spawnBlock();
+        spawnTimer = Math.max(500, 1100 - playerSave.level * 15);
     }
 }
 
-function drawImageCenter(img, x, y, width, height) {
-    if (img.complete && img.naturalWidth !== 0) {
-        ctx.drawImage(img, x - width/2, y - height/2, width, height);
-    }
+function drawImageCenter(img, x, y, size) {
+    if(!img) return;
+    ctx.drawImage(img, x - size/2, y - size/2, size, size);
 }
 
 function draw() {
-    // Background
-    if (images.bg.complete && images.bg.naturalWidth !== 0) {
-        const scale = Math.max(cw / images.bg.width, ch / images.bg.height);
-        const x = (cw / 2) - (images.bg.width / 2) * scale;
-        const y = (ch / 2) - (images.bg.height / 2) * scale;
-        ctx.drawImage(images.bg, x, y, images.bg.width * scale, images.bg.height * scale);
-        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    // BG
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0,0,cw,ch);
+    if(assets['bg_mountain']) {
+        ctx.drawImage(assets['bg_mountain'], 0, 0, cw, ch);
+        ctx.fillStyle = 'rgba(0,0,0,0.4)';
         ctx.fillRect(0,0,cw,ch);
-    } else {
-        ctx.fillStyle = '#111';
-        ctx.fillRect(0, 0, cw, ch);
     }
 
-    // Ground
-    ctx.fillStyle = 'rgba(34, 197, 94, 0.4)';
-    ctx.fillRect(0, ch - 20, cw, 20);
+    // Ultimate Beam
+    if (gameState.ultActiveTimer > 0) {
+        ctx.fillStyle = 'rgba(0, 255, 255, 0.6)';
+        ctx.fillRect(player.x - 60, 0, 120, ch);
+    }
+
+    // Blocks
+    blocks.forEach(b => {
+        let img = assets['gem']; // fallback
+        if (b.type === 'bomb') img = assets['explosion'];
+        
+        drawImageCenter(img, b.x, b.y, b.radius*2);
+        
+        ctx.fillStyle = b.type === 'heal' ? '#22c55e' : (b.type === 'bomb' ? '#ef4444' : '#fff');
+        ctx.font = `bold ${Math.max(14, b.radius * 0.7)}px Outfit, sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(Math.ceil(b.hp), b.x, b.y);
+    });
 
     // Projectiles
     projectiles.forEach(p => {
-        drawImageCenter(images.projectile, p.x, p.y, p.radius*2, p.radius*2);
+        drawImageCenter(assets['projectile'], p.x, p.y, 16);
     });
 
-    // Shapes
-    shapes.forEach(s => {
-        const img = s.isSnake ? images.enemySnake : images.enemyHex;
-        drawImageCenter(img, s.x, s.y, s.radius*2, s.radius*2);
-        
-        // Text
-        ctx.fillStyle = '#fff';
-        ctx.font = `bold ${s.radius * 0.8}px Outfit, sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 3;
-        ctx.strokeText(s.hp, s.x, s.y);
-        ctx.fillText(s.hp, s.x, s.y);
-    });
-
-    // Player
-    drawImageCenter(images.player, player.x, player.y, player.width, player.height);
-
-    // Floating Texts
-    floatingTexts.forEach(ft => {
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, ft.alpha);
-        ctx.fillStyle = ft.color;
-        ctx.font = 'bold 24px Outfit, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 3;
-        ctx.strokeText(ft.text, ft.x, ft.y);
-        ctx.fillText(ft.text, ft.x, ft.y);
-        ctx.restore();
-    });
+    // Cannon
+    drawImageCenter(assets['cannon_base'], player.x, ch - 50, 64);
+    
+    // Drone
+    if(playerSave.equipped.drones !== 'dr_1') {
+        drawImageCenter(assets['drone_snake'], player.x + 40, ch - 80, 40);
+    }
 }
 
-// Start
-gameState.lastTime = performance.now();
-requestAnimationFrame(gameLoop);
+// --- UI NAVIGATION ---
+document.getElementById('nav-shop').addEventListener('click', () => {
+    gameState.running = false;
+    document.getElementById('shop-view').classList.remove('hidden');
+    renderShop('abilities');
+});
+document.getElementById('nav-wallet').addEventListener('click', () => {
+    gameState.running = false;
+    document.getElementById('wallet-view').classList.remove('hidden');
+});
+document.querySelectorAll('.nav-back').forEach(b => {
+    b.addEventListener('click', () => {
+        document.getElementById('shop-view').classList.add('hidden');
+        document.getElementById('wallet-view').classList.add('hidden');
+        gameState.running = true;
+    });
+});
+
+// --- TON CONNECT (UI Only) ---
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: 'https://amancrypto12-pixel.github.io/canon-blast/tonconnect-manifest.json',
+    buttonRootId: 'ton-connect'
+});
+
+tonConnectUI.onStatusChange(wallet => {
+    if (wallet) {
+        document.getElementById('wallet-actions').classList.remove('hidden');
+        // Shorten address
+        const a = wallet.account.address;
+        document.getElementById('wallet-address').innerText = a.substring(0,6) + '...' + a.substring(a.length-4);
+    } else {
+        document.getElementById('wallet-actions').classList.add('hidden');
+    }
+});
+
+document.getElementById('claim-btn').addEventListener('click', () => {
+    if (tonConnectUI.account) {
+        // PDF Section 7 Backend logic required here.
+        alert("Client request built. Needs backend server to process TON transfer safely.");
+    }
+});
