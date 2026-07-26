@@ -43,6 +43,8 @@ const App = {
         
         // Back to lobby
         document.getElementById('back-to-lobby-btn').addEventListener('click', () => {
+            BattleScene.stop();
+            
             document.getElementById('game-view').classList.remove('active');
             document.getElementById('game-view').classList.add('hidden');
             document.getElementById('game-over-screen').classList.add('hidden');

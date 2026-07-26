@@ -23,6 +23,8 @@ export const BattleScene = {
     spawnTimer: 0,
     lastTime: 0,
     animationFrameId: null,
+    inputBound: false,
+    floatingTexts: [],
     SaveManager: SaveManager, // Exposed for Boss use
 
     start(mode) {
@@ -31,7 +33,6 @@ export const BattleScene = {
         this.ctx = this.canvas.getContext('2d');
         
         this.resize();
-        window.addEventListener('resize', () => this.resize());
         
         this.player.x = this.cw / 2;
         this.resetState();
@@ -54,6 +55,7 @@ export const BattleScene = {
     resetState() {
         this.projectiles = [];
         this.blocks = [];
+        this.floatingTexts = [];
         this.boss = null;
         this.waveProgress = 0;
         this.ultimateCharge = 0;
@@ -62,6 +64,14 @@ export const BattleScene = {
         
         if (this.mode === 'boss') {
             this.boss = new SnakeBoss(this.cw, this.ch, SaveManager.get().level);
+        }
+    },
+
+    stop() {
+        this.running = false;
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
         }
     },
 
@@ -89,6 +99,11 @@ export const BattleScene = {
     },
 
     bindInput() {
+        if (this.inputBound) return;
+        this.inputBound = true;
+        
+        window.addEventListener('resize', () => this.resize());
+        
         let isDragging = false;
         const updateX = (clientX) => {
             const rect = this.canvas.getBoundingClientRect();
@@ -205,6 +220,7 @@ export const BattleScene = {
             if (this.boss && Math.sqrt((p.x-this.boss.x)**2 + (p.y-this.boss.y)**2) < this.boss.radius + 10) {
                 p.markedForDeletion = true;
                 this.boss.hp -= p.damage;
+                this.spawnFloatingText(p.x, p.y, p.damage, "#fff");
                 this.ultimateCharge = Math.min(100, this.ultimateCharge + (p.damage * 0.15));
                 return;
             }
@@ -216,6 +232,7 @@ export const BattleScene = {
                     if (Math.sqrt((p.x-m.x)**2 + (p.y-m.y)**2) < m.radius + 10) {
                         p.markedForDeletion = true;
                         m.hp -= p.damage;
+                        this.spawnFloatingText(m.x, m.y, p.damage, "#fff");
                         if(m.hp <= 0) m.markedForDeletion = true;
                     }
                 });
@@ -227,10 +244,17 @@ export const BattleScene = {
                 if (Math.sqrt((p.x-b.x)**2 + (p.y-b.y)**2) < b.radius + 10) {
                     p.markedForDeletion = true;
                     b.hp -= p.damage;
+                    this.spawnFloatingText(b.x, b.y, p.damage, "#fff");
                     this.ultimateCharge = Math.min(100, this.ultimateCharge + (Math.min(p.damage, b.hp+p.damage) * 0.15));
                 }
             });
         });
+
+        this.floatingTexts.forEach(t => {
+            t.y += t.vy * dt;
+            t.life -= dt;
+        });
+        this.floatingTexts = this.floatingTexts.filter(t => t.life > 0);
 
         this.blocks.forEach(b => {
             if (b.hp <= 0 && !b.markedForDeletion) {
@@ -275,7 +299,7 @@ export const BattleScene = {
     },
 
     spawnFloatingText(x, y, text, color) {
-        // Simple text effect, not fully implemented for brevity
+        this.floatingTexts.push({ x: x, y: y, text: text, color: color, life: 1.0, vy: -50 });
     },
 
     updateHUD() {
@@ -313,6 +337,15 @@ export const BattleScene = {
 
         this.projectiles.forEach(p => {
             if(this.assets['projectile']) this.ctx.drawImage(this.assets['projectile'], p.x-8, p.y-8, 16, 16);
+        });
+        
+        this.floatingTexts.forEach(t => {
+            this.ctx.fillStyle = t.color;
+            this.ctx.globalAlpha = Math.max(0, t.life);
+            this.ctx.font = 'bold 20px Outfit';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(t.text, t.x, t.y);
+            this.ctx.globalAlpha = 1.0;
         });
 
         if(this.assets['cannon_base']) this.ctx.drawImage(this.assets['cannon_base'], this.player.x-32, this.ch-82, 64, 64);

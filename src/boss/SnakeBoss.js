@@ -130,7 +130,12 @@ export class SnakeBoss {
         // Update Minions (they fall like normal blocks but track player slightly)
         this.minions.forEach(m => {
             m.x += m.vx * dt; m.y += m.vy * dt;
-            m.vx += (player.x - m.x) * 0.5 * dt; // homing
+            m.vx += (player.x - m.x) * 2.0 * dt; // homing pull
+            m.vx *= 0.95; // friction
+            
+            if (m.vx > 250) m.vx = 250;
+            if (m.vx < -250) m.vx = -250;
+            
             if (m.y > this.ch) m.markedForDeletion = true;
             if (Math.sqrt((m.x-player.x)**2 + (m.y-(this.ch-50))**2) < m.radius + 20) {
                 gameScene.gameOver();
