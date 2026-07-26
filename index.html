@@ -4,20 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cannon Blast - Telegram Mini App</title>
-    <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- TON Connect SDK -->
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app-container">
+        
+        <!-- Lobby View -->
+        <div id="lobby-view" class="view active glass-panel-bg">
+            <div class="lobby-header">
+                <h1>CANNON BLAST</h1>
+                <div class="lobby-stats">
+                    <span class="currency-pill"><img src="assert/9e76a0bc-fdf3-4933-b80f-400cb98f94b5.png" class="currency-icon"> <span id="lobby-coins">0</span></span>
+                    <span class="currency-pill"><img src="assert/Red_hexagon_game_token_energy_202607252339-removebg-preview.png" class="currency-icon"> <span id="lobby-gems">0</span></span>
+                </div>
+            </div>
+            
+            <div class="lobby-menu">
+                <button id="btn-play" class="main-menu-btn primary-btn">PLAY</button>
+                <div class="menu-grid">
+                    <button id="btn-shop" class="menu-btn glass-btn">Shop</button>
+                    <button id="btn-upgrade" class="menu-btn glass-btn">Upgrade</button>
+                    <button id="btn-inventory" class="menu-btn glass-btn">Inventory</button>
+                    <button id="btn-leaderboard" class="menu-btn glass-btn">Leaderboard</button>
+                </div>
+                <button id="btn-settings" class="menu-btn glass-btn settings-btn">⚙ Settings</button>
+            </div>
+        </div>
+
+        <!-- Mode Selection Overlay -->
+        <div id="mode-select-view" class="overlay glass-panel hidden">
+            <h2>Select Mode</h2>
+            <button class="mode-btn primary-btn" data-mode="classic">Classic Mode</button>
+            <button class="mode-btn primary-btn" data-mode="boss">Boss Mode</button>
+            <button class="mode-btn primary-btn" data-mode="endless">Endless Mode</button>
+            <button id="btn-close-modes" class="glass-btn" style="width:100%; margin-top:10px;">Cancel</button>
+        </div>
+
         <!-- Main Game View -->
-        <div id="game-view" class="view active">
+        <div id="game-view" class="view hidden">
             <canvas id="gameCanvas"></canvas>
             
-            <!-- HUD -->
             <div id="hud">
                 <div class="hud-top">
                     <div class="hud-left">
@@ -27,76 +55,36 @@
                         </div>
                     </div>
                     <div class="hud-right">
-                        <div class="currency-pill glass-panel">
-                            <img id="hud-coin-img" class="currency-icon" src="" alt="C"> <span id="coin-value">0</span>
-                        </div>
-                        <div class="currency-pill glass-panel">
-                            <img id="hud-gem-img" class="currency-icon" src="" alt="G"> <span id="gem-value">0</span>
-                        </div>
-                        <button id="pause-btn" class="glass-btn">
-                            <img id="hud-pause-img" src="" alt="P" style="width:20px;height:20px;">
-                        </button>
+                        <button id="pause-btn" class="glass-btn">⏸</button>
                     </div>
                 </div>
                 
-                <!-- Ultimate Bar -->
                 <div class="ultimate-container glass-panel">
                     <div class="ult-progress-bg"><div id="ult-progress-fill"></div></div>
                     <button id="ult-btn" class="ult-btn disabled">ULTIMATE</button>
                 </div>
-                
-                <!-- Navigation -->
-                <div class="bottom-nav glass-panel">
-                    <button id="nav-shop" class="nav-btn">Shop</button>
-                    <button id="nav-wallet" class="nav-btn">Wallet</button>
-                </div>
             </div>
             
-            <!-- Game Over Screen -->
             <div id="game-over-screen" class="overlay glass-panel hidden">
-                <h1>Game Over</h1>
+                <h1 id="game-over-title">Game Over</h1>
                 <p>Wave Failed</p>
                 <button id="retry-btn" class="primary-btn">Retry</button>
+                <button id="back-to-lobby-btn" class="glass-btn" style="width:100%; margin-top:10px;">Lobby</button>
             </div>
         </div>
 
-        <!-- Shop View -->
+        <!-- Shop View (Placeholder for modular shop) -->
         <div id="shop-view" class="view hidden glass-panel-bg">
             <div class="view-header">
                 <h2>Shop</h2>
-                <button class="nav-back glass-btn">✕</button>
+                <button class="nav-back glass-btn" data-target="lobby-view">✕</button>
             </div>
-            <div class="shop-tabs">
-                <button class="shop-tab active" data-cat="abilities">Abilities</button>
-                <button class="shop-tab" data-cat="weapons">Weapons</button>
-                <button class="shop-tab" data-cat="ultimates">Ultimates</button>
-                <button class="shop-tab" data-cat="drones">Drones</button>
-            </div>
-            <div id="shop-grid" class="shop-grid">
-                <!-- Populated by shop.js -->
-            </div>
-        </div>
-
-        <!-- Wallet View -->
-        <div id="wallet-view" class="view hidden glass-panel-bg">
-            <div class="view-header">
-                <h2>Wallet (TON)</h2>
-                <button class="nav-back glass-btn">✕</button>
-            </div>
-            <div class="wallet-content">
-                <p>Connect your TON wallet to claim rewards.</p>
-                <div id="ton-connect"></div>
-                <div id="wallet-actions" class="hidden">
-                    <p>Connected: <span id="wallet-address"></span></p>
-                    <button id="claim-btn" class="primary-btn">Claim Rewards</button>
-                </div>
-            </div>
+            <div id="shop-container"></div>
         </div>
 
     </div>
 
-    <!-- Logic -->
-    <script src="shop.js"></script>
-    <script src="game.js"></script>
+    <!-- Entry Point as Module -->
+    <script type="module" src="src/main.js"></script>
 </body>
 </html>
