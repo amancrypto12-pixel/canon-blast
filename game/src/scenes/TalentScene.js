@@ -105,7 +105,8 @@ class TalentScene extends Phaser.Scene {
         container.add(bg);
 
         if (skillData.iconKey && this.textures.exists(skillData.iconKey)) {
-            const icon = this.add.image(0, 0, skillData.iconKey).setScale(0.45);
+            const icon = this.add.image(0, 0, skillData.iconKey);
+            UIHelpers.fitImage(icon, size * 0.6, size * 0.6);
             container.add(icon);
         }
 

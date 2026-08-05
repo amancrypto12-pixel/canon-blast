@@ -97,8 +97,11 @@ class LobbyScene extends Phaser.Scene {
 
         if (charKey) {
             const character = this.add.image(centerX, centerY, charKey);
-            character.setScale(0.6);
             character.setOrigin(0.5);
+            // Box-fit to a fixed footprint instead of setScale(), since
+            // source character art resolution varies wildly (some are
+            // 1500x2700+) and a flat scale factor causes huge overflow.
+            UIHelpers.fitImage(character, width * 0.62, height * 0.42);
 
             // Subtle idle float animation
             this.tweens.add({

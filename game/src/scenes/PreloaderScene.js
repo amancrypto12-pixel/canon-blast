@@ -139,11 +139,16 @@ class PreloaderScene extends Phaser.Scene {
         const basePath = '../New/';
 
         this.load.image('char_monster', basePath + 'Monster_33_Cinder_Hound_202607161809.png');
-        this.load.image('remove_bg_1', basePath + 'Remove_background_provide_PNG_202607141837.png');
-        this.load.image('remove_bg_2', basePath + 'Remove_background_provide_PNG_202607141840.png');
         this.load.image('zoom_char_1', basePath + 'Zoom_image_remove_background_PNG_202607141816.png');
         this.load.image('zoom_char_2', basePath + 'Zoom_image_remove_background_PNG_202607141820.png');
         this.load.image('star_icon', basePath + 'ChatGPT Image Jul 13, 2026, 01_38_16 PM.png');
+
+        // Real chest/character art (replaces the procedural vector chests
+        // previously drawn in ShopScene)
+        this.load.image('shop_chest_gem', basePath + 'Remove_background_provide_PNG_202607141837.png');
+        this.load.image('shop_chest_mystery', basePath + 'Remove_background_provide_PNG_202607141840.png');
+        this.load.image('shop_chest_emblem', basePath + 'Remove_background_provide_PNG_202607141840 (1).png');
+        this.load.image('fire_wizard', basePath + 'Untitled design (1).png');
     }
 
     create() {

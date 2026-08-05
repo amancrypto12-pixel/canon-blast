@@ -78,7 +78,7 @@ class ShopScene extends Phaser.Scene {
         // Center fire-creature (Cinder Hound stand-in for the boss art)
         if (this.textures.exists('char_monster')) {
             const monster = this.add.image(centerX, bh - 45, 'char_monster');
-            monster.setScale(0.45);
+            UIHelpers.fitImage(monster, bh * 0.85, bh * 0.85);
             monster.setTint(0xffb060);
         }
 
@@ -217,7 +217,7 @@ class ShopScene extends Phaser.Scene {
             desc: 'May give Exclusive S Epic equipment',
             accentColor: 0x2f6fd8,
             panelColor: 0x101a30,
-            emblem: true,
+            artKey: 'shop_chest_emblem',
             draws: [
                 { label: 'Draw 1x', cost: 300, currency: 'diamonds' },
                 { label: 'Draw 10x', cost: 2800, currency: 'diamonds' },
@@ -229,7 +229,7 @@ class ShopScene extends Phaser.Scene {
             desc: 'May give Normal Grade equipment',
             accentColor: 0x8a4fd8,
             panelColor: 0x241a3a,
-            chestVariant: 'wood',
+            artKey: 'shop_chest_gem',
             draws: [
                 { label: 'Draw 1x', cost: 200, currency: 'gold' },
                 { label: 'Draw 1x', cost: 1800, currency: 'diamonds', color: 0x2ed573 },
@@ -248,7 +248,7 @@ class ShopScene extends Phaser.Scene {
             desc: 'Contains exclusive Common, Magic, Rare, or Epic equipment',
             accentColor: 0x8a4fd8,
             panelColor: 0x241a3a,
-            chestVariant: 'blue',
+            artKey: 'shop_chest_mystery',
             draws: [
                 { label: 'Draw 1x', cost: 300, currency: 'diamonds' },
                 { label: 'Draw 10x', cost: 2800, currency: 'diamonds' },
@@ -260,7 +260,7 @@ class ShopScene extends Phaser.Scene {
             desc: 'Contains Common, Magic, or Rare equipment',
             accentColor: 0x2f6fd8,
             panelColor: 0x101a30,
-            chestVariant: 'mystery',
+            artKey: 'shop_chest_gem',
             draws: [
                 { label: 'Draw 1x', cost: 200, currency: 'gold' },
                 { label: 'Draw 1x', cost: 1800, currency: 'diamonds', color: 0x2ed573 },
@@ -323,11 +323,17 @@ class ShopScene extends Phaser.Scene {
         }).setOrigin(0.5);
         this.contentContainer.add(descText);
 
-        // Chest/emblem art (right)
+        // Chest/emblem art (right) - prefer real chest artwork over the
+        // procedural vector chest/emblem, falling back only if the real
+        // asset key isn't loaded.
         const artX = centerX + cardW / 2 - 68;
         const artY = topY + 95;
+        const artSize = 100;
         let art;
-        if (cfg.emblem) {
+        if (cfg.artKey && this.textures.exists(cfg.artKey)) {
+            art = this.add.image(artX, artY, cfg.artKey);
+            UIHelpers.fitImage(art, artSize, artSize);
+        } else if (cfg.emblem) {
             art = UIHelpers.createEmblemIcon(this, artX, artY, { size: 82 });
         } else {
             art = UIHelpers.createChestIcon(this, artX, artY, { size: 82, variant: cfg.chestVariant || 'wood' });
@@ -444,7 +450,8 @@ class ShopScene extends Phaser.Scene {
 
         // Icon
         if (this.textures.exists(item.icon)) {
-            const icon = this.add.image(x, y - 4, item.icon).setScale(0.28);
+            const icon = this.add.image(x, y - 4, item.icon);
+            UIHelpers.fitImage(icon, w * 0.5, h * 0.4);
             this.contentContainer.add(icon);
         }
 

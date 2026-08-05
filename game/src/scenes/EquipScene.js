@@ -109,7 +109,8 @@ class EquipScene extends Phaser.Scene {
         container.add(bg);
 
         if (slot.icon && this.textures.exists(slot.icon)) {
-            const icon = this.add.image(0, 0, slot.icon).setScale(0.5).setAlpha(0.55);
+            const icon = this.add.image(0, 0, slot.icon).setAlpha(0.55);
+            UIHelpers.fitImage(icon, size * 0.7, size * 0.7);
             container.add(icon);
         }
 

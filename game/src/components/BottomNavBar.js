@@ -59,7 +59,8 @@ class BottomNavBar {
             let icon;
             if (this.scene.textures.exists(tab.icon)) {
                 icon = this.scene.add.image(0, 0, tab.icon);
-                icon.setScale(isActive ? 0.46 : 0.4);
+                const iconBox = tileSize * (isActive ? 0.56 : 0.5);
+                UIHelpers.fitImage(icon, iconBox, iconBox);
             } else {
                 icon = this.scene.add.graphics();
                 icon.fillStyle(0xffffff, 0.8);
@@ -128,8 +129,9 @@ class BottomNavBar {
         this.tabs.forEach((t) => {
             const isActive = t.key === tabKey;
             this.drawTile(t.tileBg, 54, isActive);
-            if (t.icon.setScale) {
-                t.icon.setScale(isActive ? 0.46 : 0.4);
+            if (t.icon.setDisplaySize) {
+                const iconBox = 54 * (isActive ? 0.56 : 0.5);
+                UIHelpers.fitImage(t.icon, iconBox, iconBox);
             }
             t.container.setScale(1.0);
         });

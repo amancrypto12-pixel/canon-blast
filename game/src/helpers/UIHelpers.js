@@ -65,9 +65,10 @@ const UIHelpers = {
         }).setOrigin(0.5);
         container.add(label);
 
-        // Optional icon
+        // Optional icon (box-fit so native asset resolution never overflows the button)
         if (iconKey && scene.textures.exists(iconKey)) {
-            const icon = scene.add.image(-width / 2 + 25, 0, iconKey).setScale(iconScale);
+            const icon = scene.add.image(-width / 2 + 25, 0, iconKey);
+            UIHelpers.fitImage(icon, height * 0.7, height * 0.7);
             container.add(icon);
         }
 
@@ -128,7 +129,11 @@ const UIHelpers = {
 
         let icon;
         if (scene.textures.exists(textureKey)) {
-            icon = scene.add.image(0, 0, textureKey).setScale(scale);
+            icon = scene.add.image(0, 0, textureKey);
+            // Box-fit to a fixed slot size instead of scaling relative to
+            // the source image's native resolution (assets vary wildly).
+            const boxSize = 80 * scale;
+            UIHelpers.fitImage(icon, boxSize, boxSize);
         } else {
             // Fallback: colored circle placeholder
             icon = scene.add.graphics();
@@ -372,7 +377,8 @@ const UIHelpers = {
         container.add(label);
 
         if (iconKey && scene.textures.exists(iconKey)) {
-            const icon = scene.add.image(-width / 2 + height * 0.45, 0, iconKey).setScale(iconScale);
+            const icon = scene.add.image(-width / 2 + height * 0.45, 0, iconKey);
+            UIHelpers.fitImage(icon, height * 0.7, height * 0.7);
             container.add(icon);
         }
 
@@ -419,7 +425,8 @@ const UIHelpers = {
         container.add(bg);
 
         if (scene.textures.exists(iconKey)) {
-            const icon = scene.add.image(-width / 2 + 15, 0, iconKey).setScale(iconScale);
+            const icon = scene.add.image(-width / 2 + 15, 0, iconKey);
+            UIHelpers.fitImage(icon, height * 0.8, height * 0.8);
             container.add(icon);
         }
 
@@ -610,7 +617,8 @@ const UIHelpers = {
         container.add(bg);
 
         if (iconKey && scene.textures.exists(iconKey)) {
-            const icon = scene.add.image(0, -2, iconKey).setScale(iconScale);
+            const icon = scene.add.image(0, -2, iconKey);
+            UIHelpers.fitImage(icon, size * 0.6, size * 0.6);
             container.add(icon);
         }
 
@@ -763,7 +771,8 @@ const UIHelpers = {
 
         // Equipment icon
         if (iconKey && scene.textures.exists(iconKey)) {
-            const icon = scene.add.image(0, 0, iconKey).setScale(iconScale);
+            const icon = scene.add.image(0, 0, iconKey);
+            UIHelpers.fitImage(icon, size * 0.7, size * 0.7);
             container.add(icon);
         }
 
@@ -826,7 +835,8 @@ const UIHelpers = {
 
         // Skill icon
         if (skillData.iconKey && scene.textures.exists(skillData.iconKey)) {
-            const icon = scene.add.image(0, -5, skillData.iconKey).setScale(0.4);
+            const icon = scene.add.image(0, -5, skillData.iconKey);
+            UIHelpers.fitImage(icon, size * 0.55, size * 0.55);
             container.add(icon);
         } else {
             // Placeholder colored square
@@ -887,7 +897,8 @@ const UIHelpers = {
         const container = scene.add.container(x, y);
 
         if (scene.textures.exists(iconKey)) {
-            const icon = scene.add.image(0, 0, iconKey).setScale(iconScale);
+            const icon = scene.add.image(0, 0, iconKey);
+            UIHelpers.fitImage(icon, 24, 24);
             container.add(icon);
         } else {
             const placeholder = scene.add.graphics();
@@ -910,6 +921,25 @@ const UIHelpers = {
         };
 
         return container;
+    },
+
+    /**
+     * Scale an image so it FITS inside a max box (maxWidth x maxHeight),
+     * preserving aspect ratio, regardless of the source texture's native
+     * pixel size. This must be used instead of setScale() for any real
+     * (non-placeholder) image asset, since our art is exported at wildly
+     * different native resolutions (some icons ~1024px, some character
+     * art 1500x2700+). setScale(0.4) on a 1024px icon renders at ~410px
+     * inside a 450px-wide game and causes the overlap/bleed bugs seen in
+     * the UI. fitImage always fits the intended slot size instead.
+     */
+    fitImage(image, maxWidth, maxHeight) {
+        const srcW = image.width;
+        const srcH = image.height;
+        if (!srcW || !srcH) return image;
+        const scale = Math.min(maxWidth / srcW, maxHeight / srcH);
+        image.setDisplaySize(srcW * scale, srcH * scale);
+        return image;
     },
 
     /**
