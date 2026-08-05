@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Roguelite Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #game-container {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 9/16;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <script src="src/helpers/UIHelpers.js"></script>
+    <script src="src/components/TopBar.js"></script>
+    <script src="src/components/BottomNavBar.js"></script>
+    <script src="src/scenes/PreloaderScene.js"></script>
+    <script src="src/scenes/LobbyScene.js"></script>
+    <script src="src/scenes/EquipScene.js"></script>
+    <script src="src/scenes/TalentScene.js"></script>
+    <script src="src/scenes/ShopScene.js"></script>
+    <script src="src/scenes/AbyssScene.js"></script>
+    <script src="src/game.js"></script>
+</body>
+</html>
