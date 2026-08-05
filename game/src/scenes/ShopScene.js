@@ -1,6 +1,8 @@
 /**
  * ShopScene.js - Shop with sub-tabs (Special, Gear, Skill, Top Up)
- * Draw 1x/10x buttons and Top-Up packs with currency deduction
+ * Redesigned to match reference art: banner header w/ back button,
+ * chest/draw cards with Draw 1x/10x pills, and a dark sub-tab footer
+ * (Special / Gear / Skill / Top Up) instead of the main 5-icon nav.
  */
 
 class ShopScene extends Phaser.Scene {
@@ -11,40 +13,99 @@ class ShopScene extends Phaser.Scene {
     create() {
         const { width, height } = this.scale;
 
-        // Background
-        if (this.textures.exists('bg_shop')) {
-            const bg = this.add.image(width / 2, height / 2, 'bg_shop');
-            bg.setDisplaySize(width, height);
-        } else {
-            this.cameras.main.setBackgroundColor(UIHelpers.COLORS.DARK_BG);
-        }
-
-        // Top bar
-        this.topBar = new TopBar(this);
+        // Dark base background
+        this.cameras.main.setBackgroundColor(0x23262e);
 
         // Player currency state
         this.playerCurrency = {
             gold: 25000,
             diamonds: 500,
             energy: 120,
+            stars: 1000,
         };
 
-        // Sub-tabs
+        this.bannerHeight = 172;
+        this.footerHeight = 66;
+
+        // Banner header (back button + fire creature/coin decoration)
+        this.createBanner();
+
+        // Sub-tab footer bar
         this.activeSubTab = 0;
-        this.createSubTabs();
+        this.createSubTabFooter();
 
         // Content area
         this.contentContainer = this.add.container(0, 0);
         this.showSpecialPanel();
 
-        // Bottom nav
-        this.bottomNav = new BottomNavBar(this, 'shop');
-
         UIHelpers.fadeInScene(this);
     }
 
-    createSubTabs() {
+    // --- BANNER HEADER ---
+    createBanner() {
         const { width } = this.scale;
+        const bh = this.bannerHeight;
+        const centerX = width / 2;
+        const centerY = bh / 2;
+
+        // Sunburst backdrop
+        const mask = this.add.graphics();
+        mask.fillStyle(0xffffff, 1);
+        mask.fillRect(0, 0, width, bh);
+        const maskShape = mask.createGeometryMask();
+
+        const burst = UIHelpers.createSunburst(this, centerX, centerY, {
+            radius: width * 0.9,
+            rayCount: 20,
+            colorA: 0xffe066,
+            colorB: 0xffb700,
+        });
+        burst.setMask(maskShape);
+
+        // Coin piles (drawn) flanking the center monster
+        const coinPositions = [-140, -95, 95, 140];
+        coinPositions.forEach((dx) => {
+            const coin = this.add.graphics();
+            coin.setPosition(centerX + dx, bh - 30);
+            coin.fillStyle(0xffd54f, 1);
+            coin.fillEllipse(0, 0, 46, 30);
+            coin.lineStyle(3, 0xc98a1a, 1);
+            coin.strokeEllipse(0, 0, 46, 30);
+            coin.fillStyle(0xffe999, 1);
+            coin.fillEllipse(0, -6, 34, 18);
+        });
+
+        // Center fire-creature (Cinder Hound stand-in for the boss art)
+        if (this.textures.exists('char_monster')) {
+            const monster = this.add.image(centerX, bh - 45, 'char_monster');
+            monster.setScale(0.45);
+            monster.setTint(0xffb060);
+        }
+
+        // Back button (top-left)
+        UIHelpers.createBackButton(this, 30, 30, () => this.onBack());
+
+        // Bottom edge shadow to separate banner from content
+        const shadow = this.add.graphics();
+        shadow.fillGradientStyle(0x000000, 0x000000, 0x000000, 0x000000, 0, 0, 0.35, 0.35);
+        shadow.fillRect(0, bh - 20, width, 20);
+    }
+
+    onBack() {
+        this.scene.start('LobbyScene');
+    }
+
+    // --- SUB-TAB FOOTER (Special / Gear / Skill / Top Up) ---
+    createSubTabFooter() {
+        const { width, height } = this.scale;
+        const footerY = height - this.footerHeight / 2;
+
+        const bg = this.add.graphics();
+        bg.fillStyle(0x1c1e24, 1);
+        bg.fillRect(0, height - this.footerHeight, width, this.footerHeight);
+        bg.lineStyle(1, 0x3a3a44, 1);
+        bg.lineBetween(0, height - this.footerHeight, width, height - this.footerHeight);
+
         const tabs = [
             { label: 'Special' },
             { label: 'Gear' },
@@ -52,12 +113,15 @@ class ShopScene extends Phaser.Scene {
             { label: 'Top Up' },
         ];
 
-        this.tabBar = UIHelpers.createTabBar(this, width / 2, UIHelpers.CONTENT_Y_START + 20, tabs, {
-            tabWidth: 90,
-            tabHeight: 32,
+        this.tabBar = UIHelpers.createTabBar(this, width / 2, footerY, tabs, {
+            tabWidth: 92,
+            tabHeight: 36,
             gap: 6,
             activeIndex: 0,
-            fontSize: '12px',
+            fontSize: '13px',
+            activeColor: UIHelpers.COLORS.ACCENT_PURPLE,
+            inactiveColor: 0x2a2c34,
+            showInactiveBg: true,
             onTabChange: (index, tab) => this.onSubTabChange(index, tab),
         });
     }
@@ -75,272 +139,348 @@ class ShopScene extends Phaser.Scene {
         }
     }
 
-    // --- SPECIAL PANEL (Featured draws) ---
+    // --- SPECIAL PANEL (Daily Special pedestal) ---
     showSpecialPanel() {
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 65;
+        const topY = this.bannerHeight;
 
-        // Banner area
-        const bannerBg = UIHelpers.createPanel(this, centerX, contentY + 80, width - 30, 160, {
-            bgColor: 0x1a0a30,
-            alpha: 0.9,
-            borderColor: UIHelpers.COLORS.ACCENT_PURPLE,
-            borderWidth: 2,
+        // Section header
+        const header = UIHelpers.createSectionHeader(this, centerX, topY + 18, width, 'Daily Special', {
+            height: 34,
+            fontSize: '17px',
         });
-        this.contentContainer.add(bannerBg);
+        this.contentContainer.add(header);
 
-        // Featured item title
-        const title = this.add.text(centerX, contentY + 20, '★ Limited Time Draw ★', {
-            fontSize: '16px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GOLD,
-            fontStyle: 'bold',
-        }).setOrigin(0.5);
-        this.contentContainer.add(title);
+        // Red sunburst display area
+        const displayH = 300;
+        const displayY = topY + 40;
 
-        // Featured item image
-        if (this.textures.exists('crystal_purple')) {
-            const featured = this.add.image(centerX, contentY + 80, 'crystal_purple');
-            featured.setScale(0.5);
-            this.contentContainer.add(featured);
+        const dispMask = this.make.graphics({ x: 0, y: 0, add: false });
+        dispMask.fillRect(0, displayY, width, displayH);
 
-            // Spin animation
-            this.tweens.add({
-                targets: featured,
-                angle: 360,
-                duration: 8000,
-                repeat: -1,
-                ease: 'Linear',
-            });
-        }
+        const burst = UIHelpers.createSunburst(this, centerX, displayY + displayH / 2, {
+            radius: width,
+            rayCount: 18,
+            colorA: 0xd91f2e,
+            colorB: 0x8f1018,
+        });
+        burst.setMask(dispMask.createGeometryMask());
+        this.contentContainer.add(burst);
 
-        const desc = this.add.text(centerX, contentY + 130, 'Chance to get Legendary Equipment!', {
-            fontSize: '11px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GRAY,
-        }).setOrigin(0.5);
-        this.contentContainer.add(desc);
+        // Stone pedestal (drawn)
+        const pedestalY = displayY + displayH / 2 + 40;
+        const pedestal = this.add.graphics();
+        pedestal.setPosition(centerX, pedestalY);
+        const tiers = [
+            { w: 150, h: 26, dy: 40 },
+            { w: 120, h: 24, dy: 16 },
+            { w: 95, h: 22, dy: -6 },
+            { w: 70, h: 40, dy: -40 },
+        ];
+        tiers.forEach((t) => {
+            pedestal.fillStyle(0xc9c9c9, 1);
+            pedestal.fillRoundedRect(-t.w / 2, t.dy - t.h / 2, t.w, t.h, 6);
+            pedestal.lineStyle(2, 0x8a8a8a, 1);
+            pedestal.strokeRoundedRect(-t.w / 2, t.dy - t.h / 2, t.w, t.h, 6);
+        });
+        this.contentContainer.add(pedestal);
 
-        // Draw buttons
-        this.createDrawButtons(contentY + 200, 'diamonds', 50, 450);
+        // Star reward pill button
+        const btnY = displayY + displayH + 30;
+        const rewardBtn = UIHelpers.createPillButton(this, centerX, btnY, 190, 46, '1000', {
+            fontSize: '22px',
+            bgColor: 0x4fc3ff,
+            borderColor: 0x1a7fbf,
+            strokeColor: '#0a4a70',
+            iconKey: this.textures.exists('star_icon') ? 'star_icon' : null,
+            iconScale: 0.12,
+            cornerRadius: 23,
+            onClick: () => this.onClaimDailySpecial(),
+        });
+        this.contentContainer.add(rewardBtn);
     }
 
-    // --- GEAR PANEL (Equipment draws) ---
+    onClaimDailySpecial() {
+        this.cameras.main.flash(200, 255, 215, 0);
+        this.showResult('Daily Special claimed!', '#2ed573');
+    }
+
+    // --- GEAR PANEL (Exclusive S-Gear Chest + Gear Chest) ---
     showGearPanel() {
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 65;
+        const topY = this.bannerHeight + 14;
 
-        const title = this.add.text(centerX, contentY, 'Gear Draw', {
-            fontSize: '16px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_WHITE,
-            fontStyle: 'bold',
-        }).setOrigin(0.5);
-        this.contentContainer.add(title);
-
-        // Showcase equipment icons
-        const equipIcons = ['equip_hat', 'equip_necklace', 'equip_sword', 'equip_shirt', 'equip_boots'];
-        const spacing = 60;
-        const startX = centerX - ((equipIcons.length - 1) * spacing) / 2;
-
-        equipIcons.forEach((key, i) => {
-            if (this.textures.exists(key)) {
-                const icon = this.add.image(startX + i * spacing, contentY + 60, key);
-                icon.setScale(0.35);
-                this.contentContainer.add(icon);
-
-                // Gentle bounce
-                this.tweens.add({
-                    targets: icon,
-                    y: icon.y - 5,
-                    duration: 1000 + i * 200,
-                    yoyo: true,
-                    repeat: -1,
-                    ease: 'Sine.easeInOut',
-                });
-            }
+        this.createChestCard(centerX, topY, {
+            title: 'Exclusive S-Gear Chest',
+            desc: 'May give Exclusive S Epic equipment',
+            accentColor: 0x2f6fd8,
+            panelColor: 0x101a30,
+            emblem: true,
+            draws: [
+                { label: 'Draw 1x', cost: 300, currency: 'diamonds' },
+                { label: 'Draw 10x', cost: 2800, currency: 'diamonds' },
+            ],
         });
 
-        // Info text
-        const info = this.add.text(centerX, contentY + 110, 'Draw for powerful gear upgrades', {
-            fontSize: '11px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GRAY,
-        }).setOrigin(0.5);
-        this.contentContainer.add(info);
-
-        // Draw buttons
-        this.createDrawButtons(contentY + 160, 'gold', 5000, 45000);
+        this.createChestCard(centerX, topY + 268, {
+            title: 'Gear Chest',
+            desc: 'May give Normal Grade equipment',
+            accentColor: 0x8a4fd8,
+            panelColor: 0x241a3a,
+            chestVariant: 'wood',
+            draws: [
+                { label: 'Draw 1x', cost: 200, currency: 'gold' },
+                { label: 'Draw 1x', cost: 1800, currency: 'diamonds', color: 0x2ed573 },
+            ],
+        });
     }
 
-    // --- SKILL PANEL (Skill draws) ---
+    // --- SKILL PANEL (Exclusive Skill Chest + Skill Chest) ---
     showSkillPanel() {
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 65;
+        const topY = this.bannerHeight + 14;
 
-        const title = this.add.text(centerX, contentY, 'Skill Draw', {
-            fontSize: '16px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_WHITE,
-            fontStyle: 'bold',
-        }).setOrigin(0.5);
-        this.contentContainer.add(title);
-
-        // Showcase skill icons
-        const skillIcons = ['skill_attack', 'skill_shield', 'skill_speed', 'skill_luck', 'skill_poison'];
-        const spacing = 60;
-        const startX = centerX - ((skillIcons.length - 1) * spacing) / 2;
-
-        skillIcons.forEach((key, i) => {
-            if (this.textures.exists(key)) {
-                const icon = this.add.image(startX + i * spacing, contentY + 60, key);
-                icon.setScale(0.35);
-                this.contentContainer.add(icon);
-            }
+        this.createChestCard(centerX, topY, {
+            title: 'Exclusive SkiLL Chest',
+            desc: 'Contains exclusive Common, Magic, Rare, or Epic equipment',
+            accentColor: 0x8a4fd8,
+            panelColor: 0x241a3a,
+            chestVariant: 'blue',
+            draws: [
+                { label: 'Draw 1x', cost: 300, currency: 'diamonds' },
+                { label: 'Draw 10x', cost: 2800, currency: 'diamonds' },
+            ],
         });
 
-        const info = this.add.text(centerX, contentY + 110, 'Draw for rare skill scrolls', {
-            fontSize: '11px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GRAY,
-        }).setOrigin(0.5);
-        this.contentContainer.add(info);
-
-        // Draw buttons
-        this.createDrawButtons(contentY + 160, 'gold', 3000, 27000);
+        this.createChestCard(centerX, topY + 268, {
+            title: 'SkiLL Chest',
+            desc: 'Contains Common, Magic, or Rare equipment',
+            accentColor: 0x2f6fd8,
+            panelColor: 0x101a30,
+            chestVariant: 'mystery',
+            draws: [
+                { label: 'Draw 1x', cost: 200, currency: 'gold' },
+                { label: 'Draw 1x', cost: 1800, currency: 'diamonds', color: 0x2ed573 },
+            ],
+        });
     }
 
-    // --- TOP UP PANEL (Purchase packs) ---
+    // --- SHARED: chest/gear draw card ---
+    createChestCard(centerX, topY, cfg) {
+        const { width } = this.scale;
+        const cardW = width - 24;
+        const cardH = 250;
+        const cardY = topY + cardH / 2;
+
+        // Outer accent-colored card background
+        const card = UIHelpers.createPanel(this, centerX, cardY, cardW, cardH, {
+            bgColor: cfg.panelColor,
+            alpha: 1,
+            cornerRadius: 16,
+            borderColor: cfg.accentColor,
+            borderWidth: 3,
+        });
+        this.contentContainer.add(card);
+
+        // Title bar
+        const titleBg = this.add.graphics();
+        titleBg.fillStyle(cfg.accentColor, 1);
+        titleBg.fillRoundedRect(centerX - cardW / 2 + 3, topY + 3, cardW - 6, 34, { tl: 13, tr: 13, bl: 0, br: 0 });
+        this.contentContainer.add(titleBg);
+
+        const title = UIHelpers.createOutlineText(this, centerX, topY + 20, cfg.title, {
+            fontSize: '15px',
+            strokeThickness: 3,
+        });
+        this.contentContainer.add(title);
+
+        // Info badge
+        const info = UIHelpers.createInfoBadge(this, centerX + cardW / 2 - 22, topY + 20, {
+            onClick: () => this.showResult(cfg.desc, '#ffffff'),
+        });
+        this.contentContainer.add(info);
+
+        // Description panel (left)
+        const descX = centerX - cardW / 2 + 95;
+        const descY = topY + 95;
+        const descBg = UIHelpers.createPanel(this, descX, descY, 155, 80, {
+            bgColor: 0x000000,
+            alpha: 0.3,
+            cornerRadius: 12,
+        });
+        this.contentContainer.add(descBg);
+
+        const descText = this.add.text(descX, descY, cfg.desc, {
+            fontSize: '12px',
+            fontFamily: 'Arial, sans-serif',
+            color: '#ffffff',
+            fontStyle: 'bold',
+            align: 'center',
+            wordWrap: { width: 140 },
+        }).setOrigin(0.5);
+        this.contentContainer.add(descText);
+
+        // Chest/emblem art (right)
+        const artX = centerX + cardW / 2 - 68;
+        const artY = topY + 95;
+        let art;
+        if (cfg.emblem) {
+            art = UIHelpers.createEmblemIcon(this, artX, artY, { size: 82 });
+        } else {
+            art = UIHelpers.createChestIcon(this, artX, artY, { size: 82, variant: cfg.chestVariant || 'wood' });
+        }
+        this.contentContainer.add(art);
+        this.tweens.add({
+            targets: art,
+            y: artY - 6,
+            duration: 1400,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut',
+        });
+
+        // Draw buttons row
+        const drawY = topY + 205;
+        const gap = 16;
+        const btnW = (cardW - 40 - gap) / 2;
+        const startX = centerX - cardW / 2 + 20 + btnW / 2;
+
+        cfg.draws.forEach((draw, i) => {
+            const bx = startX + i * (btnW + gap);
+            const pillColor = draw.color || UIHelpers.COLORS.ACCENT_GOLD;
+            const currencyIcon = draw.currency === 'diamonds' ? 'currency_diamond'
+                : draw.currency === 'gold' ? 'currency_gold' : 'currency_energy';
+
+            const btn = UIHelpers.createPillButton(this, bx, drawY, btnW, 40, draw.label, {
+                fontSize: '13px',
+                bgColor: pillColor,
+                borderColor: 0x00000055,
+                strokeColor: '#00000088',
+                cornerRadius: 20,
+                onClick: () => this.onDraw(draw.label.includes('10') ? 10 : 1, draw.currency, draw.cost),
+            });
+            this.contentContainer.add(btn);
+
+            // cost tag under button
+            const costPill = UIHelpers.createCurrencyPill(this, bx, drawY + 30, currencyIcon, draw.cost, {
+                width: btnW - 6,
+                height: 20,
+                bgColor: 0x0a0a12,
+                borderColor: 0x333344,
+                fontSize: '10px',
+                iconScale: 0.16,
+            });
+            this.contentContainer.add(costPill);
+        });
+    }
+
+    // --- TOP UP PANEL (Diamond / Gold / Energy sections) ---
     showTopUpPanel() {
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 65;
+        let y = this.bannerHeight + 8;
 
-        const title = this.add.text(centerX, contentY, 'Top Up Packs', {
-            fontSize: '16px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_WHITE,
-            fontStyle: 'bold',
-        }).setOrigin(0.5);
-        this.contentContainer.add(title);
+        y = this.createTopUpSection(centerX, y, 'Diamond', [
+            { amount: 500, cost: 250, icon: 'currency_diamond', currencyType: 'diamonds' },
+            { amount: 1500, cost: 500, icon: 'currency_diamond', currencyType: 'diamonds' },
+            { amount: 6000, cost: 2000, icon: 'currency_diamond', currencyType: 'diamonds' },
+            { amount: 15000, cost: 5000, icon: 'currency_diamond', currencyType: 'diamonds', chest: true },
+        ], 'star_icon');
 
-        // Pack items
-        const packs = [
-            { name: 'Energy Pack', icon: 'currency_energy', reward: '+60 Energy', cost: 100, currency: 'diamonds', color: 0xff4757 },
-            { name: 'Gold Pack', icon: 'currency_gold', reward: '+10,000 Gold', cost: 200, currency: 'diamonds', color: 0xffd700 },
-            { name: 'Diamond Pack', icon: 'currency_diamond', reward: '+100 Diamonds', cost: 5000, currency: 'gold', color: 0x00d4ff },
-            { name: 'Mega Pack', icon: 'crystal_purple', reward: 'All Resources', cost: 500, currency: 'diamonds', color: 0x9b59b6 },
-        ];
+        y = this.createTopUpSection(centerX, y + 10, 'Gold', [
+            { amount: 6000, cost: 15, icon: 'currency_gold', currencyType: 'gold' },
+            { amount: 50000, cost: 150, icon: 'currency_gold', currencyType: 'gold' },
+            { amount: 100000, cost: 6000, icon: 'currency_gold', currencyType: 'gold' },
+            { amount: 300000, cost: 10000, icon: 'currency_gold', currencyType: 'gold', chest: true },
+        ], 'currency_diamond');
 
-        packs.forEach((pack, index) => {
-            const py = contentY + 40 + index * 95;
-            this.createPackCard(centerX, py, pack);
-        });
+        y = this.createTopUpSection(centerX, y + 10, 'Energy', [
+            { amount: 5, cost: 0, icon: 'currency_energy', currencyType: 'energy', free: true },
+            { amount: 10, cost: 20, icon: 'currency_energy', currencyType: 'energy' },
+            { amount: 20, cost: 100, icon: 'currency_energy', currencyType: 'energy' },
+            { amount: 100, cost: 500, icon: 'currency_energy', currencyType: 'energy' },
+        ], 'currency_diamond');
     }
 
-    // --- SHARED: Draw buttons ---
-    createDrawButtons(y, currencyType, cost1x, cost10x) {
+    createTopUpSection(centerX, y, title, items, costIconKey) {
         const { width } = this.scale;
-        const centerX = width / 2;
+        const header = UIHelpers.createSectionHeader(this, centerX, y, width, title, { height: 28, fontSize: '14px' });
+        this.contentContainer.add(header);
 
-        // Draw 1x button
-        const draw1Btn = UIHelpers.createButton(this, centerX - 70, y, 120, 44, 'Draw 1x', {
-            fontSize: '13px',
-            bgColor: UIHelpers.COLORS.ACCENT_PURPLE,
-            hoverColor: UIHelpers.COLORS.BUTTON_HOVER,
-            cornerRadius: 22,
-            onClick: () => this.onDraw(1, currencyType, cost1x),
+        const cardY = y + 20 + 55;
+        const cardW = 96;
+        const cardH = 100;
+        const gap = 8;
+        const totalW = items.length * cardW + (items.length - 1) * gap;
+        const startX = centerX - totalW / 2 + cardW / 2;
+
+        items.forEach((item, i) => {
+            const cx = startX + i * (cardW + gap);
+            this.createTopUpCard(cx, cardY, cardW, cardH, item, costIconKey);
         });
-        this.contentContainer.add(draw1Btn);
 
-        // Cost label for 1x
-        const cost1Label = this.add.text(centerX - 70, y + 30, `${UIHelpers.formatNumber(cost1x)} ${currencyType}`, {
-            fontSize: '10px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GOLD,
-        }).setOrigin(0.5);
-        this.contentContainer.add(cost1Label);
-
-        // Draw 10x button
-        const draw10Btn = UIHelpers.createButton(this, centerX + 70, y, 120, 44, 'Draw 10x', {
-            fontSize: '13px',
-            bgColor: UIHelpers.COLORS.ACCENT_GOLD,
-            hoverColor: 0xffe44d,
-            activeColor: 0xccaa00,
-            cornerRadius: 22,
-            onClick: () => this.onDraw(10, currencyType, cost10x),
-        });
-        this.contentContainer.add(draw10Btn);
-
-        // Cost label for 10x
-        const cost10Label = this.add.text(centerX + 70, y + 30, `${UIHelpers.formatNumber(cost10x)} ${currencyType}`, {
-            fontSize: '10px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GOLD,
-        }).setOrigin(0.5);
-        this.contentContainer.add(cost10Label);
-
-        // Discount badge on 10x
-        const badge = this.add.text(centerX + 120, y - 22, '-10%', {
-            fontSize: '9px',
-            fontFamily: 'Arial, sans-serif',
-            color: '#ffffff',
-            backgroundColor: '#ff4757',
-            padding: { x: 4, y: 2 },
-        }).setOrigin(0.5);
-        this.contentContainer.add(badge);
+        return cardY + cardH / 2;
     }
 
-    // --- SHARED: Pack card for Top Up ---
-    createPackCard(x, y, pack) {
-        const { width } = this.scale;
-        const cardWidth = width - 40;
-        const cardHeight = 80;
-
-        // Card background
-        const cardBg = UIHelpers.createPanel(this, x, y + 35, cardWidth, cardHeight, {
-            bgColor: 0x1a1a2e,
-            alpha: 0.9,
-            borderColor: pack.color,
-            borderWidth: 1,
+    createTopUpCard(x, y, w, h, item, costIconKey) {
+        const card = UIHelpers.createPanel(this, x, y, w, h, {
+            bgColor: 0x1a1c24,
+            alpha: 0.95,
+            cornerRadius: 10,
+            borderColor: 0x3a3d48,
+            borderWidth: 2,
         });
-        this.contentContainer.add(cardBg);
+        this.contentContainer.add(card);
 
-        // Pack icon
-        if (this.textures.exists(pack.icon)) {
-            const icon = this.add.image(x - cardWidth / 2 + 35, y + 35, pack.icon);
-            icon.setScale(0.3);
+        // Amount text
+        const amountText = UIHelpers.createOutlineText(this, x, y - h / 2 + 16, UIHelpers.formatNumber(item.amount), {
+            fontSize: '13px',
+            strokeThickness: 3,
+        });
+        this.contentContainer.add(amountText);
+
+        // Icon
+        if (this.textures.exists(item.icon)) {
+            const icon = this.add.image(x, y - 4, item.icon).setScale(0.28);
             this.contentContainer.add(icon);
         }
 
-        // Pack name & reward
-        const nameText = this.add.text(x - cardWidth / 2 + 70, y + 22, pack.name, {
-            fontSize: '13px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_WHITE,
-            fontStyle: 'bold',
-        });
-        this.contentContainer.add(nameText);
+        // Cost pill at bottom
+        if (item.free) {
+            const freeBtn = UIHelpers.createPillButton(this, x, y + h / 2 - 12, w - 12, 22, 'Free', {
+                fontSize: '11px',
+                bgColor: 0x2ed573,
+                borderColor: 0x1a8f4a,
+                strokeColor: '#0a5a2a',
+                cornerRadius: 11,
+                onClick: () => this.onPurchaseTopUp(item),
+            });
+            this.contentContainer.add(freeBtn);
+        } else {
+            const costPill = UIHelpers.createCurrencyPill(this, x, y + h / 2 - 12, costIconKey, item.cost, {
+                width: w - 12,
+                height: 22,
+                bgColor: 0x0d2033,
+                borderColor: 0x2a7a9a,
+                fontSize: '11px',
+                iconScale: 0.16,
+            });
+            this.contentContainer.add(costPill);
 
-        const rewardText = this.add.text(x - cardWidth / 2 + 70, y + 40, pack.reward, {
-            fontSize: '11px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GOLD,
-        });
-        this.contentContainer.add(rewardText);
+            const hit = this.add.rectangle(x, y + h / 2 - 12, w - 12, 22, 0x000000, 0);
+            hit.setInteractive({ useHandCursor: true });
+            hit.on('pointerup', () => this.onPurchaseTopUp(item));
+            this.contentContainer.add(hit);
+        }
+    }
 
-        // Purchase button
-        const buyBtn = UIHelpers.createButton(this, x + cardWidth / 2 - 55, y + 35, 80, 34, `${pack.cost}`, {
-            fontSize: '12px',
-            bgColor: pack.color,
-            hoverColor: Phaser.Display.Color.IntegerToColor(pack.color).brighten(20).color,
-            cornerRadius: 17,
-            onClick: () => this.onPurchasePack(pack),
-        });
-        this.contentContainer.add(buyBtn);
+    onPurchaseTopUp(item) {
+        this.cameras.main.flash(150, 255, 215, 0);
+        this.playerCurrency[item.currencyType] = (this.playerCurrency[item.currencyType] || 0) + item.amount;
+        this.showResult(`+${UIHelpers.formatNumber(item.amount)} ${item.currencyType}!`, '#2ed573');
     }
 
     // --- LOGIC: Handle draw ---
@@ -353,73 +493,28 @@ class ShopScene extends Phaser.Scene {
             return;
         }
 
-        // Deduct currency
         this.playerCurrency[currencyType] -= cost;
-        this.topBar.updateCurrency(currencyType, this.playerCurrency[currencyType]);
 
-        // Show draw result
         this.cameras.main.flash(200, 123, 47, 247);
         this.showResult(`Drew ${count}x! Check your inventory.`, '#2ed573');
 
         console.log(`[ShopScene] Drew ${count}x for ${cost} ${currencyType}. Remaining: ${this.playerCurrency[currencyType]}`);
     }
 
-    // --- LOGIC: Handle pack purchase ---
-    onPurchasePack(pack) {
-        const current = this.playerCurrency[pack.currency] || 0;
-
-        if (current < pack.cost) {
-            this.showResult(`Not enough ${pack.currency}!`, '#ff4757');
-            this.cameras.main.shake(100, 0.003);
-            return;
-        }
-
-        // Deduct cost
-        this.playerCurrency[pack.currency] -= pack.cost;
-        this.topBar.updateCurrency(pack.currency, this.playerCurrency[pack.currency]);
-
-        // Add reward
-        switch (pack.name) {
-            case 'Energy Pack':
-                this.playerCurrency.energy += 60;
-                this.topBar.updateCurrency('energy', this.playerCurrency.energy);
-                break;
-            case 'Gold Pack':
-                this.playerCurrency.gold += 10000;
-                this.topBar.updateCurrency('gold', this.playerCurrency.gold);
-                break;
-            case 'Diamond Pack':
-                this.playerCurrency.diamonds += 100;
-                this.topBar.updateCurrency('diamonds', this.playerCurrency.diamonds);
-                break;
-            case 'Mega Pack':
-                this.playerCurrency.energy += 30;
-                this.playerCurrency.gold += 5000;
-                this.playerCurrency.diamonds += 50;
-                this.topBar.updateCurrency('energy', this.playerCurrency.energy);
-                this.topBar.updateCurrency('gold', this.playerCurrency.gold);
-                this.topBar.updateCurrency('diamonds', this.playerCurrency.diamonds);
-                break;
-        }
-
-        this.cameras.main.flash(150, 255, 215, 0);
-        this.showResult(`${pack.name} purchased! ${pack.reward}`, '#2ed573');
-
-        console.log(`[ShopScene] Purchased ${pack.name} for ${pack.cost} ${pack.currency}`);
-    }
-
     showResult(message, color) {
         const { width } = this.scale;
-        const resultText = this.add.text(width / 2, UIHelpers.CONTENT_Y_START + 50, message, {
+        const resultText = this.add.text(width / 2, this.bannerHeight + 10, message, {
             fontSize: '13px',
             fontFamily: 'Arial, sans-serif',
             color: color,
             fontStyle: 'bold',
+            wordWrap: { width: width - 60 },
+            align: 'center',
         }).setOrigin(0.5).setDepth(2000);
 
         this.tweens.add({
             targets: resultText,
-            y: resultText.y - 25,
+            y: resultText.y - 20,
             alpha: 0,
             duration: 1500,
             ease: 'Power2',

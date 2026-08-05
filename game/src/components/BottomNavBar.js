@@ -32,72 +32,53 @@ class BottomNavBar {
 
         // Bar background
         const bg = this.scene.add.graphics();
-        bg.fillStyle(0x0d0d1a, 0.95);
+        bg.fillStyle(0x18181f, 0.97);
         bg.fillRect(0, barY, width, barHeight);
         // Top border line
         bg.lineStyle(1, 0x3a3a5a, 0.8);
         bg.lineBetween(0, barY, width, barY);
         this.container.add(bg);
 
-        // Create tab buttons
+        // Create tab buttons - rounded-square tiles like the reference art
         const tabWidth = width / this.tabConfig.length;
-        const iconY = barY + 28;
-        const labelY = barY + 55;
+        const tileSize = 54;
+        const tileY = barY + barHeight / 2;
 
         this.tabConfig.forEach((tab, index) => {
             const tx = tabWidth * index + tabWidth / 2;
             const isActive = tab.key === this.activeTab;
 
-            const tabContainer = this.scene.add.container(tx, 0);
+            const tabContainer = this.scene.add.container(tx, tileY);
 
-            // Active indicator (glowing dot above icon)
-            const indicator = this.scene.add.graphics();
-            if (isActive) {
-                indicator.fillStyle(UIHelpers.COLORS.ACCENT_PURPLE, 1);
-                indicator.fillCircle(0, barY + 8, 3);
-            }
-            tabContainer.add(indicator);
+            // Tile background (purple normal, gold when active)
+            const tileBg = this.scene.add.graphics();
+            this.drawTile(tileBg, tileSize, isActive);
+            tabContainer.add(tileBg);
 
             // Icon
             let icon;
             if (this.scene.textures.exists(tab.icon)) {
-                icon = this.scene.add.image(0, iconY, tab.icon);
-                icon.setScale(isActive ? 0.38 : 0.32);
-                if (!isActive) icon.setAlpha(0.5);
+                icon = this.scene.add.image(0, 0, tab.icon);
+                icon.setScale(isActive ? 0.46 : 0.4);
             } else {
                 icon = this.scene.add.graphics();
-                icon.fillStyle(isActive ? UIHelpers.COLORS.ACCENT_PURPLE : 0x555555, 1);
-                icon.fillCircle(0, iconY, 16);
+                icon.fillStyle(0xffffff, 0.8);
+                icon.fillCircle(0, 0, 14);
             }
             tabContainer.add(icon);
 
-            // Label
-            const label = this.scene.add.text(0, labelY, tab.label, {
-                fontSize: '10px',
-                fontFamily: 'Arial, sans-serif',
-                color: isActive ? '#ffffff' : '#777777',
-                fontStyle: isActive ? 'bold' : 'normal',
-            }).setOrigin(0.5);
-            tabContainer.add(label);
-
             // Hit area for the full tab region
-            const hitArea = this.scene.add.rectangle(0, barY + barHeight / 2, tabWidth - 4, barHeight, 0x000000, 0);
+            const hitArea = this.scene.add.rectangle(0, 0, tabWidth - 4, barHeight, 0x000000, 0);
             hitArea.setInteractive({ useHandCursor: true });
             tabContainer.add(hitArea);
 
             // Pointer events
             hitArea.on('pointerover', () => {
-                if (tab.key !== this.activeTab) {
-                    if (icon.setAlpha) icon.setAlpha(0.8);
-                    label.setColor('#bbbbbb');
-                }
+                if (tab.key !== this.activeTab) tabContainer.setScale(1.05);
             });
 
             hitArea.on('pointerout', () => {
-                if (tab.key !== this.activeTab) {
-                    if (icon.setAlpha) icon.setAlpha(0.5);
-                    label.setColor('#777777');
-                }
+                if (tab.key !== this.activeTab) tabContainer.setScale(1.0);
             });
 
             hitArea.on('pointerup', () => {
@@ -110,12 +91,30 @@ class BottomNavBar {
                 key: tab.key,
                 container: tabContainer,
                 icon,
-                label,
-                indicator,
+                tileBg,
             });
 
             this.container.add(tabContainer);
         });
+    }
+
+    drawTile(g, size, isActive) {
+        g.clear();
+        if (isActive) {
+            UIHelpers.drawPill(g, size, size, {
+                bgColor: UIHelpers.COLORS.ACCENT_GOLD,
+                borderColor: 0x8a5a00,
+                cornerRadius: 12,
+                gloss: true,
+            });
+        } else {
+            UIHelpers.drawPill(g, size, size, {
+                bgColor: UIHelpers.COLORS.ACCENT_PURPLE,
+                borderColor: 0x4a1a8a,
+                cornerRadius: 12,
+                gloss: true,
+            });
+        }
     }
 
     switchTab(tab) {
@@ -125,28 +124,14 @@ class BottomNavBar {
 
     setActive(tabKey) {
         this.activeTab = tabKey;
-        const { height } = this.scene.scale;
-        const barY = height - UIHelpers.BOTTOM_NAV_HEIGHT;
 
         this.tabs.forEach((t) => {
             const isActive = t.key === tabKey;
-
-            // Update indicator
-            t.indicator.clear();
-            if (isActive) {
-                t.indicator.fillStyle(UIHelpers.COLORS.ACCENT_PURPLE, 1);
-                t.indicator.fillCircle(0, barY + 8, 3);
+            this.drawTile(t.tileBg, 54, isActive);
+            if (t.icon.setScale) {
+                t.icon.setScale(isActive ? 0.46 : 0.4);
             }
-
-            // Update icon
-            if (t.icon.setAlpha) {
-                t.icon.setAlpha(isActive ? 1 : 0.5);
-                t.icon.setScale(isActive ? 0.38 : 0.32);
-            }
-
-            // Update label
-            t.label.setColor(isActive ? '#ffffff' : '#777777');
-            t.label.setFontStyle(isActive ? 'bold' : 'normal');
+            t.container.setScale(1.0);
         });
     }
 

@@ -6,9 +6,9 @@ const UIHelpers = {
     // Game design constants
     GAME_WIDTH: 450,
     GAME_HEIGHT: 800,
-    TOP_BAR_HEIGHT: 60,
+    TOP_BAR_HEIGHT: 76,
     BOTTOM_NAV_HEIGHT: 80,
-    CONTENT_Y_START: 65,
+    CONTENT_Y_START: 80,
     CONTENT_Y_END: 720,
 
     // Color palette
@@ -171,6 +171,9 @@ const UIHelpers = {
 
     /**
      * Create a tab bar with multiple tabs
+     * Supports a full-width underline style bar (like the reference designs)
+     * where inactive tabs have no background and the active tab gets a
+     * colored rounded-rect pill (purple for Shop, gold for Equip, etc).
      */
     createTabBar(scene, x, y, tabs, options = {}) {
         const {
@@ -180,6 +183,13 @@ const UIHelpers = {
             activeIndex = 0,
             onTabChange = null,
             fontSize = '12px',
+            activeColor = UIHelpers.COLORS.TAB_ACTIVE,
+            inactiveColor = UIHelpers.COLORS.TAB_INACTIVE,
+            activeTextColor = '#ffffff',
+            inactiveTextColor = UIHelpers.COLORS.TEXT_GRAY,
+            showInactiveBg = true,
+            barBgColor = null,
+            barWidth = null,
         } = options;
 
         const container = scene.add.container(x, y);
@@ -187,19 +197,33 @@ const UIHelpers = {
         const totalWidth = tabs.length * tabWidth + (tabs.length - 1) * gap;
         const startX = -totalWidth / 2 + tabWidth / 2;
 
+        // Optional full-width dark strip behind the whole tab row
+        if (barBgColor !== null) {
+            const stripWidth = barWidth || (totalWidth + 20);
+            const strip = scene.add.graphics();
+            strip.fillStyle(barBgColor, 1);
+            strip.fillRect(-stripWidth / 2, -tabHeight / 2 - 4, stripWidth, tabHeight + 8);
+            container.add(strip);
+        }
+
         tabs.forEach((tab, index) => {
             const tx = startX + index * (tabWidth + gap);
             const isActive = index === activeIndex;
 
             const tabBg = scene.add.graphics();
-            tabBg.fillStyle(isActive ? UIHelpers.COLORS.TAB_ACTIVE : UIHelpers.COLORS.TAB_INACTIVE, 1);
-            tabBg.fillRoundedRect(-tabWidth / 2, -tabHeight / 2, tabWidth, tabHeight, 8);
+            if (isActive) {
+                tabBg.fillStyle(activeColor, 1);
+                tabBg.fillRoundedRect(-tabWidth / 2, -tabHeight / 2, tabWidth, tabHeight, 8);
+            } else if (showInactiveBg) {
+                tabBg.fillStyle(inactiveColor, 1);
+                tabBg.fillRoundedRect(-tabWidth / 2, -tabHeight / 2, tabWidth, tabHeight, 8);
+            }
 
             const tabLabel = scene.add.text(0, 0, tab.label, {
                 fontSize,
                 fontFamily: 'Arial, sans-serif',
-                color: isActive ? UIHelpers.COLORS.TEXT_WHITE : UIHelpers.COLORS.TEXT_GRAY,
-                fontStyle: isActive ? 'bold' : 'normal',
+                color: isActive ? activeTextColor : inactiveTextColor,
+                fontStyle: 'bold',
             }).setOrigin(0.5);
 
             const tabContainer = scene.add.container(tx, 0, [tabBg, tabLabel]);
@@ -209,7 +233,7 @@ const UIHelpers = {
             tabContainer.add(hitRect);
 
             hitRect.on('pointerup', () => {
-                UIHelpers.setActiveTab(tabButtons, index);
+                UIHelpers.setActiveTab(tabButtons, index, { activeColor, inactiveColor, activeTextColor, inactiveTextColor, showInactiveBg });
                 if (onTabChange) onTabChange(index, tab);
             });
 
@@ -228,15 +252,491 @@ const UIHelpers = {
     /**
      * Highlight a specific tab in a tab bar
      */
-    setActiveTab(tabButtons, activeIndex) {
+    setActiveTab(tabButtons, activeIndex, colorOptions = {}) {
+        const {
+            activeColor = UIHelpers.COLORS.TAB_ACTIVE,
+            inactiveColor = UIHelpers.COLORS.TAB_INACTIVE,
+            activeTextColor = '#ffffff',
+            inactiveTextColor = UIHelpers.COLORS.TEXT_GRAY,
+            showInactiveBg = true,
+        } = colorOptions;
+
         tabButtons.forEach((tab, index) => {
             const isActive = index === activeIndex;
             tab.bg.clear();
-            tab.bg.fillStyle(isActive ? UIHelpers.COLORS.TAB_ACTIVE : UIHelpers.COLORS.TAB_INACTIVE, 1);
-            tab.bg.fillRoundedRect(-tab.tabWidth / 2, -tab.tabHeight / 2, tab.tabWidth, tab.tabHeight, 8);
-            tab.label.setColor(isActive ? UIHelpers.COLORS.TEXT_WHITE : UIHelpers.COLORS.TEXT_GRAY);
-            tab.label.setFontStyle(isActive ? 'bold' : 'normal');
+            if (isActive) {
+                tab.bg.fillStyle(activeColor, 1);
+                tab.bg.fillRoundedRect(-tab.tabWidth / 2, -tab.tabHeight / 2, tab.tabWidth, tab.tabHeight, 8);
+            } else if (showInactiveBg) {
+                tab.bg.fillStyle(inactiveColor, 1);
+                tab.bg.fillRoundedRect(-tab.tabWidth / 2, -tab.tabHeight / 2, tab.tabWidth, tab.tabHeight, 8);
+            }
+            tab.label.setColor(isActive ? activeTextColor : inactiveTextColor);
+            tab.label.setFontStyle('bold');
         });
+    },
+
+    /**
+     * Bold cartoon-style outlined text (white fill + dark stroke + shadow)
+     * Matches the chunky title text seen throughout the reference designs.
+     */
+    createOutlineText(scene, x, y, text, options = {}) {
+        const {
+            fontSize = '18px',
+            color = '#ffffff',
+            strokeColor = '#1a1a1a',
+            strokeThickness = 5,
+            fontStyle = 'bold',
+            shadow = true,
+            align = 'center',
+        } = options;
+
+        const txt = scene.add.text(x, y, text, {
+            fontSize,
+            fontFamily: 'Arial, sans-serif',
+            color,
+            stroke: strokeColor,
+            strokeThickness,
+            fontStyle,
+            align,
+        }).setOrigin(0.5);
+
+        if (shadow) {
+            txt.setShadow(0, 2, '#000000', 3, false, true);
+        }
+
+        return txt;
+    },
+
+    /**
+     * Draw a pill/rounded-rect background with a subtle glossy highlight.
+     * Returns the Graphics object only (caller positions/adds it).
+     */
+    drawPill(graphics, width, height, options = {}) {
+        const {
+            bgColor = UIHelpers.COLORS.ACCENT_PURPLE,
+            borderColor = null,
+            borderWidth = 3,
+            cornerRadius = height / 2,
+            gloss = true,
+        } = options;
+
+        graphics.clear();
+        graphics.fillStyle(bgColor, 1);
+        graphics.fillRoundedRect(-width / 2, -height / 2, width, height, cornerRadius);
+
+        if (gloss) {
+            graphics.fillStyle(0xffffff, 0.16);
+            graphics.fillRoundedRect(-width / 2 + 3, -height / 2 + 3, width - 6, height * 0.45, cornerRadius * 0.7);
+        }
+
+        if (borderColor !== null) {
+            graphics.lineStyle(borderWidth, borderColor, 1);
+            graphics.strokeRoundedRect(-width / 2, -height / 2, width, height, cornerRadius);
+        }
+    },
+
+    /**
+     * Create an interactive pill-shaped button with an outlined bold label.
+     * Used for things like "Draw 1x", "STAGE 1", "PLAY ABYSS", "GRADE UP".
+     */
+    createPillButton(scene, x, y, width, height, text, options = {}) {
+        const {
+            fontSize = '15px',
+            bgColor = UIHelpers.COLORS.ACCENT_GOLD,
+            borderColor = 0x8a5a00,
+            textColor = '#ffffff',
+            strokeColor = '#7a4a00',
+            strokeThickness = 4,
+            cornerRadius = height / 2,
+            onClick = null,
+            iconKey = null,
+            iconScale = 0.4,
+            disabled = false,
+        } = options;
+
+        const container = scene.add.container(x, y);
+
+        const bg = scene.add.graphics();
+        UIHelpers.drawPill(bg, width, height, { bgColor, borderColor, cornerRadius });
+        container.add(bg);
+
+        const label = scene.add.text(iconKey ? 8 : 0, 0, text, {
+            fontSize,
+            fontFamily: 'Arial, sans-serif',
+            color: textColor,
+            stroke: strokeColor,
+            strokeThickness,
+            fontStyle: 'bold',
+        }).setOrigin(0.5);
+        container.add(label);
+
+        if (iconKey && scene.textures.exists(iconKey)) {
+            const icon = scene.add.image(-width / 2 + height * 0.45, 0, iconKey).setScale(iconScale);
+            container.add(icon);
+        }
+
+        if (!disabled) {
+            const hitArea = scene.add.rectangle(0, 0, width, height, 0x000000, 0);
+            hitArea.setInteractive({ useHandCursor: true });
+            container.add(hitArea);
+
+            hitArea.on('pointerover', () => container.setScale(1.03));
+            hitArea.on('pointerout', () => container.setScale(1.0));
+            hitArea.on('pointerdown', () => container.setScale(0.95));
+            hitArea.on('pointerup', () => {
+                container.setScale(1.0);
+                if (onClick) onClick();
+            });
+        } else {
+            container.setAlpha(0.5);
+        }
+
+        container.bg = bg;
+        container.label = label;
+        return container;
+    },
+
+    /**
+     * Small pill containing an icon + amount, used for currency/cost tags
+     * (e.g. the little "300 diamond" / "1000 star" chips in the reference art).
+     */
+    createCurrencyPill(scene, x, y, iconKey, amount, options = {}) {
+        const {
+            width = 84,
+            height = 26,
+            bgColor = 0x1c2b45,
+            borderColor = 0x3d5a8a,
+            fontSize = '12px',
+            textColor = '#ffffff',
+            iconScale = 0.22,
+        } = options;
+
+        const container = scene.add.container(x, y);
+
+        const bg = scene.add.graphics();
+        UIHelpers.drawPill(bg, width, height, { bgColor, borderColor, cornerRadius: height / 2, gloss: false });
+        container.add(bg);
+
+        if (scene.textures.exists(iconKey)) {
+            const icon = scene.add.image(-width / 2 + 15, 0, iconKey).setScale(iconScale);
+            container.add(icon);
+        }
+
+        const amountText = scene.add.text(4, 0, UIHelpers.formatNumber(amount), {
+            fontSize,
+            fontFamily: 'Arial, sans-serif',
+            color: textColor,
+            fontStyle: 'bold',
+        }).setOrigin(0, 0.5);
+        container.add(amountText);
+
+        container.amountText = amountText;
+        return container;
+    },
+
+    /**
+     * Small circular "?" info badge (top-right corner of chest/gacha cards)
+     */
+    createInfoBadge(scene, x, y, options = {}) {
+        const { radius = 11, onClick = null } = options;
+        const container = scene.add.container(x, y);
+
+        const bg = scene.add.graphics();
+        bg.fillStyle(0x000000, 0.4);
+        bg.fillCircle(0, 0, radius);
+        bg.lineStyle(1.5, 0xffffff, 0.6);
+        bg.strokeCircle(0, 0, radius);
+        container.add(bg);
+
+        const q = scene.add.text(0, 0, '?', {
+            fontSize: '13px',
+            fontFamily: 'Arial, sans-serif',
+            color: '#ffffff',
+            fontStyle: 'bold',
+        }).setOrigin(0.5);
+        container.add(q);
+
+        const hit = scene.add.circle(0, 0, radius, 0x000000, 0);
+        hit.setInteractive({ useHandCursor: true });
+        container.add(hit);
+        hit.on('pointerup', () => { if (onClick) onClick(); });
+
+        return container;
+    },
+
+    /**
+     * Curved "back" arrow button, top-left of banner headers
+     */
+    createBackButton(scene, x, y, onClick = null) {
+        const container = scene.add.container(x, y);
+        const radius = 20;
+
+        const bg = scene.add.graphics();
+        bg.fillStyle(0x000000, 0.25);
+        bg.fillCircle(0, 0, radius);
+        container.add(bg);
+
+        const arrow = scene.add.text(0, -1, '\u21A9', {
+            fontSize: '22px',
+            fontFamily: 'Arial, sans-serif',
+            color: '#111111',
+            fontStyle: 'bold',
+        }).setOrigin(0.5);
+        container.add(arrow);
+
+        const hit = scene.add.circle(0, 0, radius, 0x000000, 0);
+        hit.setInteractive({ useHandCursor: true });
+        container.add(hit);
+
+        hit.on('pointerover', () => container.setScale(1.1));
+        hit.on('pointerout', () => container.setScale(1.0));
+        hit.on('pointerup', () => {
+            container.setScale(1.0);
+            if (onClick) onClick();
+        });
+
+        return container;
+    },
+
+    /**
+     * Decorative sunburst / rays behind banners (matches the yellow rays
+     * behind the coin pile character art, and red rays behind the Daily
+     * Special pedestal).
+     */
+    createSunburst(scene, x, y, options = {}) {
+        const {
+            radius = 200,
+            rayCount = 16,
+            colorA = 0xffdd55,
+            colorB = 0xffb700,
+            alpha = 1,
+        } = options;
+
+        const g = scene.add.graphics();
+        g.setPosition(x, y);
+        const angleStep = (Math.PI * 2) / rayCount;
+
+        for (let i = 0; i < rayCount; i++) {
+            const a0 = i * angleStep;
+            const a1 = a0 + angleStep;
+            const color = i % 2 === 0 ? colorA : colorB;
+            g.fillStyle(color, alpha);
+            g.beginPath();
+            g.moveTo(0, 0);
+            g.lineTo(Math.cos(a0) * radius, Math.sin(a0) * radius);
+            g.lineTo(Math.cos(a1) * radius, Math.sin(a1) * radius);
+            g.closePath();
+            g.fillPath();
+        }
+
+        return g;
+    },
+
+    /**
+     * Soft radial glow made of concentric fading circles (purple equip
+     * background glow, red abyss glow, etc).
+     */
+    createRadialGlow(scene, x, y, options = {}) {
+        const {
+            radius = 160,
+            steps = 6,
+            color = UIHelpers.COLORS.ACCENT_PURPLE,
+            maxAlpha = 0.35,
+        } = options;
+
+        const g = scene.add.graphics();
+        g.setPosition(x, y);
+        for (let i = steps; i > 0; i--) {
+            const r = (radius / steps) * i;
+            const alpha = maxAlpha * (1 - i / (steps + 1));
+            g.fillStyle(color, alpha);
+            g.fillCircle(0, 0, r);
+        }
+        return g;
+    },
+
+    /**
+     * Full-width section header strip with centered bold text
+     * (e.g. "Diamond", "Gold", "Energy", "Daily Special")
+     */
+    createSectionHeader(scene, x, y, width, text, options = {}) {
+        const {
+            height = 30,
+            bgColor = 0x33373f,
+            bgAlpha = 0.9,
+            fontSize = '15px',
+            textColor = '#ffffff',
+        } = options;
+
+        const container = scene.add.container(x, y);
+        const bg = scene.add.graphics();
+        bg.fillStyle(bgColor, bgAlpha);
+        bg.fillRect(-width / 2, -height / 2, width, height);
+        container.add(bg);
+
+        const label = UIHelpers.createOutlineText(scene, 0, 0, text, {
+            fontSize,
+            color: textColor,
+            strokeThickness: 4,
+        });
+        container.add(label);
+
+        return container;
+    },
+
+    /**
+     * Rounded menu icon box used for the Lobby side icons
+     * (Ranking / Pass / Package / Mail / Mission / Notice)
+     */
+    createMenuIconBox(scene, x, y, iconKey, label, options = {}) {
+        const {
+            size = 52,
+            onClick = null,
+            bgColor = 0x000000,
+            bgAlpha = 0.35,
+            borderColor = 0xffffff,
+            borderAlpha = 0.5,
+            iconScale = 0.5,
+        } = options;
+
+        const container = scene.add.container(x, y);
+
+        const bg = scene.add.graphics();
+        bg.fillStyle(bgColor, bgAlpha);
+        bg.fillRoundedRect(-size / 2, -size / 2, size, size, 10);
+        bg.lineStyle(1.5, borderColor, borderAlpha);
+        bg.strokeRoundedRect(-size / 2, -size / 2, size, size, 10);
+        container.add(bg);
+
+        if (iconKey && scene.textures.exists(iconKey)) {
+            const icon = scene.add.image(0, -2, iconKey).setScale(iconScale);
+            container.add(icon);
+        }
+
+        if (label) {
+            const txt = UIHelpers.createOutlineText(scene, 0, size / 2 + 11, label, {
+                fontSize: '10px',
+                strokeThickness: 3,
+            });
+            container.add(txt);
+        }
+
+        const hit = scene.add.rectangle(0, 0, size, size + 20, 0x000000, 0);
+        hit.setInteractive({ useHandCursor: true });
+        container.add(hit);
+
+        hit.on('pointerover', () => container.setScale(1.06));
+        hit.on('pointerout', () => container.setScale(1.0));
+        hit.on('pointerup', () => {
+            container.setScale(1.0);
+            if (onClick) onClick();
+        });
+
+        return container;
+    },
+
+    /**
+     * Draw a stylized treasure chest using vector graphics.
+     * variant: 'wood' | 'blue' | 'mystery'
+     */
+    createChestIcon(scene, x, y, options = {}) {
+        const { size = 90, variant = 'wood' } = options;
+        const container = scene.add.container(x, y);
+        const g = scene.add.graphics();
+        container.add(g);
+
+        const palettes = {
+            wood: { body: 0x8a5a2e, bodyDark: 0x6b4522, band: 0xc9c9d1, bandDark: 0x8f8f99, lock: 0xffd54f },
+            blue: { body: 0x2f5fa8, bodyDark: 0x1f3f78, band: 0xbfe3ff, bandDark: 0x7fb8e8, lock: 0x4fd1ff },
+            mystery: { body: 0x7a4fb0, bodyDark: 0x54327f, band: 0x3fd6c6, bandDark: 0x2a9c90, lock: 0xffd54f },
+        };
+        const p = palettes[variant] || palettes.wood;
+
+        const w = size;
+        const h = size * 0.78;
+        const lidH = h * 0.42;
+
+        // Body
+        g.fillStyle(p.body, 1);
+        g.fillRoundedRect(-w / 2, -h / 2 + lidH, w, h - lidH, 8);
+        g.lineStyle(3, p.bodyDark, 1);
+        g.strokeRoundedRect(-w / 2, -h / 2 + lidH, w, h - lidH, 8);
+
+        // Lid
+        g.fillStyle(p.body, 1);
+        g.fillRoundedRect(-w / 2, -h / 2, w, lidH + 6, 10);
+        g.lineStyle(3, p.bodyDark, 1);
+        g.strokeRoundedRect(-w / 2, -h / 2, w, lidH + 6, 10);
+
+        // Metal bands (vertical)
+        [-w * 0.28, w * 0.28].forEach((bx) => {
+            g.fillStyle(p.band, 1);
+            g.fillRect(bx - 5, -h / 2, 10, h);
+            g.lineStyle(1.5, p.bandDark, 1);
+            g.strokeRect(bx - 5, -h / 2, 10, h);
+        });
+
+        // Horizontal trim where lid meets body
+        g.fillStyle(p.band, 1);
+        g.fillRect(-w / 2, -h / 2 + lidH - 3, w, 6);
+
+        // Lock plate
+        g.fillStyle(p.band, 1);
+        g.fillRoundedRect(-11, -h / 2 + lidH - 10, 22, 22, 4);
+        g.fillStyle(p.lock, 1);
+        g.fillCircle(0, -h / 2 + lidH + 1, 6);
+
+        if (variant === 'mystery') {
+            const q = UIHelpers.createOutlineText(scene, 0, -h * 0.06, '?', {
+                fontSize: `${Math.round(size * 0.42)}px`,
+                color: '#ffd54f',
+                strokeColor: '#5a3a00',
+                strokeThickness: 5,
+            });
+            container.add(q);
+        } else if (variant === 'blue') {
+            g.fillStyle(0x66e0ff, 1);
+            g.fillTriangle(0, -h / 2 - 6, -10, -h / 2 + 10, 10, -h / 2 + 10);
+            g.fillStyle(0xffffff, 0.85);
+            g.fillCircle(0, -h / 2 + 2, 4);
+        }
+
+        return container;
+    },
+
+    /**
+     * Gold hexagonal emblem/badge (used for "Exclusive S-Gear" style icons)
+     */
+    createEmblemIcon(scene, x, y, options = {}) {
+        const { size = 90, gemColor = 0x9b59f7 } = options;
+        const container = scene.add.container(x, y);
+        const g = scene.add.graphics();
+        container.add(g);
+
+        const r = size / 2;
+        const pts = [];
+        for (let i = 0; i < 6; i++) {
+            const a = (Math.PI / 3) * i - Math.PI / 2;
+            pts.push(new Phaser.Geom.Point(Math.cos(a) * r, Math.sin(a) * r));
+        }
+
+        g.fillStyle(0xffd700, 1);
+        g.fillPoints(pts, true);
+        g.lineStyle(4, 0xb8860b, 1);
+        g.strokePoints(pts, true);
+
+        g.fillStyle(0xffe97a, 1);
+        g.fillCircle(0, 0, r * 0.55);
+        g.lineStyle(2, 0xb8860b, 1);
+        g.strokeCircle(0, 0, r * 0.55);
+
+        g.fillStyle(gemColor, 1);
+        g.fillCircle(0, 0, r * 0.28);
+        g.fillStyle(0xffffff, 0.6);
+        g.fillCircle(-r * 0.08, -r * 0.08, r * 0.08);
+
+        return container;
     },
 
     /**

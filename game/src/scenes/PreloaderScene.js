@@ -143,6 +143,7 @@ class PreloaderScene extends Phaser.Scene {
         this.load.image('remove_bg_2', basePath + 'Remove_background_provide_PNG_202607141840.png');
         this.load.image('zoom_char_1', basePath + 'Zoom_image_remove_background_PNG_202607141816.png');
         this.load.image('zoom_char_2', basePath + 'Zoom_image_remove_background_PNG_202607141820.png');
+        this.load.image('star_icon', basePath + 'ChatGPT Image Jul 13, 2026, 01_38_16 PM.png');
     }
 
     create() {

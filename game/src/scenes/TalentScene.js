@@ -10,24 +10,20 @@ class TalentScene extends Phaser.Scene {
     create() {
         const { width, height } = this.scale;
 
-        // Background
-        if (this.textures.exists('bg_talent')) {
-            const bg = this.add.image(width / 2, height / 2, 'bg_talent');
-            bg.setDisplaySize(width, height);
-        } else {
-            this.cameras.main.setBackgroundColor(UIHelpers.COLORS.DARK_BG);
-        }
+        // Dark background (matches reference "Talent Skill" screen)
+        this.cameras.main.setBackgroundColor(0x232323);
 
         // Top bar
         this.topBar = new TopBar(this);
 
-        // Title
-        this.add.text(width / 2, UIHelpers.CONTENT_Y_START + 20, 'Talent Skills', {
-            fontSize: '18px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_WHITE,
-            fontStyle: 'bold',
-        }).setOrigin(0.5);
+        // Title strip
+        const titleBg = this.add.graphics();
+        titleBg.fillStyle(0x2a2a2a, 1);
+        titleBg.fillRect(0, UIHelpers.CONTENT_Y_START - 4, width, 34);
+        UIHelpers.createOutlineText(this, width / 2, UIHelpers.CONTENT_Y_START + 13, 'Talent Skill', {
+            fontSize: '19px',
+            strokeThickness: 4,
+        });
 
         // Player gold (for upgrade cost tracking)
         this.playerGold = 25000;
@@ -75,9 +71,8 @@ class TalentScene extends Phaser.Scene {
     createSkillGrid() {
         const { width } = this.scale;
         const columns = 4;
-        const rows = 4;
-        const tileSize = 74;
-        const gap = 10;
+        const tileSize = 76;
+        const gap = 14;
         const gridWidth = columns * tileSize + (columns - 1) * gap;
         const startX = (width - gridWidth) / 2 + tileSize / 2;
         const startY = UIHelpers.CONTENT_Y_START + 60;
@@ -90,42 +85,80 @@ class TalentScene extends Phaser.Scene {
             const x = startX + col * (tileSize + gap);
             const y = startY + row * (tileSize + gap);
 
-            const tile = UIHelpers.createSkillTile(this, x, y, skill, {
-                size: tileSize,
-                onClick: (data) => this.onSkillSelect(data, index),
-            });
-
+            const tile = this.createPlainSkillTile(x, y, skill, index);
             this.skillTiles.push(tile);
         });
+    }
+
+    /**
+     * Plain gray rounded-square tile with just the icon centered
+     * (matches the clean "Talent Skill" reference grid - no level text
+     * on the tile face, selection is shown via border highlight instead).
+     */
+    createPlainSkillTile(x, y, skillData, index) {
+        const size = 68;
+        const container = this.add.container(x, y);
+
+        const bg = this.add.graphics();
+        bg.fillStyle(0x3a3a3a, 1);
+        bg.fillRoundedRect(-size / 2, -size / 2, size, size, 10);
+        container.add(bg);
+
+        if (skillData.iconKey && this.textures.exists(skillData.iconKey)) {
+            const icon = this.add.image(0, 0, skillData.iconKey).setScale(0.45);
+            container.add(icon);
+        }
+
+        const hit = this.add.rectangle(0, 0, size, size, 0x000000, 0);
+        hit.setInteractive({ useHandCursor: true });
+        container.add(hit);
+
+        hit.on('pointerover', () => {
+            bg.clear();
+            bg.fillStyle(0x4a4a4a, 1);
+            bg.fillRoundedRect(-size / 2, -size / 2, size, size, 10);
+        });
+        hit.on('pointerout', () => {
+            if (this.selectedIndex === index) return;
+            bg.clear();
+            bg.fillStyle(0x3a3a3a, 1);
+            bg.fillRoundedRect(-size / 2, -size / 2, size, size, 10);
+        });
+        hit.on('pointerup', () => this.onSkillSelect(skillData, index));
+
+        container.bg = bg;
+        container.size = size;
+        return container;
+    }
+
+    highlightTileBg(index, active) {
+        const tile = this.skillTiles[index];
+        if (!tile) return;
+        tile.bg.clear();
+        if (active) {
+            tile.bg.fillStyle(0x5a4a1a, 1);
+            tile.bg.fillRoundedRect(-tile.size / 2, -tile.size / 2, tile.size, tile.size, 10);
+            tile.bg.lineStyle(3, UIHelpers.COLORS.ACCENT_GOLD, 1);
+            tile.bg.strokeRoundedRect(-tile.size / 2, -tile.size / 2, tile.size, tile.size, 10);
+        } else {
+            tile.bg.fillStyle(0x3a3a3a, 1);
+            tile.bg.fillRoundedRect(-tile.size / 2, -tile.size / 2, tile.size, tile.size, 10);
+        }
     }
 
     createInfoPanel() {
         const { width } = this.scale;
         const panelY = UIHelpers.CONTENT_Y_START + 420;
 
-        // Info panel background
-        this.infoPanelBg = UIHelpers.createPanel(this, width / 2, panelY, width - 40, 90, {
-            bgColor: 0x1a1a2e,
-            alpha: 0.9,
-            borderColor: UIHelpers.COLORS.SLOT_BORDER,
-        });
-
-        // Default info text
-        this.infoTitle = this.add.text(width / 2, panelY - 20, 'Select a skill to upgrade', {
-            fontSize: '14px',
+        this.infoTitle = this.add.text(width / 2, panelY - 10, 'Select a skill to upgrade', {
+            fontSize: '13px',
             fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_WHITE,
+            color: UIHelpers.COLORS.TEXT_GRAY,
             fontStyle: 'bold',
         }).setOrigin(0.5);
 
-        this.infoDetail = this.add.text(width / 2, panelY + 8, 'Tap any skill tile above', {
-            fontSize: '11px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GRAY,
-        }).setOrigin(0.5);
-
-        this.infoLevel = this.add.text(width / 2, panelY + 28, '', {
-            fontSize: '11px',
+        this.infoLevel = this.add.text(width / 2, panelY + 12, '', {
+            fontSize: '12px',
             fontFamily: 'Arial, sans-serif',
             color: UIHelpers.COLORS.TEXT_GOLD,
         }).setOrigin(0.5);
@@ -133,80 +166,49 @@ class TalentScene extends Phaser.Scene {
 
     createUpgradeButton() {
         const { width, height } = this.scale;
-        const btnY = height - UIHelpers.BOTTOM_NAV_HEIGHT - 50;
+        const btnY = height - UIHelpers.BOTTOM_NAV_HEIGHT - 46;
 
-        // Gold cost display
-        this.costDisplay = this.add.container(width / 2, btnY - 25);
-        const costIcon = this.textures.exists('currency_gold')
-            ? this.add.image(-40, 0, 'currency_gold').setScale(0.2)
-            : this.add.graphics().fillStyle(UIHelpers.COLORS.ACCENT_GOLD, 1).fillCircle(-40, 0, 8);
-        this.costDisplay.add(costIcon);
-
-        this.costText = this.add.text(-20, 0, '10,000', {
-            fontSize: '13px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GOLD,
-            fontStyle: 'bold',
-        }).setOrigin(0, 0.5);
-        this.costDisplay.add(this.costText);
-        this.costDisplay.setAlpha(0.5);
-
-        // Upgrade button
-        this.upgradeBtn = UIHelpers.createButton(this, width / 2, btnY + 10, 200, 46, 'UPGRADE', {
-            fontSize: '16px',
+        // Large gold pill button showing cost, matches reference "10000" button
+        this.upgradeBtn = UIHelpers.createPillButton(this, width / 2, btnY, 220, 52, '10000', {
+            fontSize: '24px',
             bgColor: UIHelpers.COLORS.ACCENT_GOLD,
-            hoverColor: 0xffe44d,
-            activeColor: 0xccaa00,
-            cornerRadius: 23,
+            borderColor: 0x8a5a00,
+            strokeColor: '#7a4a00',
+            cornerRadius: 26,
+            iconKey: this.textures.exists('currency_gold') ? 'currency_gold' : null,
+            iconScale: 0.22,
             onClick: () => this.onUpgradeClick(),
         });
         this.upgradeBtn.setAlpha(0.5); // Disabled until skill selected
+        this.upgradeCostLabel = this.upgradeBtn.label;
     }
 
     onSkillSelect(skillData, index) {
+        const prevIndex = this.selectedIndex;
         this.selectedSkill = skillData;
         this.selectedIndex = index;
 
-        // Update info panel
+        // Update info text
         this.infoTitle.setText(skillData.name);
         this.infoTitle.setColor('#ffffff');
 
         const nextLevel = skillData.level + 1;
         if (skillData.level >= skillData.maxLevel) {
-            this.infoDetail.setText('MAX LEVEL REACHED');
-            this.infoDetail.setColor('#ffd700');
-            this.infoLevel.setText(`Level: ${skillData.level}/${skillData.maxLevel}`);
+            this.infoLevel.setText('MAX LEVEL REACHED');
+            this.infoLevel.setColor('#ffd700');
             this.upgradeBtn.setAlpha(0.3);
-            this.costDisplay.setAlpha(0.3);
         } else {
-            this.infoDetail.setText(`Increases effect by +${nextLevel * 5}%`);
-            this.infoDetail.setColor(UIHelpers.COLORS.TEXT_GRAY);
-            this.infoLevel.setText(`Level: ${skillData.level} → ${nextLevel} / ${skillData.maxLevel}`);
-            this.costText.setText(UIHelpers.formatNumber(skillData.cost));
+            this.infoLevel.setText(`Level: ${skillData.level} \u2192 ${nextLevel} / ${skillData.maxLevel}`);
+            this.infoLevel.setColor(UIHelpers.COLORS.TEXT_GOLD);
+            this.upgradeCostLabel.setText(UIHelpers.formatNumber(skillData.cost));
             this.upgradeBtn.setAlpha(1);
-            this.costDisplay.setAlpha(1);
         }
 
-        // Highlight selected tile
-        this.highlightSelectedTile(index);
-    }
-
-    highlightSelectedTile(activeIndex) {
-        // Visual pulse on selected tile
-        this.skillTiles.forEach((tile, i) => {
-            tile.setScale(i === activeIndex ? 1.08 : 1.0);
-        });
-
-        if (this.selectedTween) this.selectedTween.stop();
-        this.selectedTween = this.tweens.add({
-            targets: this.skillTiles[activeIndex],
-            scaleX: 1.12,
-            scaleY: 1.12,
-            duration: 600,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut',
-        });
+        // Highlight selected tile border, un-highlight previous
+        if (prevIndex !== undefined && prevIndex !== index) {
+            this.highlightTileBg(prevIndex, false);
+        }
+        this.highlightTileBg(index, true);
     }
 
     onUpgradeClick() {
@@ -239,12 +241,6 @@ class TalentScene extends Phaser.Scene {
 
         // Refresh display
         this.onSkillSelect(this.selectedSkill, this.selectedIndex);
-
-        // Rebuild skill grid to show updated levels
-        this.skillTiles.forEach(tile => tile.destroy());
-        this.skillTiles = [];
-        this.createSkillGrid();
-        this.highlightSelectedTile(this.selectedIndex);
     }
 
     showFeedback(message, color) {

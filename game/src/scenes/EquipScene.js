@@ -1,6 +1,8 @@
 /**
  * EquipScene.js - Equipment/Character scene with sub-tabs and gear slots
- * Sub-tabs: Character, Equip, Skill, Grade, Fuse
+ * Redesigned to match reference art: purple radial-glow header with 6
+ * outlined equipment slot placeholders, a dark Character/Equip/Skill tab
+ * bar (yellow active pill + underline), and a Grade/Fuse button row.
  */
 
 class EquipScene extends Phaser.Scene {
@@ -11,22 +13,30 @@ class EquipScene extends Phaser.Scene {
     create() {
         const { width, height } = this.scale;
 
-        // Background
-        if (this.textures.exists('bg_equip')) {
-            const bg = this.add.image(width / 2, height / 2, 'bg_equip');
-            bg.setDisplaySize(width, height);
-        } else {
-            this.cameras.main.setBackgroundColor(UIHelpers.COLORS.DARK_BG);
-        }
+        // Dark base background
+        this.cameras.main.setBackgroundColor(0x2a2a2a);
 
         // Top bar
         this.topBar = new TopBar(this);
 
-        // Sub-tabs
+        this.glowAreaY = UIHelpers.CONTENT_Y_START;
+        this.glowAreaHeight = 300;
+
+        // Purple radial-glow panel with 6 equipment slot placeholders
+        this.createGlowPanel();
+        this.createEquipSlots();
+
+        // Character / Equip / Skill tab bar
+        this.tabBarY = this.glowAreaY + this.glowAreaHeight + 22;
         this.activeSubTab = 0;
         this.createSubTabs();
 
-        // Content area - default to "Character" tab
+        // Grade / Fuse button row
+        this.gradeFuseY = this.tabBarY + 38;
+        this.createGradeFuseRow();
+
+        // Content area (below Grade/Fuse row) - default to "Character" tab
+        this.contentY = this.gradeFuseY + 40;
         this.contentContainer = this.add.container(0, 0);
         this.showCharacterPanel();
 
@@ -36,23 +46,135 @@ class EquipScene extends Phaser.Scene {
         UIHelpers.fadeInScene(this);
     }
 
+    createGlowPanel() {
+        const { width } = this.scale;
+        const centerX = width / 2;
+        const centerY = this.glowAreaY + this.glowAreaHeight / 2;
+
+        // Dark backing so the glow reads clearly against the scene bg
+        const backing = this.add.graphics();
+        backing.fillStyle(0x1c1c1c, 1);
+        backing.fillRect(0, this.glowAreaY, width, this.glowAreaHeight);
+
+        // Mask the glow to the panel area
+        const maskShape = this.make.graphics({ x: 0, y: 0, add: false });
+        maskShape.fillRect(0, this.glowAreaY, width, this.glowAreaHeight);
+
+        const glow = UIHelpers.createRadialGlow(this, centerX, centerY, {
+            radius: width * 0.75,
+            steps: 8,
+            color: UIHelpers.COLORS.ACCENT_PURPLE,
+            maxAlpha: 0.9,
+        });
+        glow.setMask(maskShape.createGeometryMask());
+
+        // Base purple wash so corners aren't pure black
+        const wash = this.add.graphics();
+        wash.fillStyle(0x5a1fb0, 0.5);
+        wash.fillRect(0, this.glowAreaY, width, this.glowAreaHeight);
+        wash.setDepth(-1);
+    }
+
+    /**
+     * 6 outlined "empty" equipment slot placeholders positioned like the
+     * reference: hat (TL), necklace (TR), ring (ML), pouch/belt (MR),
+     * shirt (BL), boots (BR).
+     */
+    createEquipSlots() {
+        const { width } = this.scale;
+        const size = 66;
+        const leftX = 20 + size / 2 + 6;
+        const rightX = width - 20 - size / 2 - 6;
+        const rowGap = 92;
+        const topY = this.glowAreaY + 40 + size / 2;
+
+        this.equipSlotDefs = [
+            { key: 'hat', icon: 'equip_hat', x: leftX, y: topY },
+            { key: 'necklace', icon: 'equip_necklace', x: rightX, y: topY },
+            { key: 'ring', icon: 'equip_ring', x: leftX, y: topY + rowGap },
+            { key: 'belt', icon: 'equip_belt', x: rightX, y: topY + rowGap },
+            { key: 'shirt', icon: 'equip_shirt', x: leftX, y: topY + rowGap * 2 },
+            { key: 'boots', icon: 'equip_boots', x: rightX, y: topY + rowGap * 2 },
+        ];
+
+        this.equipSlots = this.equipSlotDefs.map((slot) => this.createGhostSlot(slot, size));
+    }
+
+    createGhostSlot(slot, size) {
+        const container = this.add.container(slot.x, slot.y);
+
+        const bg = this.add.graphics();
+        bg.lineStyle(2, 0xffffff, 0.55);
+        bg.strokeRoundedRect(-size / 2, -size / 2, size, size, 10);
+        container.add(bg);
+
+        if (slot.icon && this.textures.exists(slot.icon)) {
+            const icon = this.add.image(0, 0, slot.icon).setScale(0.5).setAlpha(0.55);
+            container.add(icon);
+        }
+
+        const hit = this.add.rectangle(0, 0, size, size, 0x000000, 0);
+        hit.setInteractive({ useHandCursor: true });
+        container.add(hit);
+
+        hit.on('pointerover', () => bg.setAlpha(1));
+        hit.on('pointerout', () => bg.setAlpha(0.75));
+        hit.on('pointerup', () => this.onEquipSlotClick(slot.key));
+
+        return container;
+    }
+
     createSubTabs() {
         const { width } = this.scale;
         const tabs = [
             { label: 'Character' },
             { label: 'Equip' },
             { label: 'Skill' },
-            { label: 'Grade' },
-            { label: 'Fuse' },
         ];
 
-        this.tabBar = UIHelpers.createTabBar(this, width / 2, UIHelpers.CONTENT_Y_START + 20, tabs, {
-            tabWidth: 75,
-            tabHeight: 32,
-            gap: 4,
+        // Dark strip behind the tabs
+        const strip = this.add.graphics();
+        strip.fillStyle(0x000000, 0.6);
+        strip.fillRect(0, this.tabBarY - 18, width, 36);
+        // Yellow underline
+        strip.fillStyle(UIHelpers.COLORS.ACCENT_GOLD, 1);
+        strip.fillRect(0, this.tabBarY + 18, width, 2);
+
+        this.tabBar = UIHelpers.createTabBar(this, width / 2, this.tabBarY, tabs, {
+            tabWidth: width / 3,
+            tabHeight: 34,
+            gap: 0,
             activeIndex: 0,
-            fontSize: '11px',
+            fontSize: '14px',
+            activeColor: UIHelpers.COLORS.ACCENT_GOLD,
+            inactiveColor: 0x000000,
+            showInactiveBg: false,
+            activeTextColor: '#3a2a00',
+            inactiveTextColor: '#ffffff',
             onTabChange: (index, tab) => this.onSubTabChange(index, tab),
+        });
+    }
+
+    createGradeFuseRow() {
+        const { width } = this.scale;
+        const y = this.gradeFuseY;
+
+        this.gradeBtn = UIHelpers.createPillButton(this, 70, y, 120, 32, 'Grade', {
+            fontSize: '15px',
+            bgColor: UIHelpers.COLORS.ACCENT_GOLD,
+            borderColor: 0x8a5a00,
+            strokeColor: '#7a4a00',
+            cornerRadius: 16,
+            onClick: () => this.showGradePanel(),
+        });
+
+        this.fuseBtn = UIHelpers.createPillButton(this, width - 70, y, 120, 32, 'Fuse', {
+            fontSize: '15px',
+            bgColor: UIHelpers.COLORS.ACCENT_GOLD,
+            borderColor: 0x8a5a00,
+            strokeColor: '#7a4a00',
+            cornerRadius: 16,
+            onClick: () => this.showFusePanel(),
         });
     }
 
@@ -65,26 +187,15 @@ class EquipScene extends Phaser.Scene {
             case 0: this.showCharacterPanel(); break;
             case 1: this.showEquipPanel(); break;
             case 2: this.showSkillPanel(); break;
-            case 3: this.showGradePanel(); break;
-            case 4: this.showFusePanel(); break;
         }
     }
 
     showCharacterPanel() {
-        const { width, height } = this.scale;
+        const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 60;
-
-        // Character display
-        let charKey = this.textures.exists('zoom_char_2') ? 'zoom_char_2' : 'zoom_char_1';
-        if (this.textures.exists(charKey)) {
-            const char = this.add.image(centerX, contentY + 180, charKey);
-            char.setScale(0.55);
-            this.contentContainer.add(char);
-        }
 
         // Stats panel
-        const statsY = contentY + 350;
+        const statsY = this.contentY + 30;
         const stats = [
             { label: 'ATK', value: '1,250', color: '#ff4757' },
             { label: 'DEF', value: '840', color: '#2ed573' },
@@ -124,51 +235,21 @@ class EquipScene extends Phaser.Scene {
     showEquipPanel() {
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 80;
+        const infoY = this.contentY + 40;
 
-        // Equipment slots layout (3x2 grid around character)
-        const slots = [
-            { key: 'hat', label: 'Hat', icon: 'equip_hat', x: -100, y: 0 },
-            { key: 'necklace', label: 'Necklace', icon: 'equip_necklace', x: -100, y: 90 },
-            { key: 'ring', label: 'Ring', icon: 'equip_ring', x: -100, y: 180 },
-            { key: 'belt', label: 'Belt', icon: 'equip_belt', x: 100, y: 0 },
-            { key: 'shirt', label: 'Armor', icon: 'equip_shirt', x: 100, y: 90 },
-            { key: 'boots', label: 'Boots', icon: 'equip_boots', x: 100, y: 180 },
-        ];
-
-        // Character in center
-        if (this.textures.exists('zoom_char_1')) {
-            const char = this.add.image(centerX, contentY + 140, 'zoom_char_1');
-            char.setScale(0.4);
-            char.setAlpha(0.7);
-            this.contentContainer.add(char);
-        }
-
-        // Equipment slots
-        slots.forEach((slot) => {
-            const slotWidget = UIHelpers.createEquipSlot(this, centerX + slot.x, contentY + slot.y + 50, slot.key, {
-                size: 64,
-                iconKey: slot.icon,
-                iconScale: 0.45,
-                label: slot.label,
-                onClick: (key) => this.onEquipSlotClick(key),
-            });
-            this.contentContainer.add(slotWidget);
-        });
-
-        // Equipment info panel at bottom
-        const infoY = contentY + 320;
-        const infoBg = UIHelpers.createPanel(this, centerX, infoY, width - 40, 100, {
+        const infoBg = UIHelpers.createPanel(this, centerX, infoY, width - 40, 90, {
             bgColor: 0x1a1a2e,
             alpha: 0.85,
             borderColor: UIHelpers.COLORS.SLOT_BORDER,
         });
         this.contentContainer.add(infoBg);
 
-        const infoText = this.add.text(centerX, infoY, 'Tap an equipment slot to view details', {
+        const infoText = this.add.text(centerX, infoY, 'Tap an equipment slot above to view details', {
             fontSize: '12px',
             fontFamily: 'Arial, sans-serif',
             color: UIHelpers.COLORS.TEXT_GRAY,
+            align: 'center',
+            wordWrap: { width: width - 80 },
         }).setOrigin(0.5);
         this.contentContainer.add(infoText);
 
@@ -178,9 +259,8 @@ class EquipScene extends Phaser.Scene {
     showSkillPanel() {
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 80;
 
-        const titleText = this.add.text(centerX, contentY, 'Equipped Skills', {
+        const titleText = this.add.text(centerX, this.contentY, 'Equipped Skills', {
             fontSize: '14px',
             fontFamily: 'Arial, sans-serif',
             color: UIHelpers.COLORS.TEXT_WHITE,
@@ -189,7 +269,7 @@ class EquipScene extends Phaser.Scene {
         this.contentContainer.add(titleText);
 
         // 4 skill slots
-        const slotSize = 70;
+        const slotSize = 64;
         const gap = 15;
         const totalW = 4 * slotSize + 3 * gap;
         const startX = centerX - totalW / 2 + slotSize / 2;
@@ -198,7 +278,7 @@ class EquipScene extends Phaser.Scene {
 
         for (let i = 0; i < 4; i++) {
             const sx = startX + i * (slotSize + gap);
-            const slot = UIHelpers.createEquipSlot(this, sx, contentY + 60, `skill_slot_${i}`, {
+            const slot = UIHelpers.createEquipSlot(this, sx, this.contentY + 55, `skill_slot_${i}`, {
                 size: slotSize,
                 iconKey: skillIcons[i],
                 iconScale: 0.4,
@@ -210,9 +290,12 @@ class EquipScene extends Phaser.Scene {
     }
 
     showGradePanel() {
+        this.contentContainer.destroy();
+        this.contentContainer = this.add.container(0, 0);
+
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 120;
+        const contentY = this.contentY;
 
         const text = this.add.text(centerX, contentY, 'Grade Up', {
             fontSize: '18px',
@@ -222,7 +305,7 @@ class EquipScene extends Phaser.Scene {
         }).setOrigin(0.5);
         this.contentContainer.add(text);
 
-        const desc = this.add.text(centerX, contentY + 30, 'Upgrade your character grade\nto unlock new abilities', {
+        const desc = this.add.text(centerX, contentY + 26, 'Upgrade your character grade\nto unlock new abilities', {
             fontSize: '12px',
             fontFamily: 'Arial, sans-serif',
             color: UIHelpers.COLORS.TEXT_GRAY,
@@ -231,7 +314,7 @@ class EquipScene extends Phaser.Scene {
         this.contentContainer.add(desc);
 
         // Grade progress bar
-        const barY = contentY + 80;
+        const barY = contentY + 70;
         const barWidth = width - 80;
         const barBg = this.add.graphics();
         barBg.fillStyle(0x2a2a4a, 1);
@@ -243,7 +326,7 @@ class EquipScene extends Phaser.Scene {
         barFill.fillRoundedRect(centerX - barWidth / 2, barY, barWidth * 0.6, 16, 8);
         this.contentContainer.add(barFill);
 
-        const gradeText = this.add.text(centerX, barY + 30, 'Grade B → Grade A  (60%)', {
+        const gradeText = this.add.text(centerX, barY + 26, 'Grade B \u2192 Grade A  (60%)', {
             fontSize: '11px',
             fontFamily: 'Arial, sans-serif',
             color: UIHelpers.COLORS.TEXT_GOLD,
@@ -251,20 +334,23 @@ class EquipScene extends Phaser.Scene {
         this.contentContainer.add(gradeText);
 
         // Upgrade button
-        const upgradeBtn = UIHelpers.createButton(this, centerX, barY + 80, 160, 42, 'GRADE UP', {
+        const upgradeBtn = UIHelpers.createPillButton(this, centerX, barY + 66, 160, 42, 'GRADE UP', {
             fontSize: '14px',
             bgColor: UIHelpers.COLORS.ACCENT_GOLD,
-            hoverColor: 0xffe44d,
-            activeColor: 0xccaa00,
+            borderColor: 0x8a5a00,
+            strokeColor: '#7a4a00',
             onClick: () => console.log('Grade Up clicked'),
         });
         this.contentContainer.add(upgradeBtn);
     }
 
     showFusePanel() {
+        this.contentContainer.destroy();
+        this.contentContainer = this.add.container(0, 0);
+
         const { width } = this.scale;
         const centerX = width / 2;
-        const contentY = UIHelpers.CONTENT_Y_START + 120;
+        const contentY = this.contentY;
 
         const text = this.add.text(centerX, contentY, 'Fuse Equipment', {
             fontSize: '18px',
@@ -274,7 +360,7 @@ class EquipScene extends Phaser.Scene {
         }).setOrigin(0.5);
         this.contentContainer.add(text);
 
-        const desc = this.add.text(centerX, contentY + 30, 'Combine duplicate equipment\nto create stronger versions', {
+        const desc = this.add.text(centerX, contentY + 26, 'Combine duplicate equipment\nto create stronger versions', {
             fontSize: '12px',
             fontFamily: 'Arial, sans-serif',
             color: UIHelpers.COLORS.TEXT_GRAY,
@@ -283,15 +369,14 @@ class EquipScene extends Phaser.Scene {
         this.contentContainer.add(desc);
 
         // Fuse slots (2 source + 1 result)
-        const slotY = contentY + 110;
+        const slotY = contentY + 90;
         const sourceSlot1 = UIHelpers.createEquipSlot(this, centerX - 80, slotY, 'fuse_src_1', {
-            size: 64,
+            size: 60,
             label: 'Source 1',
             onClick: () => console.log('Fuse source 1'),
         });
         this.contentContainer.add(sourceSlot1);
 
-        // Plus sign
         const plus = this.add.text(centerX, slotY, '+', {
             fontSize: '24px',
             fontFamily: 'Arial, sans-serif',
@@ -301,31 +386,30 @@ class EquipScene extends Phaser.Scene {
         this.contentContainer.add(plus);
 
         const sourceSlot2 = UIHelpers.createEquipSlot(this, centerX + 80, slotY, 'fuse_src_2', {
-            size: 64,
+            size: 60,
             label: 'Source 2',
             onClick: () => console.log('Fuse source 2'),
         });
         this.contentContainer.add(sourceSlot2);
 
-        // Arrow down
-        const arrow = this.add.text(centerX, slotY + 60, '▼', {
+        const arrow = this.add.text(centerX, slotY + 55, '\u25bc', {
             fontSize: '20px',
             color: UIHelpers.COLORS.TEXT_GOLD,
         }).setOrigin(0.5);
         this.contentContainer.add(arrow);
 
-        // Result slot
-        const resultSlot = UIHelpers.createEquipSlot(this, centerX, slotY + 120, 'fuse_result', {
-            size: 72,
+        const resultSlot = UIHelpers.createEquipSlot(this, centerX, slotY + 105, 'fuse_result', {
+            size: 66,
             label: 'Result',
             onClick: () => console.log('Fuse result'),
         });
         this.contentContainer.add(resultSlot);
 
-        // Fuse button
-        const fuseBtn = UIHelpers.createButton(this, centerX, slotY + 200, 160, 42, 'FUSE', {
+        const fuseBtn = UIHelpers.createPillButton(this, centerX, slotY + 175, 160, 42, 'FUSE', {
             fontSize: '14px',
             bgColor: UIHelpers.COLORS.ACCENT_PURPLE,
+            borderColor: 0x4a1a8a,
+            strokeColor: '#3a1470',
             onClick: () => console.log('Fuse clicked'),
         });
         this.contentContainer.add(fuseBtn);

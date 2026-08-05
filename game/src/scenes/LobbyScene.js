@@ -29,7 +29,7 @@ class LobbyScene extends Phaser.Scene {
             diamonds: 500,
         });
 
-        // Side icons (left column)
+        // Side icons (left + right columns, like reference)
         this.createSideIcons();
 
         // Central character display
@@ -46,26 +46,37 @@ class LobbyScene extends Phaser.Scene {
     }
 
     createSideIcons() {
-        const icons = [
-            { key: 'icon_ranking', label: 'Rank', callback: () => this.onSideIconClick('ranking') },
+        const { width } = this.scale;
+        const startY = UIHelpers.CONTENT_Y_START + 55;
+        const spacing = 68;
+
+        const leftIcons = [
+            { key: 'icon_ranking', label: 'Ranking', callback: () => this.onSideIconClick('ranking') },
             { key: 'icon_pass', label: 'Pass', callback: () => this.onSideIconClick('pass') },
-            { key: 'icon_package', label: 'Pack', callback: () => this.onSideIconClick('package') },
+            { key: 'icon_package', label: 'Pakage', callback: () => this.onSideIconClick('package') },
+        ];
+
+        const rightIcons = [
             { key: 'icon_mail', label: 'Mail', callback: () => this.onSideIconClick('mail') },
             { key: 'icon_mission', label: 'Mission', callback: () => this.onSideIconClick('mission') },
             { key: 'icon_notice', label: 'Notice', callback: () => this.onSideIconClick('notice') },
-            { key: 'icon_settings', label: 'Settings', callback: () => this.onSideIconClick('settings') },
         ];
 
-        const startY = UIHelpers.CONTENT_Y_START + 40;
-        const spacing = 60;
-        const x = 32;
+        const leftX = 34;
+        const rightX = width - 34;
 
-        icons.forEach((iconData, index) => {
+        leftIcons.forEach((iconData, index) => {
             const y = startY + index * spacing;
-            UIHelpers.createIconButton(this, x, y, iconData.key, {
-                scale: 0.5,
-                label: iconData.label,
-                labelFontSize: '9px',
+            UIHelpers.createMenuIconBox(this, leftX, y, iconData.key, iconData.label, {
+                size: 50,
+                onClick: iconData.callback,
+            });
+        });
+
+        rightIcons.forEach((iconData, index) => {
+            const y = startY + index * spacing;
+            UIHelpers.createMenuIconBox(this, rightX, y, iconData.key, iconData.label, {
+                size: 50,
                 onClick: iconData.callback,
             });
         });
@@ -74,7 +85,7 @@ class LobbyScene extends Phaser.Scene {
     createCharacterDisplay() {
         const { width, height } = this.scale;
         const centerX = width / 2;
-        const centerY = height / 2 - 20;
+        const centerY = height / 2 - 40;
 
         // Character image
         let charKey = null;
@@ -104,54 +115,32 @@ class LobbyScene extends Phaser.Scene {
             silhouette.fillStyle(UIHelpers.COLORS.ACCENT_PURPLE, 0.3);
             silhouette.fillEllipse(centerX, centerY, 120, 180);
         }
-
-        // Power level display
-        const powerContainer = this.add.container(centerX, centerY + 130);
-        const powerBg = this.add.graphics();
-        powerBg.fillStyle(0x000000, 0.5);
-        powerBg.fillRoundedRect(-60, -14, 120, 28, 14);
-        powerContainer.add(powerBg);
-
-        const powerText = this.add.text(0, 0, '⚔ Power: 4,520', {
-            fontSize: '12px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GOLD,
-            fontStyle: 'bold',
-        }).setOrigin(0.5);
-        powerContainer.add(powerText);
     }
 
     createStageButton() {
         const { width, height } = this.scale;
-        const btnY = height - UIHelpers.BOTTOM_NAV_HEIGHT - 60;
+        const btnY = height - UIHelpers.BOTTOM_NAV_HEIGHT - 55;
 
-        // Main stage button
-        const stageBtn = UIHelpers.createButton(this, width / 2, btnY, 180, 50, 'STAGE 1', {
+        // Main stage button - red pill matching reference "STAGE 1" tag
+        const stageBtn = UIHelpers.createPillButton(this, width / 2, btnY, 170, 44, 'STAGE 1', {
             fontSize: '18px',
-            bgColor: 0x7b2ff7,
-            hoverColor: 0x9b4dff,
-            activeColor: 0x5a1dbf,
-            cornerRadius: 25,
+            bgColor: 0xe32c2c,
+            borderColor: 0x8a1414,
+            strokeColor: '#7a0e0e',
+            cornerRadius: 12,
             onClick: () => this.onStageStart(),
         });
 
         // Pulsing glow effect on stage button
         this.tweens.add({
             targets: stageBtn,
-            scaleX: 1.03,
-            scaleY: 1.03,
+            scaleX: 1.04,
+            scaleY: 1.04,
             duration: 1200,
             yoyo: true,
             repeat: -1,
             ease: 'Sine.easeInOut',
         });
-
-        // Stage info text below button
-        this.add.text(width / 2, btnY + 38, 'Tap to begin adventure', {
-            fontSize: '10px',
-            fontFamily: 'Arial, sans-serif',
-            color: UIHelpers.COLORS.TEXT_GRAY,
-        }).setOrigin(0.5);
     }
 
     onStageStart() {
