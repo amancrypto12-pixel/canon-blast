@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Goblin Clan - Telegram Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: #121a29;
+      --bg-panel: #182236;
+      --border: #22314d;
+      --primary: #10b981;
+      --primary-glow: rgba(16, 185, 129, 0.4);
+      --gold: #fbbf24;
+      --star: #38bdf8;
+      --heart: #f43f5e;
+      --mush: #ec4899;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* TOP HEADER */
+    header {
+      background: linear-gradient(180deg, #152033 0%, #0d1524 100%);
+      padding: 8px 12px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 50;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(14, 22, 36, 0.85);
+      padding: 5px 9px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .badge img.icon {
+      width: 17px;
+      height: 17px;
+      object-fit: contain;
+    }
+    .badge.mush { color: #f472b6; border-color: rgba(244, 114, 182, 0.3); }
+    .badge.gold { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+    .badge.star { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
+    .badge.heart { color: #fb7185; border-color: rgba(251, 113, 133, 0.3); }
+
+    .energy-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .energy-bar-bg {
+      flex: 1;
+      height: 7px;
+      background: #1e293b;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid #334155;
+    }
+    .energy-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #34d399);
+      width: 100%;
+      transition: width 0.2s;
+    }
+
+    /* VIEWPORT */
+    .viewport {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: 74px;
+      position: relative;
+    }
+    .tab-pane {
+      display: none;
+      padding: 12px;
+      animation: tabFadeIn 0.18s ease-in-out;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TAB 1: GOBLINS HERO CARD */
+    .goblin-hero-card {
+      background: radial-gradient(circle at 50% 30%, #1e2e4a 0%, #101929 100%);
+      border: 2px solid #38bdf8;
+      border-radius: 20px;
+      padding: 16px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      margin-bottom: 12px;
+    }
+    .rarity-pill {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .rarity-Common { background: #475569; color: #fff; }
+    .rarity-Uncommon { background: #16a34a; color: #fff; }
+    .rarity-Rare { background: #2563eb; color: #fff; }
+    .rarity-Epic { background: #9333ea; color: #fff; }
+    .rarity-Legendary { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; }
+
+    .breed-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #1e293b;
+      border: 1px solid #475569;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--heart);
+    }
+    .hero-circle {
+      width: 135px;
+      height: 135px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2a4365 0%, #162032 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 10px;
+      border: 3px solid #38bdf8;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.08s;
+    }
+    .hero-circle:active {
+      transform: scale(0.92);
+    }
+    .hero-sprite-img {
+      width: 112px;
+      height: 112px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
+    }
+    .hero-name {
+      font-size: 19px;
+      font-weight: 900;
+      color: #fff;
+    }
+    .hero-level-desc {
+      font-size: 12px;
+      color: #38bdf8;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .gauge-wrap {
+      width: 100%;
+      background: #0d1522;
+      border-radius: 10px;
+      padding: 3px;
+      border: 1px solid #293b58;
+      margin-bottom: 12px;
+    }
+    .gauge-fill {
+      height: 12px;
+      background: linear-gradient(90deg, #ec4899, #f43f5e);
+      border-radius: 8px;
+      width: 40%;
+      transition: width 0.2s;
+    }
+    .feed-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 16px var(--primary-glow);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .feed-btn:active {
+      transform: scale(0.98);
+    }
+    .action-grid {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .btn-action {
+      flex: 1;
+      background: #172338;
+      border: 1px solid #2b3e60;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* FLOCK ROSTER CAROUSEL */
+    .roster-card {
+      background: #131d2e;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .roster-scroller {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-top: 6px;
+    }
+    .mini-goblin-box {
+      min-width: 70px;
+      background: #19263c;
+      border: 1.5px solid #2d4368;
+      border-radius: 10px;
+      padding: 6px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .mini-goblin-box.active {
+      border-color: #38bdf8;
+      background: #1f3250;
+    }
+    .mini-goblin-box img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    /* TAB 2: 7x7 RELIC MERGE GRID */
+    .grid-container-7x7 {
+      background: #0f1624;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    .board-7x7 {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(7, 1fr);
+      gap: 4px;
+      aspect-ratio: 1;
+      width: 100%;
+    }
+    .cell-slot {
+      background: #162134;
+      border: 1px solid #233452;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.1s;
+    }
+    .cell-slot.selected {
+      border: 2px solid #fbbf24;
+      background: #253755;
+      transform: scale(1.08);
+      z-index: 10;
+    }
+    .cell-egg {
+      width: 85%;
+      height: 85%;
+      object-fit: contain;
+    }
+    .cell-lvl-tag {
+      position: absolute;
+      bottom: 1px;
+      right: 2px;
+      font-size: 8px;
+      font-weight: 800;
+      color: #38bdf8;
+      background: rgba(0,0,0,0.6);
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+
+    /* TAB 3: GODS / TOTEMS */
+    .god-row-card {
+      background: linear-gradient(135deg, #1c1938 0%, #121024 100%);
+      border: 2px solid #8b5cf6;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .god-totem-img {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: #2e1065;
+      border: 2px solid #a855f7;
+      padding: 4px;
+      object-fit: contain;
+    }
+    .god-details {
+      flex: 1;
+    }
+    .god-title {
+      font-weight: 900;
+      font-size: 15px;
+      color: #d8b4fe;
+    }
+    .god-multiplier {
+      font-size: 12px;
+      color: #a78bfa;
+      margin: 2px 0 6px;
+    }
+    .god-btn {
+      background: #7c3aed;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* TAB 4: MARKET & VIP PASS */
+    .vip-pass-card {
+      background: linear-gradient(135deg, #381552 0%, #1e1b4b 100%);
+      border: 2px solid #c084fc;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .pass-crown-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+    .market-product-row {
+      background: #141f33;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* TAB 5: TASKS, REFERRALS & CLAN */
+    .referral-box {
+      background: #132238;
+      border: 2px dashed #3b82f6;
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .quest-card {
+      background: #141f33;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn-claim {
+      background: #10b981;
+      color: #000;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .btn-claim:disabled {
+      background: #334155;
+      color: #64748b;
+      cursor: not-allowed;
+    }
+
+    /* BOTTOM 5-TAB BAR */
+    nav.tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: #0c1322;
+      border-top: 2px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      color: #64748b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      color: #38bdf8;
+    }
+    .tab-icon {
+      font-size: 22px;
+    }
+
+    /* FLOATING POPUP ANIMATION */
+    .floating-gain {
+      position: absolute;
+      font-size: 18px;
+      font-weight: 900;
+      color: #fbbf24;
+      pointer-events: none;
+      animation: floatPop 0.65s ease-out forwards;
+      z-index: 99;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+    @keyframes floatPop {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -40px) scale(1.3); }
+    }
+    .toast-popup {
+      position: fixed;
+      top: 65px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(16, 185, 129, 0.95);
+      color: #000;
+      font-weight: 900;
+      font-size: 13px;
+      padding: 8px 18px;
+      border-radius: 20px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .toast-popup.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="stats-row">
+      <div class="badge mush">
+        <img class="icon" src="assets/icon_mushroom.png">
+        <span id="mushVal">1,500</span>
+      </div>
+      <div class="badge gold">
+        <img class="icon" src="assets/icon_coin.png">
+        <span id="gobVal">100.00</span>
+      </div>
+      <div class="badge heart">
+        <img class="icon" src="assets/icon_heart.png">
+        <span id="heartVal">30</span>
+      </div>
+      <div class="badge star">
+        <span>⭐</span>
+        <span id="starVal">0</span>
+      </div>
+    </div>
+    <div class="energy-bar-wrap">
+      <span>⚡ Energy</span>
+      <div class="energy-bar-bg">
+        <div class="energy-bar-fill" id="energyFill"></div>
+      </div>
+      <span id="energyVal">2000/2000</span>
+    </div>
+  </header>
+
+  <!-- VIEWPORT TABS -->
+  <div class="viewport">
+
+    <!-- TAB 1: GOBLINS -->
+    <div id="tab-goblins" class="tab-pane active">
+      <div class="goblin-hero-card">
+        <div class="rarity-pill rarity-Common" id="heroRarity">COMMON</div>
+        <div class="breed-badge" id="heroBreed">Breed: 0/5</div>
+
+        <div class="hero-circle" id="heroCircle">
+          <img class="hero-sprite-img" id="heroSprite" src="assets/goblin_common.png">
+        </div>
+
+        <div class="hero-name" id="heroTitle">Baby Goblin Peon</div>
+        <div class="hero-level-desc" id="heroLevel">Level 1 (1x Yield)</div>
+
+        <div style="width:100%; display:flex; justify-content:space-between; font-size:11px; color:#94a3b8; margin-bottom:4px;">
+          <span>Egg Progress</span>
+          <span id="gaugePct">0%</span>
+        </div>
+        <div class="gauge-wrap">
+          <div class="gauge-fill" id="gaugeFill" style="width: 0%;"></div>
+        </div>
+
+        <button class="feed-btn" id="feedBtn">
+          <span>🍗 Tap to Feed</span>
+          <span style="font-size: 12px; opacity: 0.9;" id="feedCostText">(-25 🍄)</span>
+        </button>
+
+        <div class="action-grid">
+          <button class="btn-action" id="breedBtn">🧬 Breed Ritual</button>
+          <button class="btn-action" id="stakeBtn">🔒 Stake (+5%/d)</button>
+        </div>
+      </div>
+
+      <div class="roster-card">
+        <div style="font-weight:800; font-size:13px; color:#38bdf8; margin-bottom:4px;">Clan Flock Roster</div>
+        <div class="roster-scroller" id="rosterList">
+          <!-- Mini Goblin Cards -->
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: EGGS (7x7 GRID) -->
+    <div id="tab-eggs" class="tab-pane">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <span style="font-weight:800; font-size:14px;">7×7 Relic & Egg Grid</span>
+        <span style="font-size:12px; color:var(--heart);">Merge for ❤️ Hearts</span>
+      </div>
+
+      <div class="grid-container-7x7">
+        <div class="board-7x7" id="board7x7"></div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <button class="btn-action" id="spawnEggBtn" style="background:#10b981; color:#000; border:none; font-weight:800;">
+          🥚 Spawn Egg (50 🍄)
+        </button>
+        <button class="btn-action" id="autoMergeBtn">
+          ⚡ Auto-Merge All
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 3: GODS / TOTEMS -->
+    <div id="tab-gods" class="tab-pane">
+      <div style="font-size:13px; color:#94a3b8; margin-bottom:12px;">
+        Sacrifice Relics to unlock Ancient Goblin God Blessings & Global Multipliers.
+      </div>
+
+      <div class="god-row-card">
+        <img class="god-totem-img" src="assets/god_greed.png">
+        <div class="god-details">
+          <div class="god-title">God of Plunder (Greed)</div>
+          <div class="god-multiplier">+25% Gold & Mushroom Yield</div>
+          <div style="font-size:11px; color:#64748b;" id="greedTierText">Tier Lv. 1</div>
+        </div>
+        <button class="god-btn" onclick="upgradeGod('greed')">Upgrade (50 ❤️)</button>
+      </div>
+
+      <div class="god-row-card" style="border-color:#f43f5e;">
+        <img class="god-totem-img" style="background:#4c0519; border-color:#f43f5e;" src="assets/god_fertility.png">
+        <div class="god-details">
+          <div class="god-title" style="color:#fda4af;">Goddess of Fertility</div>
+          <div class="god-multiplier">+15% Breeding Rarity Luck</div>
+          <div style="font-size:11px; color:#64748b;" id="fertilityTierText">Tier Lv. 1</div>
+        </div>
+        <button class="god-btn" style="background:#e11d48;" onclick="upgradeGod('fertility')">Upgrade (80 ❤️)</button>
+      </div>
+
+      <div class="god-row-card" style="border-color:#38bdf8;">
+        <img class="god-totem-img" style="background:#082f49; border-color:#38bdf8;" src="assets/god_war.png">
+        <div class="god-details">
+          <div class="god-title" style="color:#7dd3fc;">Totem of Frenzy & War</div>
+          <div class="god-multiplier">-30% Energy Cooldown</div>
+          <div style="font-size:11px; color:#64748b;" id="warTierText">Tier Lv. 1</div>
+        </div>
+        <button class="god-btn" style="background:#0284c7;" onclick="upgradeGod('war')">Upgrade (120 ❤️)</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: MARKET & VIP -->
+    <div id="tab-market" class="tab-pane">
+      <div class="vip-pass-card">
+        <img class="pass-crown-icon" src="assets/icon_vip_crown.png">
+        <div style="font-size:16px; font-weight:900; color:#f0abfc; margin-bottom:4px;">👑 Chieftain VIP Pass (299 ⭐)</div>
+        <div style="font-size:12px; color:#e9d5ff; margin-bottom:10px;">
+          • Turbo Auto-Feed (20 taps/sec)<br>
+          • Automated Smart Bot Trader<br>
+          • 2x Daily Mushrooms & Ad-Skip
+        </div>
+        <button class="feed-btn" style="background:linear-gradient(135deg, #a855f7, #6366f1); padding:10px; font-size:14px;" onclick="buyVipPass()">
+          ⭐ Get VIP Pass (14 Days)
+        </button>
+      </div>
+
+      <div style="font-weight:800; font-size:13px; margin-bottom:8px; color:#94a3b8;">HOT MARKET TRADING (+15% Dynamic Surge)</div>
+
+      <div class="market-product-row">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="assets/egg_tier4.png" style="width:38px; height:38px; object-fit:contain;">
+          <div>
+            <div style="font-weight:800; font-size:14px;">Ruby Dragon Egg</div>
+            <div style="font-size:11px; color:#10b981;">Hot Relic 🔥 (+15%)</div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:800; color:#fbbf24; font-size:13px; margin-bottom:2px;">550 🍄</div>
+          <button class="btn-claim" onclick="buyMarketItem('Dragon Egg', 550)">BUY</button>
+        </div>
+      </div>
+
+      <div class="market-product-row">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="assets/goblin_epic.png" style="width:38px; height:38px; object-fit:contain;">
+          <div>
+            <div style="font-weight:800; font-size:14px;">Goblin Shaman</div>
+            <div style="font-size:11px; color:#9333ea;">Epic Tier (50x Yield)</div>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-weight:800; color:#fbbf24; font-size:13px; margin-bottom:2px;">1,400 🍄</div>
+          <button class="btn-claim" onclick="buyMarketItem('Goblin Shaman', 1400)">BUY</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: TASKS, REFERRALS & CLAN -->
+    <div id="tab-tasks" class="tab-pane">
+      <div class="referral-box">
+        <div style="font-weight:900; font-size:15px; color:#60a5fa; margin-bottom:4px;">👥 2-Level Tribe Referral</div>
+        <div style="font-size:12px; color:#cbd5e1; margin-bottom:10px;">
+          Invite Friends: +1,000 🍄 (+5,000 for Premium) + 10% Tier-1 & 2.5% Tier-2 passive $GOB earnings!
+        </div>
+        <button class="feed-btn" style="background:#2563eb; padding:10px; font-size:13px;" onclick="shareReferralLink()">
+          🔗 Share Referral Link
+        </button>
+      </div>
+
+      <div style="font-size:13px; font-weight:800; color:#94a3b8; margin-bottom:8px; text-transform:uppercase;">Daily Quests</div>
+      <div class="quest-card">
+        <div>
+          <div style="font-size:13px; font-weight:700;">Feed Goblin 50 Times</div>
+          <div style="font-size:11px; color:#ec4899; font-weight:700;">+250 🍄 & +10 ❤️</div>
+        </div>
+        <button class="btn-claim" id="q1Btn" onclick="claimQuest(1)">Claim</button>
+      </div>
+
+      <div style="font-size:13px; font-weight:800; color:#94a3b8; margin:14px 0 8px; text-transform:uppercase;">Clan Sabotage & Raids</div>
+      <div class="quest-card" style="border-color:#f43f5e;">
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#fda4af;">⚔️ Sabotage Rival Clan (Orc Horde)</div>
+          <div style="font-size:11px; color:#fbbf24; font-weight:700;">Steal +650 🍄 (Cards: <span id="sabCards">3</span>/3)</div>
+        </div>
+        <button class="btn-claim" style="background:#ef4444; color:#fff;" onclick="raidClan()">Raid</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="tab-bar">
+    <button class="tab-btn" onclick="switchNav('market')"><div class="tab-icon">🏪</div><span>Market</span></button>
+    <button class="tab-btn" onclick="switchNav('eggs')"><div class="tab-icon">🥚</div><span>Eggs</span></button>
+    <button class="tab-btn active" onclick="switchNav('goblins')"><div class="tab-icon">🧌</div><span>Goblins</span></button>
+    <button class="tab-btn" onclick="switchNav('gods')"><div class="tab-icon">🗿</div><span>Gods</span></button>
+    <button class="tab-btn" onclick="switchNav('tasks')"><div class="tab-icon">📜</div><span>Tasks</span></button>
+  </nav>
+
+  <div class="toast-popup" id="toastPop">Action Completed</div>
+
+  <script>
+    const GOBLIN_DATA = [
+      { tier: 1, name: "Baby Goblin Peon", rarity: "Common", sprite: "assets/goblin_common.png", mult: 1 },
+      { tier: 2, name: "Goblin Scout", rarity: "Uncommon", sprite: "assets/goblin_uncommon.png", mult: 4 },
+      { tier: 3, name: "Goblin Warrior", rarity: "Rare", sprite: "assets/goblin_rare.png", mult: 16 },
+      { tier: 4, name: "Goblin Shaman", rarity: "Epic", sprite: "assets/goblin_epic.png", mult: 50 },
+      { tier: 5, name: "Goblin Warlord King", rarity: "Legendary", sprite: "assets/goblin_legendary.png", mult: 160 }
+    ];
+
+    const EGG_SPRITES = [
+      "",
+      "assets/egg_tier1.png",
+      "assets/egg_tier2.png",
+      "assets/egg_tier3.png",
+      "assets/egg_tier4.png",
+      "assets/egg_tier5.png"
+    ];
+
+    let state = {
+      mush: 1500,
+      gob: 100.00,
+      hearts: 30,
+      stars: 0,
+      energy: 2000,
+      maxEnergy: 2000,
+      activeGoblinIdx: 0,
+      goblins: [
+        { tier: 1, level: 1, xp: 0, breedCount: 0, isStaked: false }
+      ],
+      grid: new Array(49).fill(0),
+      selectedSlot: null,
+      sabCards: 3
+    };
+
+    // Synthesized Procedural Audio Engine
+    const SFX = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this.ctx = new AC();
+        }
+      },
+      tap() {
+        if (!this.ctx) return;
+        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+        o.type = 'sine'; o.frequency.setValueAtTime(460, this.ctx.currentTime);
+        o.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.07);
+        g.gain.setValueAtTime(0.2, this.ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.07);
+        o.connect(g); g.connect(this.ctx.destination);
+        o.start(); o.stop(this.ctx.currentTime + 0.07);
+      },
+      merge() {
+        if (!this.ctx) return;
+        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(320, this.ctx.currentTime);
+        o.frequency.exponentialRampToValueAtTime(960, this.ctx.currentTime + 0.22);
+        g.gain.setValueAtTime(0.25, this.ctx.currentTime);
+        g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.22);
+        o.connect(g); g.connect(this.ctx.destination);
+        o.start(); o.stop(this.ctx.currentTime + 0.22);
+      }
+    };
+
+    if (window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
+
+    function haptic(type = 'light') {
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
+    }
+
+    function toast(text) {
+      const el = document.getElementById('toastPop');
+      el.innerText = text; el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 1600);
+    }
+
+    function switchNav(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+
+      const tabs = ['market', 'eggs', 'goblins', 'gods', 'tasks'];
+      const idx = tabs.indexOf(tabId);
+      if (idx !== -1) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+      haptic('light');
+    }
+
+    function updateUI() {
+      document.getElementById('mushVal').innerText = state.mush.toLocaleString();
+      document.getElementById('gobVal').innerText = state.gob.toFixed(2);
+      document.getElementById('heartVal').innerText = state.hearts.toLocaleString();
+      document.getElementById('starVal').innerText = state.stars.toLocaleString();
+      document.getElementById('energyVal').innerText = `${state.energy}/${state.maxEnergy}`;
+      document.getElementById('energyFill').style.width = `${(state.energy / state.maxEnergy) * 100}%`;
+
+      const g = state.goblins[state.activeGoblinIdx] || state.goblins[0];
+      const gData = GOBLIN_DATA.find(d => d.tier === g.tier) || GOBLIN_DATA[0];
+
+      document.getElementById('heroSprite').src = gData.sprite;
+      document.getElementById('heroTitle').innerText = gData.name;
+      document.getElementById('heroLevel').innerText = `Level ${g.level} (${gData.mult}x Yield)`;
+      document.getElementById('heroRarity').innerText = gData.rarity;
+      document.getElementById('heroRarity').className = `rarity-pill rarity-${gData.rarity}`;
+      document.getElementById('heroBreed').innerText = `Breed: ${g.breedCount}/5`;
+
+      document.getElementById('gaugePct').innerText = `${g.xp}%`;
+      document.getElementById('gaugeFill').style.width = `${g.xp}%`;
+      document.getElementById('sabCards').innerText = state.sabCards;
+
+      renderRoster();
+    }
+
+    function renderRoster() {
+      const scroller = document.getElementById('rosterList');
+      scroller.innerHTML = '';
+      state.goblins.forEach((g, i) => {
+        const d = GOBLIN_DATA.find(x => x.tier === g.tier) || GOBLIN_DATA[0];
+        const box = document.createElement('div');
+        box.className = `mini-goblin-box ${state.activeGoblinIdx === i ? 'active' : ''}`;
+        box.innerHTML = `<img src="${d.sprite}"><span style="font-size:9px; font-weight:800; color:#38bdf8;">Lv.${g.level}</span>`;
+        box.addEventListener('click', () => {
+          state.activeGoblinIdx = i;
+          haptic('light');
+          updateUI();
+        });
+        scroller.appendChild(box);
+      });
+    }
+
+    // Tap to Feed
+    document.getElementById('feedBtn').addEventListener('click', (e) => {
+      SFX.init();
+      if (state.mush < 25) return toast("Not enough Mushrooms 🍄!");
+      if (state.energy < 20) return toast("Out of Energy ⚡!");
+
+      SFX.tap(); haptic('medium');
+      state.mush -= 25;
+      state.energy -= 20;
+
+      const g = state.goblins[state.activeGoblinIdx];
+      const gData = GOBLIN_DATA.find(d => d.tier === g.tier) || GOBLIN_DATA[0];
+      const earned = 0.05 * gData.mult;
+      state.gob += earned;
+      g.xp += 5;
+
+      if (g.xp >= 100) {
+        g.xp = 0;
+        if (g.level < 5) g.level += 1;
+        state.hearts += 5;
+        toast(`🎉 ${gData.name} Leveled Up! +5 ❤️`);
+      }
+
+      // Pop floating yield
+      const pop = document.createElement('div');
+      pop.className = 'floating-gain';
+      pop.innerText = `+${earned.toFixed(2)} 🪙`;
+      pop.style.left = `${e.clientX || 180}px`;
+      pop.style.top = `${e.clientY || 300}px`;
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 650);
+
+      updateUI();
+    });
+
+    // 7x7 Grid Functions
+    function renderBoard() {
+      const b = document.getElementById('board7x7');
+      b.innerHTML = '';
+      for (let i = 0; i < 49; i++) {
+        const cell = document.createElement('div');
+        cell.className = `cell-slot ${state.selectedSlot === i ? 'selected' : ''}`;
+        const tier = state.grid[i];
+        if (tier > 0) {
+          const src = EGG_SPRITES[tier] || EGG_SPRITES[1];
+          cell.innerHTML = `<img class="cell-egg" src="${src}"><span class="cell-lvl-tag">T${tier}</span>`;
+        }
+        cell.addEventListener('click', () => handleCellClick(i));
+        b.appendChild(cell);
+      }
+    }
+
+    function handleCellClick(idx) {
+      SFX.init();
+      if (state.selectedSlot === null) {
+        if (state.grid[idx] > 0) {
+          state.selectedSlot = idx;
+          haptic('light');
+          renderBoard();
+        }
+      } else {
+        if (state.selectedSlot === idx) {
+          state.selectedSlot = null;
+          renderBoard();
+          return;
+        }
+        const from = state.grid[state.selectedSlot];
+        const to = state.grid[idx];
+
+        if (to === 0) {
+          state.grid[idx] = from;
+          state.grid[state.selectedSlot] = 0;
+          state.selectedSlot = null;
+          renderBoard();
+        } else if (from === to) {
+          // Merge!
+          state.grid[idx] = Math.min(5, from + 1);
+          state.grid[state.selectedSlot] = 0;
+          state.selectedSlot = null;
+          const heartsEarned = from * 3;
+          state.hearts += heartsEarned;
+          SFX.merge(); haptic('heavy');
+          toast(`✨ Relic Merged to Tier ${Math.min(5, from + 1)}! +${heartsEarned} ❤️`);
+          renderBoard(); updateUI();
+        } else {
+          state.selectedSlot = idx;
+          renderBoard();
+        }
+      }
+    }
+
+    document.getElementById('spawnEggBtn').addEventListener('click', () => {
+      SFX.init();
+      if (state.mush < 50) return toast("Need 50 Mushrooms 🍄!");
+      const emptySlots = state.grid.map((v, i) => v === 0 ? i : null).filter(v => v !== null);
+      if (emptySlots.length === 0) return toast("7x7 Grid is full!");
+
+      const randomIdx = emptySlots[Math.floor(Math.random() * emptySlots.length)];
+      state.mush -= 50;
+      state.grid[randomIdx] = 1;
+      haptic('medium');
+      renderBoard(); updateUI();
+    });
+
+    document.getElementById('autoMergeBtn').addEventListener('click', () => {
+      SFX.init();
+      let merged = false;
+      for (let i = 0; i < 49; i++) {
+        if (!state.grid[i]) continue;
+        for (let j = i + 1; j < 49; j++) {
+          if (state.grid[i] && state.grid[i] === state.grid[j]) {
+            state.grid[i] = Math.min(5, state.grid[i] + 1);
+            state.grid[j] = 0;
+            state.hearts += state.grid[i] * 2;
+            merged = true;
+            break;
+          }
+        }
+      }
+      if (merged) {
+        SFX.merge(); haptic('heavy');
+        toast("✨ Auto-Merged Matching Relics!");
+        renderBoard(); updateUI();
+      } else {
+        toast("No matching relics to merge.");
+      }
+    });
+
+    // Breeding Ritual
+    document.getElementById('breedBtn').addEventListener('click', () => {
+      const g = state.goblins[state.activeGoblinIdx];
+      if (g.breedCount >= 5) return toast("Max breeding limit reached (5/5)!");
+      if (state.hearts < 20) return toast("Need 20 ❤️ Hearts for Ritual!");
+
+      state.hearts -= 20;
+      g.breedCount++;
+      const nextTier = Math.min(5, g.tier + 1);
+      state.goblins.push({ tier: nextTier, level: 1, xp: 0, breedCount: 0, isStaked: false });
+      haptic('heavy');
+      toast(`🧬 Hatched new Tier ${nextTier} Goblin!`);
+      updateUI();
+    });
+
+    // Passive Staking Loop (every 1s)
+    setInterval(() => {
+      state.goblins.forEach(g => {
+        if (g.isStaked || g.level === 5) {
+          const d = GOBLIN_DATA.find(x => x.tier === g.tier) || GOBLIN_DATA[0];
+          state.gob += 0.02 * d.mult;
+        }
+      });
+      updateUI();
+    }, 1000);
+
+    // Energy Regen Loop (every 3s)
+    setInterval(() => {
+      if (state.energy < state.maxEnergy) {
+        state.energy = Math.min(state.maxEnergy, state.energy + 25);
+        updateUI();
+      }
+    }, 3000);
+
+    // Initial Grid Setup
+    state.grid[10] = 1; state.grid[11] = 1;
+    state.grid[18] = 2; state.grid[25] = 2;
+    state.grid[32] = 3;
+
+    renderBoard();
+    updateUI();
+
+    // Global Handlers
+    window.upgradeGod = (type) => {
+      if (state.hearts >= 50) {
+        state.hearts -= 50;
+        haptic('heavy');
+        toast(`🗿 ${type.toUpperCase()} God Blessing Level Up!`);
+        updateUI();
+      } else toast("Not enough Hearts ❤️!");
+    };
+
+    window.buyVipPass = () => {
+      toast("⭐ Opening Telegram Stars Payment...");
+      haptic('medium');
+    };
+
+    window.buyMarketItem = (name, price) => {
+      if (state.mush >= price) {
+        state.mush -= price;
+        haptic('heavy');
+        toast(`Purchased ${name}!`);
+        updateUI();
+      } else toast("Not enough Mushrooms 🍄!");
+    };
+
+    window.shareReferralLink = () => {
+      const shareUrl = "https://t.me/share/url?url=https://t.me/GoblinClanBot/game?startapp=ref_12345&text=Join%20my%20Goblin%20Clan%20and%20get%201,000%20free%20Mushrooms!";
+      if (window.Telegram?.WebApp?.openTelegramLink) window.Telegram.WebApp.openTelegramLink(shareUrl);
+      else window.open(shareUrl, '_blank');
+    };
+
+    window.claimQuest = (id) => {
+      state.mush += 250;
+      state.hearts += 10;
+      document.getElementById(`q${id}Btn`).disabled = true;
+      document.getElementById(`q${id}Btn`).innerText = "Claimed";
+      toast("🎉 Daily Quest Reward Claimed!");
+      updateUI();
+    };
+
+    window.raidClan = () => {
+      if (state.sabCards <= 0) return toast("No Sabotage cards left (Resets in 4h)!");
+      state.sabCards--;
+      state.mush += 650;
+      haptic('heavy');
+      toast("⚔️ Raid Successful! Stole +650 🍄 from Orc Horde!");
+      updateUI();
+    };
+  </script>
+</body>
+</html>
