@@ -2,34 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Goblin Clan — Telegram Mini App</title>
+  
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Google Fonts for crisp typography -->
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #07090e;
-      --bg-card: rgba(18, 22, 34, 0.85);
-      --bg-card-hover: rgba(28, 34, 52, 0.95);
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-gold: rgba(255, 204, 0, 0.4);
-      --gold-main: #ffd000;
-      --gold-glow: rgba(255, 208, 0, 0.5);
-      --green-main: #2ee677;
-      --green-glow: rgba(46, 230, 119, 0.4);
-      --pink-main: #ff4d8d;
-      --pink-glow: rgba(255, 77, 141, 0.4);
-      --cyan-main: #00d2ff;
-      --cyan-glow: rgba(0, 210, 255, 0.4);
-      --purple-main: #b84dff;
-      --purple-glow: rgba(184, 77, 255, 0.4);
-      --text-main: #f0f4fc;
-      --text-muted: #8c96ab;
+      --bg-base: #080b12;
+      --bg-surface: rgba(18, 24, 38, 0.85);
+      --bg-surface-elevated: rgba(26, 34, 54, 0.95);
+      --border-light: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(255, 204, 0, 0.35);
+      --gold: #ffcc00;
+      --gold-glow: rgba(255, 204, 0, 0.45);
+      --green: #22c55e;
+      --green-glow: rgba(34, 197, 94, 0.4);
+      --pink: #f43f5e;
+      --pink-glow: rgba(244, 63, 94, 0.4);
+      --cyan: #06b6d4;
+      --cyan-glow: rgba(6, 182, 212, 0.4);
+      --purple: #a855f7;
+      --purple-glow: rgba(168, 85, 247, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
     }
 
     * {
@@ -42,318 +44,425 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 10%, #151c2e 0%, #080a10 70%, #030407 100%);
+      background: radial-gradient(circle at 50% 0%, #172036 0%, #0a0e1a 60%, #05070d 100%);
       color: var(--text-main);
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
       padding-bottom: 96px;
     }
 
-    /* Animated background ambient particles */
-    #ambient-canvas {
+    /* Ambient background canvas for floating magic dust */
+    #ambientCanvas {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
-    .app-container {
+    .app-wrapper {
       position: relative;
       z-index: 1;
-      max-width: 480px;
+      max-width: 440px;
       margin: 0 auto;
       padding: 12px 14px;
     }
 
     /* ══════════════════════════════════════════════
-       HEADER STATS BAR
+       TOP HEADER (DUCK MY DUCK EXACT REPLICA)
        ══════════════════════════════════════════════ */
-    .header-bar {
-      background: var(--bg-card);
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      padding: 5px 12px 5px 6px;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      background: #1e293b;
+      object-fit: cover;
+    }
+
+    .user-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .user-level-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .header-resources {
+      display: flex;
+      gap: 6px;
+    }
+
+    .res-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--bg-surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-light);
+      padding: 6px 10px;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .res-pill img {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .res-val {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+    .res-val.pink { color: #ff6097; }
+    .res-val.green { color: var(--green); }
+    .res-val.cyan { color: var(--cyan); }
+
+    /* Main Score Display */
+    .score-banner {
+      background: var(--bg-surface);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-light);
       border-radius: 20px;
       padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      margin-bottom: 14px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
     }
 
-    .stat-pill {
+    .score-left {
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 5px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      gap: 8px;
     }
 
-    .stat-pill img {
-      width: 22px;
-      height: 22px;
+    .score-left img {
+      width: 32px;
+      height: 32px;
       object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      filter: drop-shadow(0 2px 6px rgba(255, 204, 0, 0.5));
     }
 
-    .stat-val {
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.3px;
-    }
-    .stat-val.gold { color: var(--gold-main); }
-    .stat-val.pink { color: var(--pink-main); }
-    .stat-val.green { color: var(--green-main); }
-    .stat-val.cyan { color: var(--cyan-main); }
-
-    /* Energy Pill */
-    .energy-box {
+    .score-details {
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      min-width: 80px;
     }
-    .energy-label {
-      display: flex;
-      justify-content: space-between;
+
+    .score-label {
       font-size: 0.68rem;
       font-weight: 700;
-      color: var(--green-main);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .energy-bar-bg {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
+
+    .score-number {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.5px;
+    }
+
+    /* Energy Progress Box */
+    .energy-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      min-width: 100px;
+    }
+
+    .energy-text {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .energy-track {
+      width: 100px;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
       overflow: hidden;
     }
-    .energy-bar-fill {
+
+    .energy-fill {
       height: 100%;
-      background: linear-gradient(90deg, #10b981, #34d399);
-      box-shadow: 0 0 8px var(--green-glow);
-      width: 85%;
+      background: linear-gradient(90deg, #10b981, #22c55e);
+      box-shadow: 0 0 10px var(--green-glow);
+      width: 90%;
       transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* ══════════════════════════════════════════════
-       TAB PANELS
+       TAB VIEWS
        ══════════════════════════════════════════════ */
-    .tab-content {
+    .tab-pane {
       display: none;
-      animation: fadeIn 0.3s ease-out;
+      animation: tabSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .tab-content.active {
+    .tab-pane.active {
       display: block;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+    @keyframes tabSlideUp {
+      from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     /* ══════════════════════════════════════════════
-       TAB 1: GOBLINS (FEEDING / BREEDING / STAKING)
+       TAB 3 (CENTER): GOBLINS / DUCKS
        ══════════════════════════════════════════════ */
-    .hero-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border-subtle);
-      border-radius: 24px;
-      padding: 18px 16px;
+    .character-stage-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-light);
+      border-radius: 26px;
+      padding: 16px;
       text-align: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
     }
 
-    .hero-card::before {
+    .character-stage-card::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 208, 0, 0.08) 0%, transparent 60%);
+      top: -40%;
+      left: -40%;
+      width: 180%;
+      height: 180%;
+      background: radial-gradient(circle, rgba(255, 204, 0, 0.07) 0%, transparent 60%);
       pointer-events: none;
-      animation: pulseAura 4s infinite alternate;
+      animation: ambientPulse 5s infinite alternate ease-in-out;
     }
 
-    @keyframes pulseAura {
-      0% { transform: scale(0.9); opacity: 0.5; }
-      100% { transform: scale(1.1); opacity: 1; }
+    @keyframes ambientPulse {
+      0% { transform: scale(0.95); opacity: 0.4; }
+      100% { transform: scale(1.15); opacity: 0.9; }
     }
 
-    .hero-rarity-badge {
-      display: inline-flex;
+    .card-top-info {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, rgba(255, 208, 0, 0.2), rgba(255, 120, 0, 0.2));
-      border: 1px solid var(--gold-main);
-      color: var(--gold-main);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 2;
     }
 
-    .hero-title {
+    .rarity-pill {
+      background: linear-gradient(135deg, rgba(255, 204, 0, 0.2), rgba(255, 100, 0, 0.2));
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .breed-pill {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #ff6097;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .char-title {
       font-family: 'Cinzel', serif;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 900;
       color: #fff;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
       margin-bottom: 2px;
+      position: relative;
+      z-index: 2;
     }
 
-    .hero-multiplier {
-      font-size: 0.8rem;
+    .char-sub {
+      font-size: 0.78rem;
       color: var(--text-muted);
       margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
     }
-    .hero-multiplier span {
-      color: var(--green-main);
-      font-weight: 800;
-    }
+    .char-sub b { color: var(--green); }
 
-    /* Main Tap Stage */
-    .tap-stage {
+    /* Interactive Center Stage */
+    .tap-avatar-zone {
       position: relative;
       width: 210px;
       height: 210px;
-      margin: 0 auto 16px;
+      margin: 0 auto 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
     }
 
-    .tap-ring {
+    .pedestal-ring {
       position: absolute;
-      inset: 0;
+      bottom: 10px;
+      width: 170px;
+      height: 48px;
+      background: radial-gradient(ellipse at center, rgba(255, 204, 0, 0.25) 0%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);
       border-radius: 50%;
-      border: 2px dashed rgba(255, 208, 0, 0.3);
-      animation: rotateRing 20s linear infinite;
+      filter: blur(2px);
+      z-index: 1;
     }
 
-    @keyframes rotateRing {
-      to { transform: rotate(360deg); }
-    }
-
-    .hero-sprite {
-      width: 175px;
-      height: 175px;
+    .avatar-img {
+      width: 180px;
+      height: 180px;
       object-fit: contain;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.7));
-      transition: transform 0.08s cubic-bezier(0.1, 0.9, 0.2, 1);
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.8));
+      position: relative;
+      z-index: 2;
+      transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .avatar-img.squish {
+      transform: scale(0.90, 1.12);
+    }
+
+    /* Floating Particles on Tap */
+    .tap-float-num {
+      position: absolute;
+      font-weight: 900;
+      font-size: 1.15rem;
+      pointer-events: none;
+      z-index: 10;
+      animation: floatPop 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    }
+
+    @keyframes floatPop {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
+      40% { transform: translate(-50%, -40px) scale(1.2); }
+      100% { opacity: 0; transform: translate(-50%, -75px) scale(1); }
+    }
+
+    /* Level & Egg Gauge Bar */
+    .level-gauge-box {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 16px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
       position: relative;
       z-index: 2;
     }
 
-    .hero-sprite.tap-squish {
-      transform: scale(0.90, 1.12);
-    }
-
-    /* Floating Tap Numbers & Sparkles */
-    .floating-text {
-      position: absolute;
-      font-weight: 900;
-      font-size: 1.1rem;
-      pointer-events: none;
-      z-index: 10;
-      animation: floatUp 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.9);
-    }
-
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
-      50% { transform: translate(-50%, -35px) scale(1.15); }
-      100% { opacity: 0; transform: translate(-50%, -65px) scale(1); }
-    }
-
-    /* Hero Progression Gauge */
-    .progress-section {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 16px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-    }
-
-    .gauge-row {
+    .gauge-labels {
       display: flex;
       justify-content: space-between;
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-size: 0.72rem;
+      font-weight: 800;
       color: var(--text-muted);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
+    .gauge-labels b { color: #fff; }
 
-    .gauge-bar-bg {
+    .gauge-rail {
       height: 8px;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 6px;
       overflow: hidden;
-      margin-bottom: 8px;
     }
 
-    .gauge-bar-fill {
+    .gauge-fill {
       height: 100%;
       background: linear-gradient(90deg, #ffd000, #ff8800);
-      box-shadow: 0 0 10px var(--gold-glow);
-      width: 45%;
-      transition: width 0.4s ease;
+      box-shadow: 0 0 12px var(--gold-glow);
+      width: 75%;
+      transition: width 0.3s ease;
     }
 
-    /* Action Buttons */
-    .hero-actions {
+    /* Main CTA Button */
+    .cta-button-row {
       display: grid;
       grid-template-columns: 2fr 1fr;
-      gap: 10px;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
     }
 
-    .btn-feed {
+    .btn-main-feed {
       background: linear-gradient(135deg, #10b981, #059669);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 12px;
-      border-radius: 16px;
-      font-weight: 800;
+      padding: 14px;
+      border-radius: 18px;
+      font-family: inherit;
+      font-weight: 900;
       font-size: 0.95rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 6px 20px var(--green-glow);
+      box-shadow: 0 8px 24px var(--green-glow);
       transition: transform 0.1s;
     }
+    .btn-main-feed:active { transform: scale(0.96); }
 
-    .btn-feed:active {
-      transform: scale(0.96);
-    }
-
-    .btn-feed img {
-      width: 22px;
-      height: 22px;
+    .btn-main-feed img {
+      width: 24px;
+      height: 24px;
       object-fit: contain;
     }
 
-    .btn-breed {
+    .btn-side-action {
       background: linear-gradient(135deg, #ec4899, #db2777);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
-      padding: 12px;
-      border-radius: 16px;
-      font-weight: 800;
+      padding: 14px;
+      border-radius: 18px;
+      font-family: inherit;
+      font-weight: 900;
       font-size: 0.85rem;
       cursor: pointer;
       display: flex;
@@ -361,58 +470,59 @@
       align-items: center;
       justify-content: center;
       gap: 2px;
-      box-shadow: 0 6px 20px var(--pink-glow);
+      box-shadow: 0 8px 24px var(--pink-glow);
     }
-    .btn-breed:active { transform: scale(0.96); }
+    .btn-side-action:active { transform: scale(0.96); }
 
-    /* Flock Carousel */
-    .flock-header {
+    /* Roster Carousel */
+    .roster-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 18px 0 8px;
+      margin: 16px 0 8px;
     }
-    .flock-title {
-      font-size: 0.9rem;
+
+    .roster-title {
+      font-size: 0.8rem;
       font-weight: 800;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    .flock-carousel {
+    .roster-scroll {
       display: flex;
       gap: 8px;
       overflow-x: auto;
       padding-bottom: 6px;
       scrollbar-width: none;
     }
-    .flock-carousel::-webkit-scrollbar { display: none; }
+    .roster-scroll::-webkit-scrollbar { display: none; }
 
-    .flock-card {
-      min-width: 82px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
+    .roster-card {
+      min-width: 78px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
       padding: 8px 6px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .flock-card.active {
-      border-color: var(--gold-main);
-      box-shadow: 0 0 12px var(--gold-glow);
-      background: var(--bg-card-hover);
+    .roster-card.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 14px var(--gold-glow);
+      background: var(--bg-surface-elevated);
     }
-    .flock-card img {
+    .roster-card img {
       width: 44px;
       height: 44px;
       object-fit: contain;
       margin-bottom: 4px;
     }
-    .flock-card-name {
-      font-size: 0.7rem;
-      font-weight: 700;
+    .roster-name {
+      font-size: 0.68rem;
+      font-weight: 800;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -421,14 +531,14 @@
     /* ══════════════════════════════════════════════
        TAB 2: EGGS (7x7 MERGE GRID)
        ══════════════════════════════════════════════ */
-    .merge-header {
+    .grid-control-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
     }
 
-    .btn-auto-merge {
+    .btn-quick-merge {
       background: linear-gradient(135deg, #6366f1, #4f46e5);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
@@ -440,25 +550,24 @@
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     }
 
-    .grid-board {
+    .merge-matrix {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+      gap: 4px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
       border-radius: 20px;
       padding: 8px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
       aspect-ratio: 1;
     }
 
-    .grid-cell {
+    .matrix-cell {
       background: rgba(10, 14, 22, 0.8);
       border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
+      border-radius: 8px;
       aspect-ratio: 1;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       position: relative;
@@ -466,135 +575,58 @@
       transition: all 0.15s;
     }
 
-    .grid-cell.selected {
-      border-color: var(--gold-main);
+    .matrix-cell.active-select {
+      border-color: var(--gold);
       box-shadow: 0 0 10px var(--gold-glow);
-      background: rgba(255, 208, 0, 0.1);
+      background: rgba(255, 204, 0, 0.12);
     }
 
-    .grid-cell img {
-      width: 78%;
-      height: 78%;
+    .matrix-cell img {
+      width: 80%;
+      height: 80%;
       object-fit: contain;
       filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
       pointer-events: none;
-      transition: transform 0.15s ease;
     }
 
-    .grid-cell-tier {
+    .cell-badge {
       position: absolute;
       bottom: 2px;
-      right: 3px;
-      font-size: 0.55rem;
-      font-weight: 800;
-      color: var(--gold-main);
-      background: rgba(0, 0, 0, 0.75);
+      right: 2px;
+      font-size: 0.52rem;
+      font-weight: 900;
+      color: var(--gold);
+      background: rgba(0, 0, 0, 0.8);
       padding: 1px 3px;
-      border-radius: 4px;
+      border-radius: 3px;
     }
 
-    .grid-actions {
-      display: flex;
-      gap: 8px;
+    .btn-spawn-cell {
+      width: 100%;
       margin-top: 10px;
-    }
-
-    .btn-spawn-egg {
-      flex: 1;
       background: linear-gradient(135deg, #10b981, #059669);
       color: #fff;
       border: none;
-      padding: 10px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 0.85rem;
+      padding: 12px;
+      border-radius: 16px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 0.9rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 4px 14px var(--green-glow);
+      box-shadow: 0 6px 20px var(--green-glow);
     }
 
     /* ══════════════════════════════════════════════
-       TAB 3: GODS (ANCIENT TOTEMS & SACRIFICES)
+       TAB 1: MARKET & VIP
        ══════════════════════════════════════════════ */
-    .gods-container {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .god-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 20px;
-      padding: 14px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .god-card img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
-    }
-
-    .god-info {
-      flex: 1;
-    }
-
-    .god-name {
-      font-family: 'Cinzel', serif;
-      font-size: 1.05rem;
-      font-weight: 900;
-      color: var(--gold-main);
-      margin-bottom: 2px;
-    }
-
-    .god-buff {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-    .god-buff b { color: var(--green-main); }
-
-    .god-progress-bg {
-      height: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 6px;
-    }
-    .god-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #ec4899, #f43f5e);
-      width: 35%;
-    }
-
-    .btn-sacrifice {
-      background: linear-gradient(135deg, #ec4899, #db2777);
-      border: none;
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 4px 12px var(--pink-glow);
-    }
-
-    /* ══════════════════════════════════════════════
-       TAB 4: MARKET & VIP PASS
-       ══════════════════════════════════════════════ */
-    .vip-banner {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3));
-      border: 1px solid var(--purple-main);
-      border-radius: 20px;
+    .vip-card-banner {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.25));
+      border: 1px solid var(--purple);
+      border-radius: 22px;
       padding: 16px;
       display: flex;
       align-items: center;
@@ -604,7 +636,7 @@
       overflow: hidden;
     }
 
-    .vip-banner::after {
+    .vip-card-banner::after {
       content: '';
       position: absolute;
       top: -50%;
@@ -612,43 +644,44 @@
       width: 200%;
       height: 200%;
       background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.15) 50%, transparent 60%);
-      animation: sheenSweep 3s infinite linear;
+      animation: sweepAnim 3s infinite linear;
     }
 
-    @keyframes sheenSweep {
+    @keyframes sweepAnim {
       0% { transform: translate(-100%, -100%); }
       100% { transform: translate(100%, 100%); }
     }
 
-    .vip-banner img {
+    .vip-card-banner img {
       width: 65px;
       height: 65px;
       object-fit: contain;
     }
 
-    .vip-details {
+    .vip-info {
       flex: 1;
       position: relative;
       z-index: 2;
     }
-    .vip-title {
+    .vip-head {
       font-family: 'Cinzel', serif;
       font-size: 1.1rem;
       font-weight: 900;
-      color: #ffd000;
+      color: var(--gold);
     }
-    .vip-desc {
+    .vip-sub {
       font-size: 0.72rem;
       color: var(--text-muted);
       margin: 2px 0 6px;
     }
 
-    .btn-buy-vip {
+    .btn-buy-stars {
       background: linear-gradient(135deg, #ffd000, #ff8800);
       color: #000;
       border: none;
-      padding: 6px 12px;
-      border-radius: 10px;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-family: inherit;
       font-size: 0.75rem;
       font-weight: 900;
       cursor: pointer;
@@ -658,91 +691,161 @@
       box-shadow: 0 4px 12px var(--gold-glow);
     }
 
-    .market-grid {
+    .market-listing-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .market-item-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: 16px;
+    .listing-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
       padding: 12px;
       text-align: center;
     }
 
-    .market-item-card img {
+    .listing-card img {
       width: 60px;
       height: 60px;
       object-fit: contain;
       margin-bottom: 6px;
     }
 
-    .market-item-name {
+    .listing-title {
       font-size: 0.8rem;
       font-weight: 800;
       margin-bottom: 4px;
     }
 
-    .market-price-tag {
+    .listing-price {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 4px;
       font-size: 0.75rem;
       font-weight: 800;
-      color: var(--gold-main);
+      color: var(--gold);
       margin-bottom: 8px;
     }
-    .market-price-tag img {
-      width: 16px;
-      height: 16px;
-      margin: 0;
-    }
 
-    .btn-trade {
+    .btn-buy-listing {
       width: 100%;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
       padding: 6px;
       border-radius: 10px;
+      font-family: inherit;
       font-size: 0.75rem;
       font-weight: 800;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .btn-trade:hover {
-      background: var(--gold-main);
+    .btn-buy-listing:hover {
+      background: var(--gold);
       color: #000;
     }
 
     /* ══════════════════════════════════════════════
-       TAB 5: TASKS, WHEEL & CLAN SABOTAGE
+       TAB 4: GODS (TOTEMS)
        ══════════════════════════════════════════════ */
-    .wheel-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+    .gods-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .god-row-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
       border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .god-row-card img {
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+    }
+
+    .god-row-info {
+      flex: 1;
+    }
+    .god-row-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 2px;
+    }
+    .god-row-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .god-row-desc b { color: var(--green); }
+
+    .god-meter-bg {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .god-meter-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ec4899, #f43f5e);
+    }
+
+    .btn-altar-sac {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      border: none;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 12px var(--pink-glow);
+    }
+
+    /* ══════════════════════════════════════════════
+       TAB 5: TASKS & CLAN
+       ══════════════════════════════════════════════ */
+    .wheel-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: 22px;
       padding: 16px;
       text-align: center;
       margin-bottom: 14px;
     }
 
-    .wheel-stage {
+    .wheel-box {
       position: relative;
       width: 190px;
       height: 190px;
       margin: 0 auto 12px;
     }
 
-    #fortuneCanvas {
-      width: 100%;
-      height: 100%;
+    .wheel-pin {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 18px solid var(--gold);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+      z-index: 5;
     }
 
-    .wheel-center-ornament {
+    .wheel-hub {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -752,34 +855,20 @@
       pointer-events: none;
     }
 
-    .wheel-pointer {
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 18px solid var(--gold-main);
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
-      z-index: 5;
-    }
-
-    .btn-spin {
+    .btn-spin-now {
       background: linear-gradient(135deg, #ffd000, #ff8800);
       color: #000;
       border: none;
       padding: 10px 24px;
       border-radius: 14px;
+      font-family: inherit;
       font-size: 0.85rem;
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 4px 14px var(--gold-glow);
     }
 
-    /* Clan Raid Card */
-    .clan-raid-card {
+    .raid-boss-card {
       background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(153, 27, 27, 0.3));
       border: 1px solid #ef4444;
       border-radius: 20px;
@@ -790,97 +879,98 @@
       margin-bottom: 14px;
     }
 
-    .clan-raid-card img {
+    .raid-boss-card img {
       width: 65px;
       height: 65px;
       object-fit: contain;
     }
 
-    .raid-info {
+    .raid-boss-details {
       flex: 1;
     }
-    .raid-title {
+    .raid-boss-title {
       font-family: 'Cinzel', serif;
       font-size: 0.95rem;
       font-weight: 900;
       color: #f87171;
     }
-    .raid-desc {
+    .raid-boss-sub {
       font-size: 0.72rem;
       color: var(--text-muted);
       margin: 2px 0 6px;
     }
 
-    .btn-raid {
+    .btn-do-raid {
       background: linear-gradient(135deg, #ef4444, #b91c1c);
       color: #fff;
       border: none;
       padding: 6px 12px;
       border-radius: 10px;
+      font-family: inherit;
       font-size: 0.75rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
     }
 
-    /* Referral Card */
-    .referral-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
+    .referral-box-widget {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-light);
       border-radius: 20px;
       padding: 14px;
     }
-    .ref-header {
+    .ref-title {
       font-size: 0.85rem;
       font-weight: 800;
-      color: var(--green-main);
+      color: var(--green);
       margin-bottom: 4px;
     }
-    .ref-desc {
+    .ref-sub {
       font-size: 0.72rem;
       color: var(--text-muted);
       margin-bottom: 10px;
     }
-    .ref-box {
+    .ref-input-group {
       display: flex;
       gap: 8px;
     }
-    .ref-input {
+    .ref-text-field {
       flex: 1;
       background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid var(--border-light);
       border-radius: 10px;
       padding: 8px 10px;
       color: #fff;
       font-size: 0.75rem;
       outline: none;
     }
-    .btn-copy-ref {
-      background: var(--green-main);
+    .btn-copy-link {
+      background: var(--green);
       color: #000;
       border: none;
       padding: 8px 14px;
       border-radius: 10px;
+      font-family: inherit;
       font-size: 0.75rem;
       font-weight: 900;
       cursor: pointer;
     }
 
     /* ══════════════════════════════════════════════
-       BOTTOM FLOATING DOCK NAVIGATION
+       BOTTOM DOCK (DUCK MY DUCK 5-TAB ORDER)
+       1: Market, 2: Eggs, 3: Goblins (Center), 4: Gods, 5: Tasks
        ══════════════════════════════════════════════ */
-    .bottom-dock {
+    .bottom-dock-nav {
       position: fixed;
       bottom: 14px;
       left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 24px);
       max-width: 440px;
-      background: rgba(14, 18, 28, 0.92);
+      background: rgba(12, 16, 26, 0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 28px;
+      border-radius: 30px;
       padding: 6px 8px;
       display: flex;
       justify-content: space-around;
@@ -889,7 +979,7 @@
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
     }
 
-    .dock-btn {
+    .nav-tab-item {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -902,33 +992,43 @@
       font-size: 0.65rem;
       font-weight: 700;
       cursor: pointer;
-      padding: 6px 2px;
+      padding: 4px 2px;
       border-radius: 18px;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
     }
 
-    .dock-btn img {
-      width: 28px;
-      height: 28px;
+    .nav-tab-item img {
+      width: 26px;
+      height: 26px;
       object-fit: contain;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)) grayscale(0.5);
       transition: all 0.2s;
     }
 
-    .dock-btn.active {
-      color: var(--gold-main);
+    /* Center Highlight (Goblin Tab) */
+    .nav-tab-item.center-tab img {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 4px 8px var(--gold-glow)) grayscale(0);
+      transform: translateY(-4px);
     }
-    .dock-btn.active img {
+
+    .nav-tab-item.active {
+      color: var(--gold);
+    }
+    .nav-tab-item.active img {
       filter: drop-shadow(0 4px 8px var(--gold-glow)) grayscale(0);
       transform: translateY(-2px) scale(1.1);
     }
+    .nav-tab-item.center-tab.active img {
+      transform: translateY(-6px) scale(1.15);
+    }
 
-    /* Modal / Popups */
-    .modal-overlay {
+    /* Reward Modal */
+    .modal-wrap {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       display: none;
       align-items: center;
@@ -936,327 +1036,349 @@
       z-index: 200;
       padding: 20px;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-wrap.open { display: flex; }
 
-    .modal-card {
-      background: var(--bg-card);
-      border: 1px solid var(--gold-main);
+    .modal-box {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--gold);
       border-radius: 24px;
-      padding: 20px;
+      padding: 22px;
       max-width: 320px;
       width: 100%;
       text-align: center;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
-      animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    @keyframes modalPop {
+    @keyframes popIn {
       from { transform: scale(0.8); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
 
-    .modal-card img {
+    .modal-box img {
       width: 90px;
       height: 90px;
       object-fit: contain;
       margin-bottom: 10px;
     }
-    .modal-title {
+    .modal-head {
       font-family: 'Cinzel', serif;
       font-size: 1.2rem;
       font-weight: 900;
-      color: var(--gold-main);
+      color: var(--gold);
       margin-bottom: 6px;
     }
-    .modal-msg {
+    .modal-desc {
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-bottom: 16px;
     }
-    .btn-modal-close {
-      background: var(--gold-main);
+    .btn-collect-reward {
+      background: var(--gold);
       color: #000;
       border: none;
       padding: 10px 24px;
       border-radius: 14px;
-      font-weight: 800;
+      font-family: inherit;
+      font-weight: 900;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient Particle FX Canvas -->
-  <canvas id="ambient-canvas"></canvas>
+  <!-- Ambient Spores Canvas -->
+  <canvas id="ambientCanvas"></canvas>
 
-  <div class="app-container">
+  <div class="app-wrapper">
 
     <!-- ══════════════════════════════════════════════
-         TOP HEADER STATS BAR
+         TOP BAR: PROFILE & RESOURCES
          ══════════════════════════════════════════════ -->
-    <header class="header-bar">
-      <!-- $GOB Coins -->
-      <div class="stat-pill">
-        <img src="assets/icon_gob_coin_hd.png" alt="GOB">
-        <span class="stat-val gold" id="valGob">72.27</span>
-      </div>
-
-      <!-- Mushrooms / Corn -->
-      <div class="stat-pill">
-        <img src="assets/icon_mushroom_hd.png" alt="Mushroom">
-        <span class="stat-val pink" id="valMushroom">1,450</span>
-      </div>
-
-      <!-- Hearts / Breeding Gems -->
-      <div class="stat-pill">
-        <img src="assets/icon_heart_gem_hd.png" alt="Hearts">
-        <span class="stat-val green" id="valHearts">32</span>
-      </div>
-
-      <!-- Energy -->
-      <div class="energy-box">
-        <div class="energy-label">
-          <span>ENERGY</span>
-          <span id="txtEnergy">1850/2000</span>
+    <header class="top-header">
+      <div class="user-profile-badge">
+        <img src="assets/goblin_peon.png" class="user-avatar" alt="Avatar">
+        <div class="user-meta">
+          <span class="user-name">GoblinKing</span>
+          <span class="user-level-tag">Lv. 8 Chieftain</span>
         </div>
-        <div class="energy-bar-bg">
-          <div class="energy-bar-fill" id="barEnergy"></div>
+      </div>
+
+      <div class="header-resources">
+        <!-- Mushrooms 🍄 -->
+        <div class="res-pill">
+          <img src="assets/icon_mushroom_hd.png" alt="🍄">
+          <span class="res-val pink" id="hdrMushroom">1,450</span>
+        </div>
+
+        <!-- Hearts ❤️ -->
+        <div class="res-pill">
+          <img src="assets/icon_heart_gem_hd.png" alt="❤️">
+          <span class="res-val green" id="hdrHearts">32</span>
+        </div>
+
+        <!-- Stars ⭐ -->
+        <div class="res-pill">
+          <img src="assets/icon_stars_hd.png" alt="⭐">
+          <span class="res-val cyan" id="hdrStars">10</span>
         </div>
       </div>
     </header>
 
-    <!-- ══════════════════════════════════════════════
-         TAB 1: GOBLINS (MAIN DUCKS TAB)
-         ══════════════════════════════════════════════ -->
-    <section id="tab-goblins" class="tab-content active">
-      <div class="hero-card">
-        <div class="hero-rarity-badge" id="heroRarity">✨ LEGENDARY TIER</div>
-        <h2 class="hero-title" id="heroName">GROM THE WARLORD</h2>
-        <div class="hero-multiplier">Earning Rate: <span id="heroMultiplier">160x Mining Boost</span></div>
-
-        <!-- Interactive Tap Stage -->
-        <div class="tap-stage" id="tapStage">
-          <div class="tap-ring"></div>
-          <img src="assets/goblin_warlord.png" alt="Hero Goblin" class="hero-sprite" id="heroSprite">
-        </div>
-
-        <!-- Level & Egg Progress Gauge -->
-        <div class="progress-section">
-          <div class="gauge-row">
-            <span>LEVEL PROGRESS (LV. <b id="heroLevel" style="color:#fff">4</b>/5)</span>
-            <span id="heroEggGauge">Egg Bar: 75%</span>
-          </div>
-          <div class="gauge-bar-bg">
-            <div class="gauge-bar-fill" id="heroProgressFill" style="width: 75%"></div>
-          </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="hero-actions">
-          <button class="btn-feed" id="btnFeed">
-            <img src="assets/feed_bowl.png" alt="Feed">
-            <span>TAP TO FEED (<span id="feedCost">25</span> 🍄)</span>
-          </button>
-          <button class="btn-breed" id="btnBreed">
-            <span>💖 BREED</span>
-            <small id="breedCounter">(2/5 Limit)</small>
-          </button>
+    <!-- Score & Energy Banner -->
+    <div class="score-banner">
+      <div class="score-left">
+        <img src="assets/icon_gob_coin_hd.png" alt="Token">
+        <div class="score-details">
+          <span class="score-label">Total Mined $GOB</span>
+          <span class="score-number" id="hdrGobScore">72.27</span>
         </div>
       </div>
 
-      <!-- Goblin Clan Roster Carousel -->
-      <div class="flock-header">
-        <div class="flock-title">Your Goblin Roster (5/5)</div>
-      </div>
-      <div class="flock-carousel" id="rosterCarousel">
-        <div class="flock-card" onclick="selectGoblin(0)">
-          <img src="assets/goblin_peon.png" alt="Peon">
-          <div class="flock-card-name">Peon</div>
+      <div class="energy-container">
+        <div class="energy-text">
+          <span>⚡ ENERGY</span>
+          <span id="txtEnergyVal">1850/2000</span>
         </div>
-        <div class="flock-card" onclick="selectGoblin(1)">
-          <img src="assets/goblin_scout.png" alt="Scout">
-          <div class="flock-card-name">Scout</div>
-        </div>
-        <div class="flock-card" onclick="selectGoblin(2)">
-          <img src="assets/goblin_warrior.png" alt="Warrior">
-          <div class="flock-card-name">Warrior</div>
-        </div>
-        <div class="flock-card" onclick="selectGoblin(3)">
-          <img src="assets/goblin_shaman.png" alt="Shaman">
-          <div class="flock-card-name">Shaman</div>
-        </div>
-        <div class="flock-card active" onclick="selectGoblin(4)">
-          <img src="assets/goblin_warlord.png" alt="Warlord">
-          <div class="flock-card-name">Warlord</div>
+        <div class="energy-track">
+          <div class="energy-fill" id="energyFillBar"></div>
         </div>
       </div>
-    </section>
+    </div>
 
     <!-- ══════════════════════════════════════════════
-         TAB 2: EGGS (7x7 RELIC MERGE GRID)
+         TAB 1: MARKET (LEFT 1)
          ══════════════════════════════════════════════ -->
-    <section id="tab-eggs" class="tab-content">
-      <div class="merge-header">
-        <div>
-          <h3 style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-main)">7×7 RELIC MERGE</h3>
-          <p style="font-size:0.72rem;color:var(--text-muted)">Merge 2 matching eggs for rare drops & ❤️ Hearts!</p>
-        </div>
-        <button class="btn-auto-merge" id="btnAutoMerge">⚡ AUTO-MERGE</button>
-      </div>
-
-      <!-- 49 Slot Grid -->
-      <div class="grid-board" id="gridBoard"></div>
-
-      <!-- Grid Bottom Action -->
-      <div class="grid-actions">
-        <button class="btn-spawn-egg" id="btnSpawnEgg">
-          <span>🥚 SPAWN RELIC EGG (-50 🍄)</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         TAB 3: GODS (PRESTIGE TOTEMS & MULTIPLIERS)
-         ══════════════════════════════════════════════ -->
-    <section id="tab-gods" class="tab-content">
-      <div class="gods-container">
-        <!-- God of Greed -->
-        <div class="god-card">
-          <img src="assets/totem_greed.png" alt="God of Greed">
-          <div class="god-info">
-            <div class="god-name">IDOL OF PLUNDER</div>
-            <div class="god-buff">Feeding Gold Boost: <b id="godGreedBuff">+45% Yield</b></div>
-            <div class="god-progress-bg">
-              <div class="god-progress-fill" style="width: 60%"></div>
-            </div>
-          </div>
-          <button class="btn-sacrifice" onclick="sacrificeToGod('greed')">SACRIFICE (-10 ❤️)</button>
-        </div>
-
-        <!-- Goddess of Fertility -->
-        <div class="god-card">
-          <img src="assets/totem_fertility.png" alt="Goddess of Fertility">
-          <div class="god-info">
-            <div class="god-name">GODDESS OF LIFE</div>
-            <div class="god-buff">Breeding Luck: <b id="godFertilityBuff">+35% Legendary</b></div>
-            <div class="god-progress-bg">
-              <div class="god-progress-fill" style="width: 40%"></div>
-            </div>
-          </div>
-          <button class="btn-sacrifice" onclick="sacrificeToGod('fertility')">SACRIFICE (-10 ❤️)</button>
-        </div>
-
-        <!-- Totem of War -->
-        <div class="god-card">
-          <img src="assets/totem_war.png" alt="War Totem">
-          <div class="god-info">
-            <div class="god-name">TOTEM OF FRENZY</div>
-            <div class="god-buff">Energy Cooldown: <b id="godWarBuff">-25% Recharge Time</b></div>
-            <div class="god-progress-bg">
-              <div class="god-progress-fill" style="width: 80%"></div>
-            </div>
-          </div>
-          <button class="btn-sacrifice" onclick="sacrificeToGod('war')">SACRIFICE (-10 ❤️)</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         TAB 4: MARKET & VIP PASS
-         ══════════════════════════════════════════════ -->
-    <section id="tab-market" class="tab-content">
+    <section id="pane-market" class="tab-pane">
       <!-- VIP Chieftain Pass -->
-      <div class="vip-banner">
+      <div class="vip-card-banner">
         <img src="assets/vip_crown_3d.png" alt="VIP Pass">
-        <div class="vip-details">
-          <div class="vip-title">CHIEFTAIN VIP PASS</div>
-          <div class="vip-desc">20/s Turbo Auto-Feed · Ad-Skip · Smart Bot · 2x Mushrooms</div>
-          <button class="btn-buy-vip" onclick="buyVipPass()">
-            <img src="assets/icon_stars_hd.png" style="width:16px;height:16px" alt="Stars">
+        <div class="vip-info">
+          <div class="vip-head">CHIEFTAIN VIP PASS</div>
+          <div class="vip-sub">20/s Turbo Auto-Feed · Ad-Skip · Smart Bot · 2x Mushrooms</div>
+          <button class="btn-buy-stars" onclick="buyVipPass()">
+            <img src="assets/icon_stars_hd.png" style="width:16px;height:16px" alt="⭐">
             <span>BUY FOR 299 ⭐</span>
           </button>
         </div>
       </div>
 
-      <!-- P2P & Stock Market Items -->
-      <div class="market-grid">
-        <div class="market-item-card">
+      <!-- Market Listings -->
+      <div class="market-listing-grid">
+        <div class="listing-card">
           <img src="assets/egg_dragon.png" alt="Dragon Egg">
-          <div class="market-item-name">Dragon Relic Egg</div>
-          <div class="market-price-tag">
-            <img src="assets/icon_mushroom_hd.png" alt="🍄">
-            <span>450 🍄 <small style="color:var(--green-main)">+15%</small></span>
+          <div class="listing-title">Dragon Relic Egg</div>
+          <div class="listing-price">
+            <img src="assets/icon_mushroom_hd.png" style="width:16px;height:16px" alt="🍄">
+            <span>450 🍄 <small style="color:var(--green)">+15% 🔥</small></span>
           </div>
-          <button class="btn-trade" onclick="tradeItem('dragon_egg', 450)">BUY ITEM</button>
+          <button class="btn-buy-listing" onclick="buyListing('dragon_egg', 450)">BUY ITEM</button>
         </div>
 
-        <div class="market-item-card">
-          <img src="assets/goblin_shaman.png" alt="Shaman Card">
-          <div class="market-item-name">Goblin Shaman</div>
-          <div class="market-price-tag">
-            <img src="assets/icon_stars_hd.png" alt="⭐">
+        <div class="listing-card">
+          <img src="assets/goblin_shaman.png" alt="Shaman">
+          <div class="listing-title">Goblin Shaman</div>
+          <div class="listing-price">
+            <img src="assets/icon_stars_hd.png" style="width:16px;height:16px" alt="⭐">
             <span>75 ⭐</span>
           </div>
-          <button class="btn-trade" onclick="tradeItem('shaman_card', 75)">BUY STARS</button>
+          <button class="btn-buy-listing" onclick="buyListing('shaman_card', 75)">BUY STARS</button>
         </div>
 
-        <div class="market-item-card">
+        <div class="listing-card">
           <img src="assets/bot_trader.png" alt="Bot Trader">
-          <div class="market-item-name">Smart Bot Drone</div>
-          <div class="market-price-tag">
-            <img src="assets/icon_stars_hd.png" alt="⭐">
+          <div class="listing-title">Smart Bot Drone</div>
+          <div class="listing-price">
+            <img src="assets/icon_stars_hd.png" style="width:16px;height:16px" alt="⭐">
             <span>150 ⭐</span>
           </div>
-          <button class="btn-trade" onclick="tradeItem('bot_drone', 150)">ACTIVATE</button>
+          <button class="btn-buy-listing" onclick="buyListing('bot_drone', 150)">ACTIVATE</button>
         </div>
 
-        <div class="market-item-card">
+        <div class="listing-card">
           <img src="assets/icon_meat_hd.png" alt="Monster Feast">
-          <div class="market-item-name">Monster Feast 🍗</div>
-          <div class="market-price-tag">
-            <img src="assets/icon_gob_coin_hd.png" alt="GOB">
+          <div class="listing-title">Monster Feast 🍗</div>
+          <div class="listing-price">
+            <img src="assets/icon_gob_coin_hd.png" style="width:16px;height:16px" alt="GOB">
             <span>500 $GOB</span>
           </div>
-          <button class="btn-trade" onclick="tradeItem('feast', 500)">PURCHASE</button>
+          <button class="btn-buy-listing" onclick="buyListing('feast', 500)">PURCHASE</button>
         </div>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         TAB 5: TASKS, WHEEL & CLAN RAIDS
+         TAB 2: EGGS (LEFT 2)
          ══════════════════════════════════════════════ -->
-    <section id="tab-tasks" class="tab-content">
+    <section id="pane-eggs" class="tab-pane">
+      <div class="grid-control-bar">
+        <div>
+          <h3 style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold)">7×7 RELIC MERGE</h3>
+          <p style="font-size:0.72rem;color:var(--text-muted)">Merge matching eggs for rare drops & ❤️ Hearts!</p>
+        </div>
+        <button class="btn-quick-merge" id="btnQuickMerge">⚡ AUTO-MERGE</button>
+      </div>
+
+      <!-- 7x7 Grid Matrix -->
+      <div class="merge-matrix" id="mergeMatrix"></div>
+
+      <button class="btn-spawn-cell" id="btnSpawnRelic">
+        <span>🥚 SPAWN RELIC EGG (-50 🍄)</span>
+      </button>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         TAB 3: GOBLINS (CENTER MAIN HERO TAB)
+         ══════════════════════════════════════════════ -->
+    <section id="pane-goblins" class="tab-pane active">
+      <div class="character-stage-card">
+        <div class="card-top-info">
+          <div class="rarity-pill" id="charRarityBadge">✨ LEGENDARY TIER</div>
+          <div class="breed-pill" id="charBreedCount">💖 Breed (2/5)</div>
+        </div>
+
+        <h2 class="char-title" id="charHeroTitle">GROM THE WARLORD</h2>
+        <div class="char-sub">Earning Rate: <b id="charMiningRate">160x Mining Boost</b></div>
+
+        <!-- Center Tap Zone -->
+        <div class="tap-avatar-zone" id="tapAvatarZone">
+          <div class="pedestal-ring"></div>
+          <img src="assets/goblin_warlord.png" class="avatar-img" id="mainAvatarImg" alt="Goblin Hero">
+        </div>
+
+        <!-- Level & Egg Bar -->
+        <div class="level-gauge-box">
+          <div class="gauge-labels">
+            <span>LEVEL PROGRESS (LV. <b id="charLevelNum">4</b>/5)</span>
+            <span id="charEggGaugeTxt">Egg Bar: 75%</span>
+          </div>
+          <div class="gauge-rail">
+            <div class="gauge-fill" id="charGaugeFill" style="width: 75%"></div>
+          </div>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="cta-button-row">
+          <button class="btn-main-feed" id="btnMainFeed">
+            <img src="assets/feed_bowl.png" alt="Feed">
+            <span>TAP TO FEED (<span id="txtFeedCost">25</span> 🍄)</span>
+          </button>
+          <button class="btn-side-action" id="btnDoBreed">
+            <span>💖 BREED</span>
+            <small style="font-size:0.65rem;opacity:0.8">(2/5 Limit)</small>
+          </button>
+        </div>
+      </div>
+
+      <!-- Owned Flock Roster -->
+      <div class="roster-header">
+        <span class="roster-title">Your Goblin Roster (5/5)</span>
+      </div>
+      <div class="roster-scroll" id="rosterScroll">
+        <div class="roster-card" onclick="selectHero(0)">
+          <img src="assets/goblin_peon.png" alt="Peon">
+          <div class="roster-name">Peon</div>
+        </div>
+        <div class="roster-card" onclick="selectHero(1)">
+          <img src="assets/goblin_scout.png" alt="Scout">
+          <div class="roster-name">Scout</div>
+        </div>
+        <div class="roster-card" onclick="selectHero(2)">
+          <img src="assets/goblin_warrior.png" alt="Warrior">
+          <div class="roster-name">Warrior</div>
+        </div>
+        <div class="roster-card" onclick="selectHero(3)">
+          <img src="assets/goblin_shaman.png" alt="Shaman">
+          <div class="roster-name">Shaman</div>
+        </div>
+        <div class="roster-card active" onclick="selectHero(4)">
+          <img src="assets/goblin_warlord.png" alt="Warlord">
+          <div class="roster-name">Warlord</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         TAB 4: GODS (RIGHT 1)
+         ══════════════════════════════════════════════ -->
+    <section id="pane-gods" class="tab-pane">
+      <div class="gods-stack">
+        <!-- God of Greed -->
+        <div class="god-row-card">
+          <img src="assets/totem_greed.png" alt="God of Greed">
+          <div class="god-row-info">
+            <div class="god-row-title">IDOL OF PLUNDER</div>
+            <div class="god-row-desc">Feeding Gold Boost: <b>+45% Yield</b></div>
+            <div class="god-meter-bg">
+              <div class="god-meter-fill" style="width: 60%"></div>
+            </div>
+          </div>
+          <button class="btn-altar-sac" onclick="sacrificeToGod('greed')">SACRIFICE (-10 ❤️)</button>
+        </div>
+
+        <!-- Goddess of Fertility -->
+        <div class="god-row-card">
+          <img src="assets/totem_fertility.png" alt="Goddess of Fertility">
+          <div class="god-row-info">
+            <div class="god-row-title">GODDESS OF LIFE</div>
+            <div class="god-row-desc">Breeding Luck: <b>+35% Legendary</b></div>
+            <div class="god-meter-bg">
+              <div class="god-meter-fill" style="width: 40%"></div>
+            </div>
+          </div>
+          <button class="btn-altar-sac" onclick="sacrificeToGod('fertility')">SACRIFICE (-10 ❤️)</button>
+        </div>
+
+        <!-- Totem of War -->
+        <div class="god-row-card">
+          <img src="assets/totem_war.png" alt="Totem of War">
+          <div class="god-row-info">
+            <div class="god-row-title">TOTEM OF FRENZY</div>
+            <div class="god-row-desc">Energy Cooldown: <b>-25% Recharge</b></div>
+            <div class="god-meter-bg">
+              <div class="god-meter-fill" style="width: 80%"></div>
+            </div>
+          </div>
+          <button class="btn-altar-sac" onclick="sacrificeToGod('war')">SACRIFICE (-10 ❤️)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         TAB 5: TASKS (RIGHT 2)
+         ══════════════════════════════════════════════ -->
+    <section id="pane-tasks" class="tab-pane">
       <!-- Wheel of Fortune -->
-      <div class="wheel-card">
-        <h3 style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold-main);margin-bottom:2px">LUCKY FORTUNE WHEEL</h3>
+      <div class="wheel-panel">
+        <h3 style="font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:2px">LUCKY FORTUNE WHEEL</h3>
         <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px">Spin with energy to win Jackpots, Stars & Eggs!</p>
         
-        <div class="wheel-stage">
-          <div class="wheel-pointer"></div>
-          <canvas id="fortuneCanvas" width="190" height="190"></canvas>
-          <img src="assets/wheel_center.png" class="wheel-center-ornament" alt="Wheel Hub">
+        <div class="wheel-box">
+          <div class="wheel-pin"></div>
+          <canvas id="wheelCanvas" width="190" height="190"></canvas>
+          <img src="assets/wheel_center.png" class="wheel-hub" alt="Hub">
         </div>
 
-        <button class="btn-spin" id="btnSpinWheel">SPIN WHEEL (-100 ⚡)</button>
+        <button class="btn-spin-now" id="btnSpinFortune">SPIN WHEEL (-100 ⚡)</button>
       </div>
 
-      <!-- Clan Sabotage Raid -->
-      <div class="clan-raid-card">
-        <img src="assets/orc_boss.png" alt="Orc Horde">
-        <div class="raid-info">
-          <div class="raid-title">CLAN SABOTAGE: ORC HORDE</div>
-          <div class="raid-desc">Raid the Orc Camp every 4h to loot their Mushroom stores!</div>
-          <button class="btn-raid" onclick="startClanRaid()">⚔️ SABOTAGE RAID</button>
+      <!-- Clan Sabotage -->
+      <div class="raid-boss-card">
+        <img src="assets/orc_boss.png" alt="Orc Boss">
+        <div class="raid-boss-details">
+          <div class="raid-boss-title">CLAN SABOTAGE: ORC HORDE</div>
+          <div class="raid-boss-sub">Raid the Orc Camp every 4h to loot their Mushroom stores!</div>
+          <button class="btn-do-raid" onclick="startClanSabotage()">⚔️ SABOTAGE RAID</button>
         </div>
       </div>
 
-      <!-- 2-Level Referral Tree -->
-      <div class="referral-card">
-        <div class="ref-header">👥 2-TIER REFERRAL NETWORK</div>
-        <div class="ref-desc">Invite friends for +1,000 🍄 (+5,000 for Premium) + 10% Tier-1 & 2.5% Tier-2 passive reward share!</div>
-        <div class="ref-box">
-          <input type="text" class="ref-input" id="refLink" value="https://t.me/GoblinClanBot/game?startapp=ref_user123" readonly>
-          <button class="btn-copy-ref" onclick="copyRef()">COPY LINK</button>
+      <!-- 2-Tier Referral Engine -->
+      <div class="referral-box-widget">
+        <div class="ref-title">👥 2-TIER REFERRAL NETWORK</div>
+        <div class="ref-sub">Invite friends for +1,000 🍄 (+5,000 for Premium) + 10% Tier-1 & 2.5% Tier-2 passive reward share!</div>
+        <div class="ref-input-group">
+          <input type="text" class="ref-text-field" id="txtRefShare" value="https://t.me/GoblinClanBot/game?startapp=ref_user123" readonly>
+          <button class="btn-copy-link" onclick="copyRefLink()">COPY LINK</button>
         </div>
       </div>
     </section>
@@ -1264,89 +1386,86 @@
   </div>
 
   <!-- ══════════════════════════════════════════════
-       BOTTOM FLOATING NAVIGATION DOCK
+       BOTTOM FLOATING DOCK (EXACT DUCK MY DUCK 5-TAB ORDER)
+       1: Market, 2: Eggs, 3: Goblins (Center), 4: Gods, 5: Tasks
        ══════════════════════════════════════════════ -->
-  <nav class="bottom-dock">
-    <button class="dock-btn active" onclick="switchTab('goblins')">
-      <img src="assets/dock_goblin.png" alt="Goblins">
-      <span>Goblins</span>
-    </button>
-    <button class="dock-btn" onclick="switchTab('eggs')">
-      <img src="assets/dock_egg.png" alt="Eggs">
-      <span>Eggs</span>
-    </button>
-    <button class="dock-btn" onclick="switchTab('gods')">
-      <img src="assets/dock_gods.png" alt="Gods">
-      <span>Gods</span>
-    </button>
-    <button class="dock-btn" onclick="switchTab('market')">
+  <nav class="bottom-dock-nav">
+    <button class="nav-tab-item" onclick="navigateTab('market')">
       <img src="assets/dock_market.png" alt="Market">
       <span>Market</span>
     </button>
-    <button class="dock-btn" onclick="switchTab('tasks')">
+    <button class="nav-tab-item" onclick="navigateTab('eggs')">
+      <img src="assets/dock_egg.png" alt="Eggs">
+      <span>Eggs</span>
+    </button>
+    <button class="nav-tab-item center-tab active" onclick="navigateTab('goblins')">
+      <img src="assets/dock_goblin.png" alt="Goblins">
+      <span>Goblins</span>
+    </button>
+    <button class="nav-tab-item" onclick="navigateTab('gods')">
+      <img src="assets/dock_gods.png" alt="Gods">
+      <span>Gods</span>
+    </button>
+    <button class="nav-tab-item" onclick="navigateTab('tasks')">
       <img src="assets/dock_tasks.png" alt="Tasks">
       <span>Tasks</span>
     </button>
   </nav>
 
-  <!-- Win / Reward Modal -->
-  <div class="modal-overlay" id="rewardModal">
-    <div class="modal-card">
-      <img src="assets/egg_celestial.png" id="modalImg" alt="Reward">
-      <h3 class="modal-title" id="modalTitle">REWARD UNLOCKED!</h3>
-      <p class="modal-msg" id="modalMsg">You hatched a Celestial Dragon Egg!</p>
-      <button class="btn-modal-close" onclick="closeModal()">COLLECT</button>
+  <!-- Modal -->
+  <div class="modal-wrap" id="genericModal">
+    <div class="modal-box">
+      <img src="assets/egg_celestial.png" id="modalIcon" alt="Reward">
+      <h3 class="modal-head" id="modalHeadline">REWARD CLAIMED!</h3>
+      <p class="modal-desc" id="modalText">You plundered 350 Mushrooms!</p>
+      <button class="btn-collect-reward" onclick="dismissModal()">COLLECT</button>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════════
-       AUDIO SFX SYNTHESIZER & GAME ENGINE LOGIC
+       GAME LOGIC & AUDIO SYNTHESIS
        ══════════════════════════════════════════════ -->
   <script>
-    // Audio Context Synthesizer
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let actx = null;
+    let sfxCtx = null;
 
-    function playSound(type) {
+    function playAudio(type) {
       try {
-        if (!actx) actx = new AudioCtx();
-        if (actx.state === 'suspended') actx.resume();
-
-        const osc = actx.createOscillator();
-        const gain = actx.createGain();
+        if (!sfxCtx) sfxCtx = new AudioCtx();
+        if (sfxCtx.state === 'suspended') sfxCtx.resume();
+        const osc = sfxCtx.createOscillator();
+        const gain = sfxCtx.createGain();
         osc.connect(gain);
-        gain.connect(actx.destination);
-
-        const now = actx.currentTime;
+        gain.connect(sfxCtx.destination);
+        const t = sfxCtx.currentTime;
 
         if (type === 'tap') {
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
-          gain.gain.setValueAtTime(0.3, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-          osc.start(now);
-          osc.stop(now + 0.08);
+          osc.frequency.setValueAtTime(480, t);
+          osc.frequency.exponentialRampToValueAtTime(960, t + 0.07);
+          gain.gain.setValueAtTime(0.25, t);
+          gain.gain.exponentialRampToValueAtTime(0.01, t + 0.07);
+          osc.start(t);
+          osc.stop(t + 0.07);
         } else if (type === 'merge') {
-          osc.frequency.setValueAtTime(523.25, now);
-          osc.frequency.setValueAtTime(659.25, now + 0.08);
-          osc.frequency.setValueAtTime(783.99, now + 0.16);
-          gain.gain.setValueAtTime(0.4, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
-          osc.start(now);
-          osc.stop(now + 0.28);
-        } else if (type === 'win') {
-          osc.frequency.setValueAtTime(600, now);
-          osc.frequency.exponentialRampToValueAtTime(1200, now + 0.25);
-          gain.gain.setValueAtTime(0.5, now);
-          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
-          osc.start(now);
-          osc.stop(now + 0.35);
+          osc.frequency.setValueAtTime(523.25, t);
+          osc.frequency.setValueAtTime(659.25, t + 0.08);
+          osc.frequency.setValueAtTime(783.99, t + 0.16);
+          gain.gain.setValueAtTime(0.35, t);
+          gain.gain.exponentialRampToValueAtTime(0.01, t + 0.28);
+          osc.start(t);
+          osc.stop(t + 0.28);
+        } else if (type === 'fanfare') {
+          osc.frequency.setValueAtTime(587.33, t);
+          osc.frequency.exponentialRampToValueAtTime(1174.66, t + 0.3);
+          gain.gain.setValueAtTime(0.4, t);
+          gain.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+          osc.start(t);
+          osc.stop(t + 0.4);
         }
       } catch (e) {}
     }
 
-    // Telegram Haptics Helper
-    function triggerHaptic(style = 'light') {
+    function triggerHaptics(style = 'light') {
       try {
         if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred(style);
@@ -1354,24 +1473,25 @@
       } catch (e) {}
     }
 
-    // Game State
-    const STATE = {
-      gob: 72.27,
+    // State
+    const G_STATE = {
+      score: 72.27,
       mushrooms: 1450,
       hearts: 32,
+      stars: 10,
       energy: 1850,
       maxEnergy: 2000,
-      activeGoblinIdx: 4,
+      currentHeroIdx: 4,
       feedCost: 25,
-      goblins: [
+      heroes: [
         { name: "GRUNT THE PEON", rarity: "COMMON", mult: 1, img: "assets/goblin_peon.png", lv: 2, exp: 40 },
         { name: "SNARL THE SCOUT", rarity: "UNCOMMON", mult: 4, img: "assets/goblin_scout.png", lv: 3, exp: 60 },
         { name: "KRAG THE WARRIOR", rarity: "RARE", mult: 16, img: "assets/goblin_warrior.png", lv: 3, exp: 70 },
         { name: "RAZZ THE SHAMAN", rarity: "EPIC", mult: 50, img: "assets/goblin_shaman.png", lv: 4, exp: 85 },
         { name: "GROM THE WARLORD", rarity: "LEGENDARY", mult: 160, img: "assets/goblin_warlord.png", lv: 4, exp: 75 }
       ],
-      grid: Array(49).fill(null),
-      eggSprites: [
+      gridSlots: Array(49).fill(null),
+      eggAssets: [
         "assets/egg_wood.png",
         "assets/egg_bronze.png",
         "assets/egg_amethyst.png",
@@ -1380,317 +1500,311 @@
       ]
     };
 
-    // Update Header UI
-    function updateHeader() {
-      document.getElementById("valGob").innerText = STATE.gob.toFixed(2);
-      document.getElementById("valMushroom").innerText = STATE.mushrooms.toLocaleString();
-      document.getElementById("valHearts").innerText = STATE.hearts;
-      document.getElementById("txtEnergy").innerText = `${STATE.energy}/${STATE.maxEnergy}`;
-      document.getElementById("barEnergy").style.width = `${(STATE.energy / STATE.maxEnergy) * 100}%`;
+    function refreshUI() {
+      document.getElementById("hdrGobScore").innerText = G_STATE.score.toFixed(2);
+      document.getElementById("hdrMushroom").innerText = G_STATE.mushrooms.toLocaleString();
+      document.getElementById("hdrHearts").innerText = G_STATE.hearts;
+      document.getElementById("hdrStars").innerText = G_STATE.stars;
+      document.getElementById("txtEnergyVal").innerText = `${G_STATE.energy}/${G_STATE.maxEnergy}`;
+      document.getElementById("energyFillBar").style.width = `${(G_STATE.energy / G_STATE.maxEnergy) * 100}%`;
     }
 
-    // Tab Switching
-    function switchTab(tabId) {
-      playSound('tap');
-      triggerHaptic('light');
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.dock-btn').forEach(el => el.classList.remove('active'));
+    function navigateTab(tabName) {
+      playAudio('tap');
+      triggerHaptics('light');
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
 
-      const targetTab = document.getElementById(`tab-${tabId}`);
-      if (targetTab) targetTab.classList.add('active');
+      const targetPane = document.getElementById(`pane-${tabName}`);
+      if (targetPane) targetPane.classList.add('active');
 
-      const activeBtn = Array.from(document.querySelectorAll('.dock-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      const activeBtn = Array.from(document.querySelectorAll('.nav-tab-item')).find(b => b.getAttribute('onclick').includes(tabName));
       if (activeBtn) activeBtn.classList.add('active');
 
-      if (tabId === 'eggs') renderGrid();
+      if (tabName === 'eggs') drawMergeGrid();
     }
 
-    // Goblin Selection
-    function selectGoblin(idx) {
-      STATE.activeGoblinIdx = idx;
-      const g = STATE.goblins[idx];
-      document.getElementById("heroName").innerText = g.name;
-      document.getElementById("heroRarity").innerText = `✨ ${g.rarity} TIER`;
-      document.getElementById("heroMultiplier").innerText = `${g.mult}x Mining Boost`;
-      document.getElementById("heroSprite").src = g.img;
-      document.getElementById("heroLevel").innerText = g.lv;
-      document.getElementById("heroProgressFill").style.width = `${g.exp}%`;
-      document.getElementById("heroEggGauge").innerText = `Egg Bar: ${g.exp}%`;
+    function selectHero(idx) {
+      G_STATE.currentHeroIdx = idx;
+      const h = G_STATE.heroes[idx];
+      document.getElementById("charHeroTitle").innerText = h.name;
+      document.getElementById("charRarityBadge").innerText = `✨ ${h.rarity} TIER`;
+      document.getElementById("charMiningRate").innerText = `${h.mult}x Mining Boost`;
+      document.getElementById("mainAvatarImg").src = h.img;
+      document.getElementById("charLevelNum").innerText = h.lv;
+      document.getElementById("charGaugeFill").style.width = `${h.exp}%`;
+      document.getElementById("charEggGaugeTxt").innerText = `Egg Bar: ${h.exp}%`;
 
-      document.querySelectorAll('.flock-card').forEach((c, i) => {
+      document.querySelectorAll('.roster-card').forEach((c, i) => {
         c.classList.toggle('active', i === idx);
       });
-      playSound('tap');
+      playAudio('tap');
     }
 
-    // Tap to Feed Action
-    const tapStage = document.getElementById("tapStage");
-    const heroSprite = document.getElementById("heroSprite");
+    // Tap Hero to Feed
+    const avatarZone = document.getElementById("tapAvatarZone");
+    const avatarImg = document.getElementById("mainAvatarImg");
 
-    function doFeed(e) {
-      if (STATE.mushrooms < STATE.feedCost) {
-        alert("Not enough mushrooms! Spawn more in Egg Merge or Raid.");
+    function handleTapFeed(e) {
+      if (G_STATE.mushrooms < G_STATE.feedCost) {
+        alert("Not enough mushrooms! Merge eggs or sabotage rival clans.");
         return;
       }
-      if (STATE.energy < 15) {
-        alert("Energy depleted! Wait for recharge.");
+      if (G_STATE.energy < 15) {
+        alert("Energy exhausted! Wait for recharge.");
         return;
       }
 
-      STATE.mushrooms -= STATE.feedCost;
-      STATE.energy -= 15;
+      G_STATE.mushrooms -= G_STATE.feedCost;
+      G_STATE.energy -= 15;
       
-      const g = STATE.goblins[STATE.activeGoblinIdx];
-      const mined = 0.05 * g.mult;
-      STATE.gob += mined;
-      g.exp += 4;
-      if (g.exp >= 100) {
-        g.exp = 0;
-        if (g.lv < 5) g.lv++;
+      const hero = G_STATE.heroes[G_STATE.currentHeroIdx];
+      const yieldAmt = 0.05 * hero.mult;
+      G_STATE.score += yieldAmt;
+      hero.exp += 4;
+      if (hero.exp >= 100) {
+        hero.exp = 0;
+        if (hero.lv < 5) hero.lv++;
       }
 
-      // Visual squish
-      heroSprite.classList.add("tap-squish");
-      setTimeout(() => heroSprite.classList.remove("tap-squish"), 80);
+      // Squash deformation
+      avatarImg.classList.add("squish");
+      setTimeout(() => avatarImg.classList.remove("squish"), 80);
 
-      // Floating particles
-      const rect = tapStage.getBoundingClientRect();
+      // Particle text
+      const rect = avatarZone.getBoundingClientRect();
       const x = (e && e.clientX) ? (e.clientX - rect.left) : (rect.width / 2);
       const y = (e && e.clientY) ? (e.clientY - rect.top) : (rect.height / 2);
 
-      const fText = document.createElement("div");
-      fText.className = "floating-text";
-      fText.style.left = `${x}px`;
-      fText.style.top = `${y}px`;
-      fText.style.color = "#ffd000";
-      fText.innerText = `+${mined.toFixed(2)} $GOB`;
-      tapStage.appendChild(fText);
-      setTimeout(() => fText.remove(), 800);
+      const fPop = document.createElement("div");
+      fPop.className = "tap-float-num";
+      fPop.style.left = `${x}px`;
+      fPop.style.top = `${y}px`;
+      fPop.style.color = "#ffcc00";
+      fPop.innerText = `+${yieldAmt.toFixed(2)} $GOB`;
+      avatarZone.appendChild(fPop);
+      setTimeout(() => fPop.remove(), 850);
 
-      playSound('tap');
-      triggerHaptic('medium');
-      updateHeader();
-      selectGoblin(STATE.activeGoblinIdx);
+      playAudio('tap');
+      triggerHaptics('medium');
+      refreshUI();
+      selectHero(G_STATE.currentHeroIdx);
     }
 
-    tapStage.addEventListener("pointerdown", doFeed);
-    document.getElementById("btnFeed").addEventListener("click", doFeed);
+    avatarZone.addEventListener("pointerdown", handleTapFeed);
+    document.getElementById("btnMainFeed").addEventListener("click", handleTapFeed);
 
-    // 7x7 Merge Grid Engine
-    let selectedCellIdx = null;
+    // 7x7 Merge Matrix
+    let activeSlotIdx = null;
 
-    function initGrid() {
-      // Seed initial eggs
+    function initMatrix() {
       for (let i = 0; i < 16; i++) {
         const slot = Math.floor(Math.random() * 49);
-        if (!STATE.grid[slot]) {
-          STATE.grid[slot] = Math.floor(Math.random() * 2) + 1; // Tier 1 or 2
+        if (!G_STATE.gridSlots[slot]) {
+          G_STATE.gridSlots[slot] = Math.floor(Math.random() * 2) + 1;
         }
       }
     }
 
-    function renderGrid() {
-      const board = document.getElementById("gridBoard");
-      board.innerHTML = "";
+    function drawMergeGrid() {
+      const mat = document.getElementById("mergeMatrix");
+      mat.innerHTML = "";
 
-      STATE.grid.forEach((val, idx) => {
+      G_STATE.gridSlots.forEach((tierVal, idx) => {
         const cell = document.createElement("div");
-        cell.className = `grid-cell ${selectedCellIdx === idx ? 'selected' : ''}`;
-        
-        if (val) {
+        cell.className = `matrix-cell ${activeSlotIdx === idx ? 'active-select' : ''}`;
+
+        if (tierVal) {
           const img = document.createElement("img");
-          img.src = STATE.eggSprites[Math.min(val - 1, 4)];
+          img.src = G_STATE.eggAssets[Math.min(tierVal - 1, 4)];
           cell.appendChild(img);
 
-          const tier = document.createElement("div");
-          tier.className = "grid-cell-tier";
-          tier.innerText = `T${val}`;
-          cell.appendChild(tier);
+          const badge = document.createElement("div");
+          badge.className = "cell-badge";
+          badge.innerText = `T${tierVal}`;
+          cell.appendChild(badge);
         }
 
-        cell.onclick = () => onCellClick(idx);
-        board.appendChild(cell);
+        cell.onclick = () => onSlotClick(idx);
+        mat.appendChild(cell);
       });
     }
 
-    function onCellClick(idx) {
-      if (selectedCellIdx === null) {
-        if (STATE.grid[idx]) {
-          selectedCellIdx = idx;
-          renderGrid();
+    function onSlotClick(idx) {
+      if (activeSlotIdx === null) {
+        if (G_STATE.gridSlots[idx]) {
+          activeSlotIdx = idx;
+          drawMergeGrid();
         }
       } else {
-        if (selectedCellIdx === idx) {
-          selectedCellIdx = null;
-          renderGrid();
-        } else if (STATE.grid[selectedCellIdx] && STATE.grid[idx] && STATE.grid[selectedCellIdx] === STATE.grid[idx]) {
-          // MERGE SUCCESS!
-          const currentTier = STATE.grid[idx];
-          const newTier = Math.min(currentTier + 1, 5);
-          STATE.grid[idx] = newTier;
-          STATE.grid[selectedCellIdx] = null;
-          selectedCellIdx = null;
+        if (activeSlotIdx === idx) {
+          activeSlotIdx = null;
+          drawMergeGrid();
+        } else if (G_STATE.gridSlots[activeSlotIdx] && G_STATE.gridSlots[idx] && G_STATE.gridSlots[activeSlotIdx] === G_STATE.gridSlots[idx]) {
+          // Merge Match!
+          const curTier = G_STATE.gridSlots[idx];
+          const evolvedTier = Math.min(curTier + 1, 5);
+          G_STATE.gridSlots[idx] = evolvedTier;
+          G_STATE.gridSlots[activeSlotIdx] = null;
+          activeSlotIdx = null;
 
-          STATE.hearts += newTier * 2;
-          STATE.mushrooms += newTier * 50;
+          G_STATE.hearts += evolvedTier * 2;
+          G_STATE.mushrooms += evolvedTier * 50;
 
-          playSound('merge');
-          triggerHaptic('heavy');
-          updateHeader();
-          renderGrid();
-        } else if (!STATE.grid[idx]) {
-          // Move
-          STATE.grid[idx] = STATE.grid[selectedCellIdx];
-          STATE.grid[selectedCellIdx] = null;
-          selectedCellIdx = null;
-          renderGrid();
+          playAudio('merge');
+          triggerHaptics('heavy');
+          refreshUI();
+          drawMergeGrid();
+        } else if (!G_STATE.gridSlots[idx]) {
+          G_STATE.gridSlots[idx] = G_STATE.gridSlots[activeSlotIdx];
+          G_STATE.gridSlots[activeSlotIdx] = null;
+          activeSlotIdx = null;
+          drawMergeGrid();
         } else {
-          selectedCellIdx = idx;
-          renderGrid();
+          activeSlotIdx = idx;
+          drawMergeGrid();
         }
       }
     }
 
-    document.getElementById("btnSpawnEgg").onclick = () => {
-      const emptyIdxs = STATE.grid.map((v, i) => v === null ? i : -1).filter(i => i !== -1);
-      if (!emptyIdxs.length) {
+    document.getElementById("btnSpawnRelic").onclick = () => {
+      const empties = G_STATE.gridSlots.map((v, i) => v === null ? i : -1).filter(i => i !== -1);
+      if (!empties.length) {
         alert("Grid is full! Merge existing eggs first.");
         return;
       }
-      if (STATE.mushrooms < 50) {
+      if (G_STATE.mushrooms < 50) {
         alert("Not enough mushrooms!");
         return;
       }
-      STATE.mushrooms -= 50;
-      const target = emptyIdxs[Math.floor(Math.random() * emptyIdxs.length)];
-      STATE.grid[target] = 1;
-      playSound('tap');
-      triggerHaptic('light');
-      updateHeader();
-      renderGrid();
+      G_STATE.mushrooms -= 50;
+      const target = empties[Math.floor(Math.random() * empties.length)];
+      G_STATE.gridSlots[target] = 1;
+      playAudio('tap');
+      triggerHaptics('light');
+      refreshUI();
+      drawMergeGrid();
     };
 
-    document.getElementById("btnAutoMerge").onclick = () => {
-      let merged = false;
+    document.getElementById("btnQuickMerge").onclick = () => {
+      let didMerge = false;
       for (let i = 0; i < 49; i++) {
-        if (!STATE.grid[i]) continue;
+        if (!G_STATE.gridSlots[i]) continue;
         for (let j = i + 1; j < 49; j++) {
-          if (STATE.grid[i] === STATE.grid[j] && STATE.grid[i] < 5) {
-            STATE.grid[i] = STATE.grid[i] + 1;
-            STATE.grid[j] = null;
-            STATE.hearts += 5;
-            merged = true;
+          if (G_STATE.gridSlots[i] === G_STATE.gridSlots[j] && G_STATE.gridSlots[i] < 5) {
+            G_STATE.gridSlots[i] = G_STATE.gridSlots[i] + 1;
+            G_STATE.gridSlots[j] = null;
+            G_STATE.hearts += 5;
+            didMerge = true;
             break;
           }
         }
       }
-      if (merged) {
-        playSound('merge');
-        triggerHaptic('heavy');
-        updateHeader();
-        renderGrid();
+      if (didMerge) {
+        playAudio('merge');
+        triggerHaptics('heavy');
+        refreshUI();
+        drawMergeGrid();
       }
     };
 
     // Fortune Wheel Canvas Engine
-    const canvas = document.getElementById("fortuneCanvas");
-    const ctx = canvas.getContext("2d");
-    const slices = ["500 🍄", "5 ⭐", "T3 EGG", "100 🍄", "10 ❤️", "JACKPOT"];
-    const colors = ["#1e293b", "#0f172a", "#1e293b", "#0f172a", "#1e293b", "#3b1d54"];
-    let wheelAngle = 0;
-    let isSpinning = false;
+    const wCanvas = document.getElementById("wheelCanvas");
+    const wCtx = wCanvas.getContext("2d");
+    const prizes = ["500 🍄", "5 ⭐", "T3 EGG", "100 🍄", "10 ❤️", "JACKPOT"];
+    const wColors = ["#1e293b", "#0f172a", "#1e293b", "#0f172a", "#1e293b", "#3b1d54"];
+    let currAngle = 0;
+    let isRotating = false;
 
-    function drawWheel() {
-      const num = slices.length;
+    function renderWheel() {
+      const num = prizes.length;
       const arc = (2 * Math.PI) / num;
-      ctx.clearRect(0, 0, 190, 190);
-      ctx.save();
-      ctx.translate(95, 95);
-      ctx.rotate(wheelAngle);
+      wCtx.clearRect(0, 0, 190, 190);
+      wCtx.save();
+      wCtx.translate(95, 95);
+      wCtx.rotate(currAngle);
 
       for (let i = 0; i < num; i++) {
-        const angle = i * arc;
-        ctx.beginPath();
-        ctx.fillStyle = colors[i];
-        ctx.strokeStyle = "rgba(255,208,0,0.4)";
-        ctx.lineWidth = 2;
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, 90, angle, angle + arc);
-        ctx.fill();
-        ctx.stroke();
+        const a = i * arc;
+        wCtx.beginPath();
+        wCtx.fillStyle = wColors[i];
+        wCtx.strokeStyle = "rgba(255,204,0,0.4)";
+        wCtx.lineWidth = 2;
+        wCtx.moveTo(0, 0);
+        wCtx.arc(0, 0, 90, a, a + arc);
+        wCtx.fill();
+        wCtx.stroke();
 
-        ctx.save();
-        ctx.rotate(angle + arc / 2);
-        ctx.fillStyle = "#ffd000";
-        ctx.font = "bold 10px Outfit";
-        ctx.textAlign = "right";
-        ctx.fillText(slices[i], 80, 4);
-        ctx.restore();
+        wCtx.save();
+        wCtx.rotate(a + arc / 2);
+        wCtx.fillStyle = "#ffcc00";
+        wCtx.font = "bold 10px Plus Jakarta Sans";
+        wCtx.textAlign = "right";
+        wCtx.fillText(prizes[i], 80, 4);
+        wCtx.restore();
       }
-      ctx.restore();
+      wCtx.restore();
     }
 
-    document.getElementById("btnSpinWheel").onclick = () => {
-      if (isSpinning) return;
-      if (STATE.energy < 100) {
+    document.getElementById("btnSpinFortune").onclick = () => {
+      if (isRotating) return;
+      if (G_STATE.energy < 100) {
         alert("Not enough energy to spin!");
         return;
       }
-      STATE.energy -= 100;
-      updateHeader();
-      isSpinning = true;
+      G_STATE.energy -= 100;
+      refreshUI();
+      isRotating = true;
 
-      const totalSpin = 10 + Math.random() * 8;
-      const targetAngle = wheelAngle + totalSpin * Math.PI * 2;
-      const start = performance.now();
-      const duration = 3500;
+      const totalSpins = 10 + Math.random() * 8;
+      const finalAngle = currAngle + totalSpins * Math.PI * 2;
+      const startT = performance.now();
+      const dur = 3500;
 
-      function animateSpin(t) {
-        const elapsed = t - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        wheelAngle = wheelAngle + (targetAngle - wheelAngle) * easeOut * 0.1;
-        drawWheel();
+      function animSpin(t) {
+        const elapsed = t - startT;
+        const prog = Math.min(elapsed / dur, 1);
+        const ease = 1 - Math.pow(1 - prog, 3);
+        currAngle = currAngle + (finalAngle - currAngle) * ease * 0.1;
+        renderWheel();
 
-        if (progress < 1) {
-          requestAnimationFrame(animateSpin);
+        if (prog < 1) {
+          requestAnimationFrame(animSpin);
         } else {
-          isSpinning = false;
-          showModal("assets/egg_celestial.png", "WHEEL JACKPOT!", "You won 500 Mushrooms and a Celestial Relic Egg!");
-          STATE.mushrooms += 500;
-          updateHeader();
-          playSound('win');
+          isRotating = false;
+          openModal("assets/egg_celestial.png", "WHEEL JACKPOT!", "You won 500 Mushrooms and a Celestial Relic Egg!");
+          G_STATE.mushrooms += 500;
+          refreshUI();
+          playAudio('fanfare');
         }
       }
-      requestAnimationFrame(animateSpin);
+      requestAnimationFrame(animSpin);
     };
 
-    // Clan Sabotage Raid
-    function startClanRaid() {
-      playSound('tap');
-      triggerHaptic('heavy');
-      const loot = Math.floor(Math.random() * 350) + 150;
-      STATE.mushrooms += loot;
-      showModal("assets/orc_boss.png", "SABOTAGE SUCCESSFUL!", `Your warband raided the Orc Camp and plundered ${loot} Mushrooms!`);
-      updateHeader();
+    function startClanSabotage() {
+      playAudio('tap');
+      triggerHaptics('heavy');
+      const looted = Math.floor(Math.random() * 350) + 150;
+      G_STATE.mushrooms += looted;
+      openModal("assets/orc_boss.png", "SABOTAGE SUCCESSFUL!", `Your warband raided the Orc Camp and looted ${looted} Mushrooms!`);
+      refreshUI();
     }
 
-    // Modal Helpers
-    function showModal(img, title, msg) {
-      document.getElementById("modalImg").src = img;
-      document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalMsg").innerText = msg;
-      document.getElementById("rewardModal").classList.add("active");
+    function openModal(icon, head, desc) {
+      document.getElementById("modalIcon").src = icon;
+      document.getElementById("modalHeadline").innerText = head;
+      document.getElementById("modalText").innerText = desc;
+      document.getElementById("genericModal").classList.add("open");
     }
 
-    function closeModal() {
-      document.getElementById("rewardModal").classList.remove("active");
+    function dismissModal() {
+      document.getElementById("genericModal").classList.remove("open");
     }
 
-    function copyRef() {
-      const input = document.getElementById("refLink");
-      input.select();
-      navigator.clipboard.writeText(input.value);
+    function copyRefLink() {
+      const inp = document.getElementById("txtRefShare");
+      inp.select();
+      navigator.clipboard.writeText(inp.value);
       alert("Referral link copied!");
     }
 
@@ -1702,61 +1816,61 @@
       }
     }
 
-    function tradeItem(id, price) {
-      alert(`Purchased ${id} for ${price}!`);
+    function buyListing(item, price) {
+      alert(`Purchased ${item} for ${price}!`);
     }
 
     function sacrificeToGod(god) {
-      if (STATE.hearts < 10) {
+      if (G_STATE.hearts < 10) {
         alert("You need at least 10 Hearts to sacrifice to the Gods!");
         return;
       }
-      STATE.hearts -= 10;
-      updateHeader();
-      playSound('win');
-      alert(`Sacrifice accepted! Global buffs increased for ${god.toUpperCase()}.`);
+      G_STATE.hearts -= 10;
+      refreshUI();
+      playAudio('fanfare');
+      alert(`Sacrifice accepted! Global multipliers upgraded for ${god.toUpperCase()}.`);
     }
 
-    // Ambient Canvas Particles
-    const aCanvas = document.getElementById("ambient-canvas");
-    const actxBg = aCanvas.getContext("2d");
-    let particles = [];
+    // Ambient Canvas
+    const bgCanvas = document.getElementById("ambientCanvas");
+    const bgCtx = bgCanvas.getContext("2d");
+    let bgParticles = [];
 
-    function resizeAmbient() {
-      aCanvas.width = window.innerWidth;
-      aCanvas.height = window.innerHeight;
+    function adjustCanvasSize() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
     }
-    window.onresize = resizeAmbient;
-    resizeAmbient();
+    window.onresize = adjustCanvasSize;
+    adjustCanvasSize();
 
-    for (let i = 0; i < 30; i++) {
-      particles.push({
-        x: Math.random() * aCanvas.width,
-        y: Math.random() * aCanvas.height,
+    for (let i = 0; i < 28; i++) {
+      bgParticles.push({
+        x: Math.random() * bgCanvas.width,
+        y: Math.random() * bgCanvas.height,
         r: Math.random() * 2 + 1,
-        speed: Math.random() * 0.4 + 0.2,
-        color: Math.random() > 0.5 ? "rgba(255, 208, 0, 0.4)" : "rgba(46, 230, 119, 0.3)"
+        speed: Math.random() * 0.35 + 0.15,
+        color: Math.random() > 0.5 ? "rgba(255, 204, 0, 0.4)" : "rgba(34, 197, 94, 0.3)"
       });
     }
 
-    function animateAmbient() {
-      actxBg.clearRect(0, 0, aCanvas.width, aCanvas.height);
-      particles.forEach(p => {
+    function runAmbientLoop() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      bgParticles.forEach(p => {
         p.y -= p.speed;
-        if (p.y < 0) p.y = aCanvas.height;
-        actxBg.beginPath();
-        actxBg.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        actxBg.fillStyle = p.color;
-        actxBg.fill();
+        if (p.y < 0) p.y = bgCanvas.height;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        bgCtx.fillStyle = p.color;
+        bgCtx.fill();
       });
-      requestAnimationFrame(animateAmbient);
+      requestAnimationFrame(runAmbientLoop);
     }
 
-    // Init
-    initGrid();
-    drawWheel();
-    animateAmbient();
-    updateHeader();
+    // Init Engine
+    initMatrix();
+    renderWheel();
+    runAmbientLoop();
+    refreshUI();
 
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.ready();
