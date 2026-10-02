@@ -8,7 +8,7 @@
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
-  <!-- Fonts -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,9 +17,9 @@
     :root {
       --bg-base: #06080e;
       --bg-surface: rgba(16, 22, 36, 0.88);
-      --bg-surface-card: rgba(22, 30, 48, 0.92);
+      --bg-surface-elevated: rgba(24, 32, 52, 0.94);
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(255, 204, 0, 0.35);
+      --border-gold: rgba(255, 204, 0, 0.4);
       --gold: #ffcc00;
       --gold-glow: rgba(255, 204, 0, 0.45);
       --green: #22c55e;
@@ -52,7 +52,6 @@
       padding-bottom: 92px;
     }
 
-    /* Ambient Background Spores Canvas */
     #ambientCanvas {
       position: fixed;
       top: 0;
@@ -73,16 +72,16 @@
     }
 
     /* ══════════════════════════════════════════════
-       HEADER (CLEAN PROFILE + CURRENCIES + ENERGY)
+       HEADER (PROFILE + CURRENCIES + SCORE + ENERGY)
        ══════════════════════════════════════════════ */
-    .header-panel {
+    .top-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
     }
 
-    .profile-pill {
+    .profile-badge {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -120,7 +119,7 @@
       color: var(--gold);
     }
 
-    .currency-cluster {
+    .currency-group {
       display: flex;
       gap: 5px;
     }
@@ -147,12 +146,12 @@
       font-size: 0.78rem;
       font-weight: 800;
     }
-    .currency-pill .val-pink { color: #ff6097; }
-    .currency-pill .val-green { color: var(--green); }
-    .currency-pill .val-cyan { color: var(--cyan); }
+    .val-pink { color: #ff6097; }
+    .val-green { color: var(--green); }
+    .val-cyan { color: var(--cyan); }
 
     /* Score & Energy Header Card */
-    .score-card {
+    .score-banner-card {
       background: var(--bg-surface);
       backdrop-filter: blur(16px);
       border: 1px solid var(--border-subtle);
@@ -165,25 +164,25 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
 
-    .score-block {
+    .score-left-area {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .score-block img {
+    .score-left-area img {
       width: 30px;
       height: 30px;
       object-fit: contain;
       filter: drop-shadow(0 2px 6px rgba(255, 204, 0, 0.5));
     }
 
-    .score-meta {
+    .score-details {
       display: flex;
       flex-direction: column;
     }
 
-    .score-title {
+    .score-label {
       font-size: 0.65rem;
       font-weight: 700;
       color: var(--text-muted);
@@ -191,14 +190,14 @@
       letter-spacing: 0.5px;
     }
 
-    .score-digits {
+    .score-value {
       font-size: 1.2rem;
       font-weight: 900;
       color: var(--gold);
       letter-spacing: 0.5px;
     }
 
-    .energy-block {
+    .energy-container {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -206,7 +205,7 @@
       min-width: 95px;
     }
 
-    .energy-label-row {
+    .energy-text-row {
       font-size: 0.68rem;
       font-weight: 800;
       color: var(--green);
@@ -215,7 +214,7 @@
       gap: 4px;
     }
 
-    .energy-bar-track {
+    .energy-bar-bg {
       width: 95px;
       height: 6px;
       background: rgba(255, 255, 255, 0.08);
@@ -234,11 +233,11 @@
     /* ══════════════════════════════════════════════
        TAB PANELS
        ══════════════════════════════════════════════ */
-    .tab-view {
+    .tab-section {
       display: none;
       animation: tabFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .tab-view.active {
+    .tab-section.active {
       display: block;
     }
 
@@ -247,378 +246,40 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ══════════════════════════════════════════════
-       TAB 3 (CENTER): GOBLINS (MAIN DUCKS SCREEN)
-       ══════════════════════════════════════════════ */
-    .main-goblin-card {
-      background: var(--bg-surface);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border-subtle);
-      border-radius: 24px;
-      padding: 14px 14px 16px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .main-goblin-card::before {
-      content: '';
-      position: absolute;
-      top: -40%;
-      left: -40%;
-      width: 180%;
-      height: 180%;
-      background: radial-gradient(circle, rgba(255, 204, 0, 0.07) 0%, transparent 60%);
-      pointer-events: none;
-      animation: heroAmbient 5s infinite alternate ease-in-out;
-    }
-
-    @keyframes heroAmbient {
-      0% { transform: scale(0.95); opacity: 0.4; }
-      100% { transform: scale(1.15); opacity: 0.9; }
-    }
-
-    .card-head-row {
+    /* Sub-nav pills (Market & Tasks) */
+    .subnav-bar {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .rarity-tag {
-      background: linear-gradient(135deg, rgba(255, 204, 0, 0.2), rgba(255, 100, 0, 0.2));
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 12px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-
-    .breed-tag {
-      background: rgba(244, 63, 94, 0.15);
-      border: 1px solid rgba(244, 63, 94, 0.4);
-      color: #ff6097;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 3px 10px;
-      border-radius: 12px;
-    }
-
-    .goblin-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: #fff;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-      margin-bottom: 1px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .goblin-boost {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 2;
-    }
-    .goblin-boost b { color: var(--green); }
-
-    /* Interactive Center Tap Arena */
-    .goblin-tap-arena {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .pedestal-glow {
-      position: absolute;
-      bottom: 8px;
-      width: 160px;
-      height: 44px;
-      background: radial-gradient(ellipse at center, rgba(255, 204, 0, 0.22) 0%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);
-      border-radius: 50%;
-      filter: blur(2px);
-      z-index: 1;
-    }
-
-    .goblin-avatar {
-      width: 175px;
-      height: 175px;
-      object-fit: contain;
-      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.8));
-      position: relative;
-      z-index: 2;
-      transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .goblin-avatar.squish {
-      transform: scale(0.88, 1.15);
-    }
-
-    /* Floating Tap Numbers */
-    .tap-pop-text {
-      position: absolute;
-      font-weight: 900;
-      font-size: 1.15rem;
-      pointer-events: none;
-      z-index: 10;
-      animation: floatPop 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
-    }
-
-    @keyframes floatPop {
-      0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
-      40% { transform: translate(-50%, -40px) scale(1.2); }
-      100% { opacity: 0; transform: translate(-50%, -75px) scale(1); }
-    }
-
-    /* Level & Egg Progress Bar */
-    .progress-box {
+      gap: 6px;
       background: rgba(0, 0, 0, 0.35);
+      padding: 4px;
       border-radius: 14px;
-      padding: 8px 12px;
       margin-bottom: 12px;
-      position: relative;
-      z-index: 2;
     }
 
-    .progress-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.68rem;
-      font-weight: 800;
+    .subnav-btn {
+      flex: 1;
+      background: none;
+      border: none;
       color: var(--text-muted);
-      margin-bottom: 5px;
-    }
-    .progress-labels b { color: #fff; }
-
-    .progress-rail {
-      height: 7px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #ffd000, #ff8800);
-      box-shadow: 0 0 10px var(--gold-glow);
-      width: 75%;
-      transition: width 0.3s ease;
-    }
-
-    /* Clean 2-Button Action Row */
-    .action-row {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 8px;
-      position: relative;
-      z-index: 2;
-    }
-
-    .btn-feed-action {
-      background: linear-gradient(135deg, #10b981, #059669);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 12px;
-      border-radius: 16px;
       font-family: inherit;
-      font-weight: 900;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      box-shadow: 0 6px 20px var(--green-glow);
-      transition: transform 0.1s;
-    }
-    .btn-feed-action:active { transform: scale(0.96); }
-
-    .btn-feed-action img {
-      width: 22px;
-      height: 22px;
-      object-fit: contain;
-    }
-
-    .btn-breed-action {
-      background: linear-gradient(135deg, #ec4899, #db2777);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 12px;
-      border-radius: 16px;
-      font-family: inherit;
-      font-weight: 900;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1px;
-      box-shadow: 0 6px 20px var(--pink-glow);
-    }
-    .btn-breed-action:active { transform: scale(0.96); }
-
-    /* Owned Flock Roster */
-    .flock-bar-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 14px 0 6px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .flock-scroll-strip {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scrollbar-width: none;
-    }
-    .flock-scroll-strip::-webkit-scrollbar { display: none; }
-
-    .flock-item-box {
-      min-width: 74px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 14px;
-      padding: 6px 4px;
-      text-align: center;
+      padding: 6px;
+      border-radius: 10px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .flock-item-box.active {
-      border-color: var(--gold);
-      box-shadow: 0 0 12px var(--gold-glow);
-      background: var(--bg-surface-card);
-    }
-    .flock-item-box img {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      margin-bottom: 2px;
-    }
-    .flock-item-name {
-      font-size: 0.65rem;
-      font-weight: 800;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
 
-    /* ══════════════════════════════════════════════
-       TAB 2: EGGS (7x7 MERGE MATRIX)
-       ══════════════════════════════════════════════ */
-    .matrix-top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .btn-automerge-tool {
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 5px 12px;
-      border-radius: 10px;
-      font-size: 0.72rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
-    }
-
-    .grid-matrix-container {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
-      border-radius: 18px;
-      padding: 8px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-      aspect-ratio: 1;
-    }
-
-    .matrix-slot {
-      background: rgba(10, 14, 22, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .matrix-slot.selected {
-      border-color: var(--gold);
-      box-shadow: 0 0 10px var(--gold-glow);
-      background: rgba(255, 204, 0, 0.12);
-    }
-
-    .matrix-slot img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
-      pointer-events: none;
-    }
-
-    .slot-tier-tag {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      font-size: 0.52rem;
-      font-weight: 900;
+    .subnav-btn.active {
+      background: var(--bg-surface-elevated);
       color: var(--gold);
-      background: rgba(0, 0, 0, 0.8);
-      padding: 1px 3px;
-      border-radius: 3px;
-    }
-
-    .btn-spawn-relic-egg {
-      width: 100%;
-      margin-top: 10px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
-      border: none;
-      padding: 12px;
-      border-radius: 16px;
-      font-family: inherit;
-      font-weight: 900;
-      font-size: 0.88rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 6px 18px var(--green-glow);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     /* ══════════════════════════════════════════════
-       TAB 1: MARKET & VIP PASS
+       TAB 1: MARKET (LIVE AUCTIONS & FIXED MARKET & VIP)
        ══════════════════════════════════════════════ */
-    .vip-deal-card {
+    .vip-pass-card {
       background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.25));
       border: 1px solid var(--purple);
       border-radius: 20px;
@@ -631,7 +292,7 @@
       overflow: hidden;
     }
 
-    .vip-deal-card::after {
+    .vip-pass-card::after {
       content: '';
       position: absolute;
       top: -50%;
@@ -647,24 +308,24 @@
       100% { transform: translate(100%, 100%); }
     }
 
-    .vip-deal-card img {
+    .vip-pass-card img {
       width: 60px;
       height: 60px;
       object-fit: contain;
     }
 
-    .vip-deal-info {
+    .vip-info {
       flex: 1;
       position: relative;
       z-index: 2;
     }
-    .vip-deal-title {
+    .vip-title {
       font-family: 'Cinzel', serif;
       font-size: 1.05rem;
       font-weight: 900;
       color: var(--gold);
     }
-    .vip-deal-sub {
+    .vip-sub {
       font-size: 0.7rem;
       color: var(--text-muted);
       margin: 2px 0 6px;
@@ -686,34 +347,55 @@
       box-shadow: 0 4px 10px var(--gold-glow);
     }
 
-    .market-items-grid {
+    /* Live Auction Cards */
+    .auction-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
 
-    .market-tile {
+    .auction-item-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 10px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .market-tile img {
+    .auction-item-card.legendary-border {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
+    }
+
+    .auction-timer-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f87171;
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 6px;
+    }
+
+    .auction-item-card img {
       width: 55px;
       height: 55px;
       object-fit: contain;
-      margin-bottom: 4px;
+      margin: 6px 0 4px;
     }
 
-    .market-tile-name {
+    .auction-item-name {
       font-size: 0.78rem;
       font-weight: 800;
       margin-bottom: 2px;
     }
 
-    .market-tile-price {
+    .auction-bid-row {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -724,33 +406,466 @@
       margin-bottom: 6px;
     }
 
-    .btn-trade-tile {
+    .btn-bid-auction {
+      width: 100%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      padding: 6px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .btn-buy-fixed {
       width: 100%;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      padding: 5px;
+      padding: 6px;
       border-radius: 8px;
       font-family: inherit;
       font-size: 0.72rem;
       font-weight: 800;
       cursor: pointer;
     }
-    .btn-trade-tile:hover {
+    .btn-buy-fixed:hover {
       background: var(--gold);
       color: #000;
     }
 
     /* ══════════════════════════════════════════════
-       TAB 4: GODS (TOTEM SACRIFICES)
+       TAB 2: EGGS (7x7 RELIC MERGE & INCUBATORS)
        ══════════════════════════════════════════════ */
-    .gods-layout {
+    .merge-top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .btn-automerge-sweep {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 5px 12px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
+    }
+
+    .grid-49-slots {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 8px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      aspect-ratio: 1;
+    }
+
+    .relic-cell {
+      background: rgba(10, 14, 22, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .relic-cell.active-selected {
+      border-color: var(--gold);
+      box-shadow: 0 0 10px var(--gold-glow);
+      background: rgba(255, 204, 0, 0.12);
+    }
+
+    .relic-cell img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
+      pointer-events: none;
+    }
+
+    .cell-tier-tag {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      font-size: 0.52rem;
+      font-weight: 900;
+      color: var(--gold);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+
+    .merge-action-buttons {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .btn-spawn-relic {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 16px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px var(--green-glow);
+    }
+
+    .btn-crack-egg {
+      background: linear-gradient(135deg, #ff8800, #e65100);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 16px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 0.8rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255, 136, 0, 0.4);
+    }
+
+    /* 3-Slot Incubator Bar */
+    .incubator-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 8px 10px;
+      margin-top: 10px;
+    }
+
+    .incubator-title {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .incubator-slots-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .incubator-slot {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+    }
+
+    .incubator-slot img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .incubator-timer {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    /* ══════════════════════════════════════════════
+       TAB 3: GOBLINS (CENTER MAIN HERO & NFT DECK)
+       ══════════════════════════════════════════════ */
+    .hero-stage-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 14px 14px 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-stage-card::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -40%;
+      width: 180%;
+      height: 180%;
+      background: radial-gradient(circle, rgba(255, 204, 0, 0.07) 0%, transparent 60%);
+      pointer-events: none;
+      animation: heroAmbient 5s infinite alternate ease-in-out;
+    }
+
+    .hero-top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .rarity-pill-badge {
+      background: linear-gradient(135deg, rgba(255, 204, 0, 0.2), rgba(255, 100, 0, 0.2));
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .breed-limit-badge {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: #ff6097;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    .hero-name-heading {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      margin-bottom: 1px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-yield-rate {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-yield-rate b { color: var(--green); }
+
+    .tap-avatar-stage {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .pedestal-aura {
+      position: absolute;
+      bottom: 8px;
+      width: 160px;
+      height: 44px;
+      background: radial-gradient(ellipse at center, rgba(255, 204, 0, 0.22) 0%, rgba(0, 0, 0, 0.8) 70%, transparent 100%);
+      border-radius: 50%;
+      filter: blur(2px);
+      z-index: 1;
+    }
+
+    .hero-sprite-img {
+      width: 175px;
+      height: 175px;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.8));
+      position: relative;
+      z-index: 2;
+      transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .hero-sprite-img.squish {
+      transform: scale(0.88, 1.15);
+    }
+
+    .float-score-text {
+      position: absolute;
+      font-weight: 900;
+      font-size: 1.15rem;
+      pointer-events: none;
+      z-index: 10;
+      animation: floatPop 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+    }
+
+    .egg-gauge-container {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 14px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .gauge-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .gauge-label-row b { color: #fff; }
+
+    .gauge-bar-track {
+      height: 7px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .gauge-bar-prog {
+      height: 100%;
+      background: linear-gradient(90deg, #ffd000, #ff8800);
+      box-shadow: 0 0 10px var(--gold-glow);
+      width: 75%;
+      transition: width 0.3s ease;
+    }
+
+    .action-cta-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 8px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-cta-feed {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 12px;
+      border-radius: 16px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px var(--green-glow);
+      transition: transform 0.1s;
+    }
+    .btn-cta-feed:active { transform: scale(0.96); }
+
+    .btn-cta-feed img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    .btn-cta-breed {
+      background: linear-gradient(135deg, #ec4899, #db2777);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 12px;
+      border-radius: 16px;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      box-shadow: 0 6px 20px var(--pink-glow);
+    }
+    .btn-cta-breed:active { transform: scale(0.96); }
+
+    /* NFT Collection / Deck Carousel */
+    .deck-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 14px 0 6px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nft-deck-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .nft-deck-scroll::-webkit-scrollbar { display: none; }
+
+    .nft-card-thumb {
+      min-width: 74px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 6px 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nft-card-thumb.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px var(--gold-glow);
+      background: var(--bg-surface-elevated);
+    }
+    .nft-card-thumb img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      margin-bottom: 2px;
+    }
+    .nft-card-name {
+      font-size: 0.65rem;
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ══════════════════════════════════════════════
+       TAB 4: GODS (TOTEMS & ALTAR SACRIFICES)
+       ══════════════════════════════════════════════ */
+    .gods-card-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .totem-row {
+    .god-totem-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 18px;
@@ -760,41 +875,41 @@
       gap: 12px;
     }
 
-    .totem-row img {
+    .god-totem-card img {
       width: 64px;
       height: 64px;
       object-fit: contain;
     }
 
-    .totem-info {
+    .god-totem-details {
       flex: 1;
     }
-    .totem-name {
+    .god-totem-title {
       font-family: 'Cinzel', serif;
       font-size: 1rem;
       font-weight: 900;
       color: var(--gold);
       margin-bottom: 2px;
     }
-    .totem-desc {
+    .god-totem-buff {
       font-size: 0.72rem;
       color: var(--text-muted);
       margin-bottom: 5px;
     }
-    .totem-desc b { color: var(--green); }
+    .god-totem-buff b { color: var(--green); }
 
-    .totem-progress-bar {
+    .god-meter-track {
       height: 5px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 4px;
       overflow: hidden;
     }
-    .totem-progress-fill {
+    .god-meter-prog {
       height: 100%;
       background: linear-gradient(90deg, #ec4899, #f43f5e);
     }
 
-    .btn-sacrifice-action {
+    .btn-altar-sacrifice {
       background: linear-gradient(135deg, #ec4899, #db2777);
       border: none;
       color: #fff;
@@ -808,25 +923,130 @@
     }
 
     /* ══════════════════════════════════════════════
-       TAB 5: TASKS (WHEEL + CLAN RAID + REFERRAL)
+       TAB 5: TASKS (DAILY QUESTS & SEASON PASS & CLAN)
        ══════════════════════════════════════════════ */
-    .fortune-wheel-card {
+    .task-list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .task-item-row {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .task-item-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .task-item-reward {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .btn-claim-task {
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: none;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+    .btn-claim-task.claimed {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      cursor: default;
+    }
+
+    /* Season Pass Collector's Path */
+    .season-pass-track {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .pass-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pass-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .pass-milestone-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 6px 0;
+      scrollbar-width: none;
+    }
+
+    .pass-node {
+      min-width: 60px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 6px;
+      text-align: center;
+    }
+    .pass-node.unlocked {
+      border-color: var(--gold);
+      background: rgba(255, 204, 0, 0.1);
+    }
+    .pass-node-lv {
+      font-size: 0.6rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+    .pass-node-reward {
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    /* Fortune Wheel */
+    .wheel-panel-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 20px;
       padding: 14px;
       text-align: center;
-      margin-bottom: 12px;
     }
 
-    .wheel-container {
+    .wheel-arena {
       position: relative;
       width: 180px;
       height: 180px;
       margin: 0 auto 10px;
     }
 
-    .wheel-needle {
+    .wheel-arrow-pin {
       position: absolute;
       top: -5px;
       left: 50%;
@@ -840,7 +1060,7 @@
       z-index: 5;
     }
 
-    .wheel-skull-hub {
+    .wheel-hub-img {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -850,7 +1070,7 @@
       pointer-events: none;
     }
 
-    .btn-spin-wheel-cta {
+    .btn-spin-wheel {
       background: linear-gradient(135deg, #ffd000, #ff8800);
       color: #000;
       border: none;
@@ -863,7 +1083,8 @@
       box-shadow: 0 4px 12px var(--gold-glow);
     }
 
-    .clan-raid-banner {
+    /* Clan Raid */
+    .clan-raid-box {
       background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(153, 27, 27, 0.3));
       border: 1px solid #ef4444;
       border-radius: 18px;
@@ -871,31 +1092,30 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
     }
 
-    .clan-raid-banner img {
+    .clan-raid-box img {
       width: 58px;
       height: 58px;
       object-fit: contain;
     }
 
-    .clan-raid-info {
+    .clan-raid-meta {
       flex: 1;
     }
-    .clan-raid-title {
+    .clan-raid-name {
       font-family: 'Cinzel', serif;
       font-size: 0.9rem;
       font-weight: 900;
       color: #f87171;
     }
-    .clan-raid-sub {
+    .clan-raid-desc {
       font-size: 0.68rem;
       color: var(--text-muted);
       margin: 1px 0 5px;
     }
 
-    .btn-raid-start {
+    .btn-raid-action {
       background: linear-gradient(135deg, #ef4444, #b91c1c);
       color: #fff;
       border: none;
@@ -907,28 +1127,29 @@
       cursor: pointer;
     }
 
-    .referral-card-clean {
+    /* Referral Box */
+    .referral-container-box {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       border-radius: 18px;
       padding: 12px;
     }
-    .ref-header-clean {
+    .ref-title-text {
       font-size: 0.8rem;
       font-weight: 800;
       color: var(--green);
       margin-bottom: 2px;
     }
-    .ref-sub-clean {
+    .ref-sub-text {
       font-size: 0.68rem;
       color: var(--text-muted);
       margin-bottom: 8px;
     }
-    .ref-field-row {
+    .ref-input-strip {
       display: flex;
       gap: 6px;
     }
-    .ref-input-clean {
+    .ref-link-input {
       flex: 1;
       background: rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border-subtle);
@@ -938,7 +1159,7 @@
       font-size: 0.72rem;
       outline: none;
     }
-    .btn-copy-ref-clean {
+    .btn-copy-ref-link {
       background: var(--green);
       color: #000;
       border: none;
@@ -951,9 +1172,9 @@
     }
 
     /* ══════════════════════════════════════════════
-       BOTTOM DOCK (EXACT 5 TABS: Market, Eggs, Goblins, Gods, Tasks)
+       BOTTOM FLOATING DOCK (EXACT 5 TABS: Market, Eggs, Goblins, Gods, Tasks)
        ══════════════════════════════════════════════ */
-    .bottom-floating-dock {
+    .bottom-dock-nav {
       position: fixed;
       bottom: 12px;
       left: 50%;
@@ -973,7 +1194,7 @@
       box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75);
     }
 
-    .dock-tab {
+    .dock-tab-btn {
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -991,7 +1212,7 @@
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .dock-tab img {
+    .dock-tab-btn img {
       width: 25px;
       height: 25px;
       object-fit: contain;
@@ -999,26 +1220,26 @@
       transition: all 0.2s;
     }
 
-    .dock-tab.center-hero img {
+    .dock-tab-btn.center-hero img {
       width: 30px;
       height: 30px;
       filter: drop-shadow(0 4px 8px var(--gold-glow)) grayscale(0);
       transform: translateY(-3px);
     }
 
-    .dock-tab.active {
+    .dock-tab-btn.active {
       color: var(--gold);
     }
-    .dock-tab.active img {
+    .dock-tab-btn.active img {
       filter: drop-shadow(0 4px 8px var(--gold-glow)) grayscale(0);
       transform: translateY(-2px) scale(1.1);
     }
-    .dock-tab.center-hero.active img {
+    .dock-tab-btn.center-hero.active img {
       transform: translateY(-5px) scale(1.15);
     }
 
-    /* Breeding Gacha Modal */
-    .breeding-modal-overlay {
+    /* Modal Framework */
+    .generic-modal-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.85);
@@ -1029,10 +1250,10 @@
       z-index: 200;
       padding: 20px;
     }
-    .breeding-modal-overlay.open { display: flex; }
+    .generic-modal-overlay.active { display: flex; }
 
-    .breeding-modal-card {
-      background: var(--bg-surface-card);
+    .generic-modal-card {
+      background: var(--bg-surface-elevated);
       border: 1px solid var(--gold);
       border-radius: 24px;
       padding: 20px;
@@ -1048,15 +1269,14 @@
       to { transform: scale(1); opacity: 1; }
     }
 
-    .breeding-nest-img {
+    .modal-hero-img {
       width: 100px;
       height: 100px;
       object-fit: contain;
       margin: 0 auto 10px;
-      transition: transform 0.2s;
     }
 
-    .breeding-nest-img.vibrate {
+    .modal-hero-img.vibrate {
       animation: eggShake 0.4s infinite alternate;
     }
 
@@ -1065,24 +1285,11 @@
       100% { transform: rotate(6deg) scale(1.05); }
     }
 
-    .btn-hatch-action {
-      background: linear-gradient(135deg, #ec4899, #db2777);
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 12px;
-      font-family: inherit;
-      font-weight: 900;
-      font-size: 0.85rem;
-      cursor: pointer;
-      box-shadow: 0 4px 14px var(--pink-glow);
-    }
-
-    .btn-close-modal {
-      background: var(--gold);
+    .btn-modal-action {
+      background: linear-gradient(135deg, #ffd000, #ff8800);
       color: #000;
       border: none;
-      padding: 9px 20px;
+      padding: 9px 22px;
       border-radius: 12px;
       font-family: inherit;
       font-weight: 900;
@@ -1093,16 +1300,16 @@
 </head>
 <body>
 
-  <!-- Ambient Particle Canvas -->
+  <!-- Ambient Spores Particle Canvas -->
   <canvas id="ambientCanvas"></canvas>
 
   <div class="app-viewport">
 
     <!-- ══════════════════════════════════════════════
-         TOP BAR: PROFILE & RESOURCES
+         TOP BAR: USER PROFILE & RESOURCE PILLS
          ══════════════════════════════════════════════ -->
-    <header class="header-panel">
-      <div class="profile-pill">
+    <header class="top-header-row">
+      <div class="profile-badge">
         <img src="assets/goblin_peon.png" class="profile-avatar" alt="Avatar">
         <div class="profile-info">
           <span class="profile-name">GoblinKing</span>
@@ -1110,7 +1317,7 @@
         </div>
       </div>
 
-      <div class="currency-cluster">
+      <div class="currency-group">
         <!-- Mushrooms 🍄 -->
         <div class="currency-pill">
           <img src="assets/icon_mushroom_hd.png" alt="🍄">
@@ -1131,37 +1338,37 @@
       </div>
     </header>
 
-    <!-- Score & Energy Header Card -->
-    <div class="score-card">
-      <div class="score-block">
+    <!-- Score & Energy Header Banner -->
+    <div class="score-banner-card">
+      <div class="score-left-area">
         <img src="assets/icon_gob_coin_hd.png" alt="Token">
-        <div class="score-meta">
-          <span class="score-title">Total Mined $GOB</span>
-          <span class="score-digits" id="hdrScore">72.27</span>
+        <div class="score-details">
+          <span class="score-label">Total Mined $GOB</span>
+          <span class="score-value" id="hdrScore">72.27</span>
         </div>
       </div>
 
-      <div class="energy-block">
-        <div class="energy-label-row">
+      <div class="energy-container">
+        <div class="energy-text-row">
           <span>⚡ ENERGY</span>
           <span id="txtEnergy">1850/2000</span>
         </div>
-        <div class="energy-bar-track">
-          <div class="energy-bar-fill" id="energyBar"></div>
+        <div class="energy-bar-bg">
+          <div class="energy-bar-fill" id="energyFill"></div>
         </div>
       </div>
     </div>
 
     <!-- ══════════════════════════════════════════════
-         TAB 1: MARKET (LEFT 1)
+         TAB 1: MARKET (LIVE AUCTIONS & FIXED MARKET & VIP)
          ══════════════════════════════════════════════ -->
-    <section id="tab-market" class="tab-view">
-      <!-- VIP Chieftain Pass -->
-      <div class="vip-deal-card">
+    <section id="tab-market" class="tab-section">
+      <!-- VIP Chieftain Pass Banner -->
+      <div class="vip-pass-card">
         <img src="assets/vip_crown_3d.png" alt="VIP Crown">
-        <div class="vip-deal-info">
-          <div class="vip-deal-title">CHIEFTAIN VIP PASS</div>
-          <div class="vip-deal-sub">20/s Turbo Auto-Feed · Ad-Skip · Smart Bot · 2x Mushrooms</div>
+        <div class="vip-info">
+          <div class="vip-title">CHIEFTAIN VIP PASS</div>
+          <div class="vip-sub">20/s Turbo Auto-Feed · Ad-Skip · Smart Bot · 2x Mushrooms</div>
           <button class="btn-buy-vip-pass" onclick="buyVip()">
             <img src="assets/icon_stars_hd.png" style="width:15px;height:15px" alt="⭐">
             <span>BUY FOR 299 ⭐</span>
@@ -1169,222 +1376,312 @@
         </div>
       </div>
 
-      <!-- Clean Market Items -->
-      <div class="market-items-grid">
-        <div class="market-tile">
+      <!-- Market Sub-Nav -->
+      <div class="subnav-bar">
+        <button class="subnav-btn active" onclick="switchMarketSubTab('auctions')">🔥 Live Auctions</button>
+        <button class="subnav-btn" onclick="switchMarketSubTab('fixed')">🛒 Fixed Price</button>
+      </div>
+
+      <!-- Live Auction Items -->
+      <div class="auction-grid" id="marketAuctionsView">
+        <div class="auction-item-card legendary-border">
+          <div class="auction-timer-badge" id="timerAuction1">01h 42m</div>
+          <img src="assets/goblin_warlord.png" alt="Warlord">
+          <div class="auction-item-name">Grom Warlord #412</div>
+          <div class="auction-bid-row">
+            <img src="assets/icon_stars_hd.png" style="width:15px;height:15px" alt="⭐">
+            <span>High Bid: 250 ⭐</span>
+          </div>
+          <button class="btn-bid-auction" onclick="placeAuctionBid('Grom Warlord', 275)">PLACE BID (275 ⭐)</button>
+        </div>
+
+        <div class="auction-item-card">
+          <div class="auction-timer-badge">03h 15m</div>
+          <img src="assets/egg_celestial.png" alt="Celestial Egg">
+          <div class="auction-item-name">Celestial Phoenix Egg</div>
+          <div class="auction-bid-row">
+            <img src="assets/icon_mushroom_hd.png" style="width:15px;height:15px" alt="🍄">
+            <span>High Bid: 850 🍄</span>
+          </div>
+          <button class="btn-bid-auction" onclick="placeAuctionBid('Celestial Egg', 950)">PLACE BID (950 🍄)</button>
+        </div>
+      </div>
+
+      <!-- Fixed Price Items -->
+      <div class="auction-grid" id="marketFixedView" style="display:none">
+        <div class="auction-item-card">
           <img src="assets/egg_dragon.png" alt="Dragon Egg">
-          <div class="market-tile-name">Dragon Relic Egg</div>
-          <div class="market-tile-price">
+          <div class="auction-item-name">Dragon Relic Egg</div>
+          <div class="auction-bid-row">
             <img src="assets/icon_mushroom_hd.png" style="width:15px;height:15px" alt="🍄">
             <span>450 🍄 <small style="color:var(--green)">+15% 🔥</small></span>
           </div>
-          <button class="btn-trade-tile" onclick="buyItem('dragon_egg', 450)">BUY ITEM</button>
+          <button class="btn-buy-fixed" onclick="buyFixedItem('dragon_egg', 450)">BUY ITEM</button>
         </div>
 
-        <div class="market-tile">
-          <img src="assets/goblin_shaman.png" alt="Shaman">
-          <div class="market-tile-name">Goblin Shaman</div>
-          <div class="market-tile-price">
-            <img src="assets/icon_stars_hd.png" style="width:15px;height:15px" alt="⭐">
-            <span>75 ⭐</span>
-          </div>
-          <button class="btn-trade-tile" onclick="buyItem('shaman_card', 75)">BUY STARS</button>
-        </div>
-
-        <div class="market-tile">
+        <div class="auction-item-card">
           <img src="assets/bot_trader.png" alt="Bot Trader">
-          <div class="market-tile-name">Smart Bot Drone</div>
-          <div class="market-tile-price">
+          <div class="auction-item-name">Smart Bot Drone</div>
+          <div class="auction-bid-row">
             <img src="assets/icon_stars_hd.png" style="width:15px;height:15px" alt="⭐">
             <span>150 ⭐</span>
           </div>
-          <button class="btn-trade-tile" onclick="buyItem('bot_drone', 150)">ACTIVATE</button>
-        </div>
-
-        <div class="market-tile">
-          <img src="assets/icon_meat_hd.png" alt="Monster Feast">
-          <div class="market-tile-name">Monster Feast 🍗</div>
-          <div class="market-tile-price">
-            <img src="assets/icon_gob_coin_hd.png" style="width:15px;height:15px" alt="GOB">
-            <span>500 $GOB</span>
-          </div>
-          <button class="btn-trade-tile" onclick="buyItem('feast', 500)">PURCHASE</button>
+          <button class="btn-buy-fixed" onclick="buyFixedItem('bot_drone', 150)">ACTIVATE</button>
         </div>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         TAB 2: EGGS (LEFT 2)
+         TAB 2: EGGS (7x7 RELIC MERGE & INCUBATORS)
          ══════════════════════════════════════════════ -->
-    <section id="tab-eggs" class="tab-view">
-      <div class="matrix-top-bar">
+    <section id="tab-eggs" class="tab-section">
+      <div class="merge-top-controls">
         <div>
           <h3 style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold)">7×7 RELIC MERGE</h3>
           <p style="font-size:0.7rem;color:var(--text-muted)">Merge matching eggs for rare drops & ❤️ Hearts!</p>
         </div>
-        <button class="btn-automerge-tool" id="btnAutoMerge">⚡ AUTO-MERGE</button>
+        <button class="btn-automerge-sweep" id="btnAutoMerge">⚡ AUTO-MERGE</button>
       </div>
 
-      <!-- 7x7 Grid Matrix -->
-      <div class="grid-matrix-container" id="gridMatrix"></div>
+      <!-- 49 Slot Grid -->
+      <div class="grid-49-slots" id="relicGridMatrix"></div>
 
-      <button class="btn-spawn-relic-egg" id="btnSpawnEgg">
-        <span>🥚 SPAWN RELIC EGG (-50 🍄)</span>
-      </button>
+      <!-- Action Buttons -->
+      <div class="merge-action-buttons">
+        <button class="btn-spawn-relic" id="btnSpawnEgg">
+          <span>🥚 SPAWN RELIC (-50 🍄)</span>
+        </button>
+        <button class="btn-crack-egg" id="btnCrackEgg" onclick="crackSelectedEgg()">
+          <span>🔨 CRACK EGG</span>
+        </button>
+      </div>
+
+      <!-- 3-Slot Incubator Bar -->
+      <div class="incubator-bar">
+        <div class="incubator-title">🐣 Egg Incubators (Hatch Timers)</div>
+        <div class="incubator-slots-row">
+          <div class="incubator-slot" onclick="claimIncubator(0)">
+            <img src="assets/egg_amethyst.png" alt="Egg">
+            <span class="incubator-timer" id="incTimer0">READY!</span>
+          </div>
+          <div class="incubator-slot" onclick="claimIncubator(1)">
+            <img src="assets/egg_dragon.png" alt="Egg">
+            <span class="incubator-timer" id="incTimer1">04:32</span>
+          </div>
+          <div class="incubator-slot" onclick="claimIncubator(2)">
+            <img src="assets/egg_wood.png" alt="Egg">
+            <span class="incubator-timer" id="incTimer2">12:15</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         TAB 3: GOBLINS (CENTER HERO TAB)
+         TAB 3: GOBLINS (CENTER MAIN HERO & NFT DECK)
          ══════════════════════════════════════════════ -->
-    <section id="tab-goblins" class="tab-view active">
-      <div class="main-goblin-card">
-        <div class="card-head-row">
-          <div class="rarity-tag" id="goblinRarity">✨ LEGENDARY TIER</div>
-          <div class="breed-tag" id="goblinBreedCounter">💖 Breed (2/5)</div>
+    <section id="tab-goblins" class="tab-section active">
+      <div class="hero-stage-card">
+        <div class="hero-top-meta">
+          <div class="rarity-pill-badge" id="heroRarityBadge">✨ LEGENDARY TIER</div>
+          <div class="breed-limit-badge" id="heroBreedBadge">💖 Breed (2/5)</div>
         </div>
 
-        <h2 class="goblin-title" id="goblinName">GROM THE WARLORD</h2>
-        <div class="goblin-boost">Earning Rate: <b id="goblinMiningRate">160x Mining Boost</b></div>
+        <h2 class="hero-name-heading" id="heroNameTxt">GROM THE WARLORD</h2>
+        <div class="hero-yield-rate">Earning Rate: <b id="heroYieldTxt">160x Mining Boost</b></div>
 
         <!-- Center Tap Arena -->
-        <div class="goblin-tap-arena" id="tapArena">
-          <div class="pedestal-glow"></div>
-          <img src="assets/goblin_warlord.png" class="goblin-avatar" id="activeAvatar" alt="Goblin Hero">
+        <div class="tap-avatar-stage" id="tapAvatarStage">
+          <div class="pedestal-aura"></div>
+          <img src="assets/goblin_warlord.png" class="hero-sprite-img" id="heroAvatarImg" alt="Goblin Hero">
         </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-box">
-          <div class="progress-labels">
-            <span>LEVEL PROGRESS (LV. <b id="goblinLevel">4</b>/5)</span>
-            <span id="txtEggProgress">Egg Bar: 75%</span>
+        <!-- Level & Egg Progress Bar -->
+        <div class="egg-gauge-container">
+          <div class="gauge-label-row">
+            <span>LEVEL PROGRESS (LV. <b id="heroLevelVal">4</b>/5)</span>
+            <span id="heroEggGaugeVal">Egg Bar: 75%</span>
           </div>
-          <div class="progress-rail">
-            <div class="progress-fill" id="progressFill" style="width: 75%"></div>
+          <div class="gauge-bar-track">
+            <div class="gauge-bar-prog" id="heroProgressBar" style="width: 75%"></div>
           </div>
         </div>
 
         <!-- Action CTAs -->
-        <div class="action-row">
-          <button class="btn-feed-action" id="btnFeedCTA">
+        <div class="action-cta-grid">
+          <button class="btn-cta-feed" id="btnFeedAction">
             <img src="assets/feed_bowl.png" alt="Feed">
-            <span>TAP TO FEED (<span id="txtFeedCost">25</span> 🍄)</span>
+            <span>TAP TO FEED (<span id="feedCostTxt">25</span> 🍄)</span>
           </button>
-          <button class="btn-breed-action" id="btnBreedCTA" onclick="openBreedingModal()">
+          <button class="btn-cta-breed" id="btnBreedAction" onclick="openBreedModal()">
             <span>💖 BREED</span>
             <small style="font-size:0.62rem;opacity:0.8">(2/5 Limit)</small>
           </button>
         </div>
       </div>
 
-      <!-- Owned Flock Roster Strip -->
-      <div class="flock-bar-title">
-        <span>Your Goblin Roster (5/5)</span>
+      <!-- Owned Flock Roster / NFT Collection -->
+      <div class="deck-section-header">
+        <span>Your Goblin NFT Deck (5/5)</span>
       </div>
-      <div class="flock-scroll-strip" id="flockStrip">
-        <div class="flock-item-box" onclick="selectGoblin(0)">
+      <div class="nft-deck-scroll" id="nftDeckScroll">
+        <div class="nft-card-thumb" onclick="selectGoblinCard(0)">
           <img src="assets/goblin_peon.png" alt="Peon">
-          <div class="flock-item-name">Peon</div>
+          <div class="nft-card-name">Peon</div>
         </div>
-        <div class="flock-item-box" onclick="selectGoblin(1)">
+        <div class="nft-card-thumb" onclick="selectGoblinCard(1)">
           <img src="assets/goblin_scout.png" alt="Scout">
-          <div class="flock-item-name">Scout</div>
+          <div class="nft-card-name">Scout</div>
         </div>
-        <div class="flock-item-box" onclick="selectGoblin(2)">
+        <div class="nft-card-thumb" onclick="selectGoblinCard(2)">
           <img src="assets/goblin_warrior.png" alt="Warrior">
-          <div class="flock-item-name">Warrior</div>
+          <div class="nft-card-name">Warrior</div>
         </div>
-        <div class="flock-item-box" onclick="selectGoblin(3)">
+        <div class="nft-card-thumb" onclick="selectGoblinCard(3)">
           <img src="assets/goblin_shaman.png" alt="Shaman">
-          <div class="flock-item-name">Shaman</div>
+          <div class="nft-card-name">Shaman</div>
         </div>
-        <div class="flock-item-box active" onclick="selectGoblin(4)">
+        <div class="nft-card-thumb active" onclick="selectGoblinCard(4)">
           <img src="assets/goblin_warlord.png" alt="Warlord">
-          <div class="flock-item-name">Warlord</div>
+          <div class="nft-card-name">Warlord</div>
         </div>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         TAB 4: GODS (RIGHT 1)
+         TAB 4: GODS (TOTEMS & SACRED SACRIFICES)
          ══════════════════════════════════════════════ -->
-    <section id="tab-gods" class="tab-view">
-      <div class="gods-layout">
+    <section id="tab-gods" class="tab-section">
+      <div class="gods-card-list">
         <!-- God of Greed -->
-        <div class="totem-row">
+        <div class="god-totem-card">
           <img src="assets/totem_greed.png" alt="God of Greed">
-          <div class="totem-info">
-            <div class="totem-name">IDOL OF PLUNDER</div>
-            <div class="totem-desc">Feeding Gold Boost: <b>+45% Yield</b></div>
-            <div class="totem-progress-bar">
-              <div class="totem-progress-fill" style="width: 60%"></div>
+          <div class="god-totem-details">
+            <div class="god-totem-title">IDOL OF PLUNDER</div>
+            <div class="god-totem-buff">Feeding Gold Boost: <b>+45% Yield</b></div>
+            <div class="god-meter-track">
+              <div class="god-meter-prog" style="width: 60%"></div>
             </div>
           </div>
-          <button class="btn-sacrifice-action" onclick="sacrificeGod('greed')">SACRIFICE (-10 ❤️)</button>
+          <button class="btn-altar-sacrifice" onclick="sacrificeToGod('greed')">SACRIFICE (-10 ❤️)</button>
         </div>
 
         <!-- Goddess of Fertility -->
-        <div class="totem-row">
+        <div class="god-totem-card">
           <img src="assets/totem_fertility.png" alt="Goddess of Fertility">
-          <div class="totem-info">
-            <div class="totem-name">GODDESS OF LIFE</div>
-            <div class="totem-desc">Breeding Luck: <b>+35% Legendary</b></div>
-            <div class="totem-progress-bar">
-              <div class="totem-progress-fill" style="width: 40%"></div>
+          <div class="god-totem-details">
+            <div class="god-totem-title">GODDESS OF LIFE</div>
+            <div class="god-totem-buff">Breeding Luck: <b>+35% Legendary</b></div>
+            <div class="god-meter-track">
+              <div class="god-meter-prog" style="width: 40%"></div>
             </div>
           </div>
-          <button class="btn-sacrifice-action" onclick="sacrificeGod('fertility')">SACRIFICE (-10 ❤️)</button>
+          <button class="btn-altar-sacrifice" onclick="sacrificeToGod('fertility')">SACRIFICE (-10 ❤️)</button>
         </div>
 
         <!-- Totem of War -->
-        <div class="totem-row">
+        <div class="god-totem-card">
           <img src="assets/totem_war.png" alt="Totem of War">
-          <div class="totem-info">
-            <div class="totem-name">TOTEM OF FRENZY</div>
-            <div class="totem-desc">Energy Cooldown: <b>-25% Recharge</b></div>
-            <div class="totem-progress-bar">
-              <div class="totem-progress-fill" style="width: 80%"></div>
+          <div class="god-totem-details">
+            <div class="god-totem-title">TOTEM OF FRENZY</div>
+            <div class="god-totem-buff">Energy Cooldown: <b>-25% Recharge</b></div>
+            <div class="god-meter-track">
+              <div class="god-meter-prog" style="width: 80%"></div>
             </div>
           </div>
-          <button class="btn-sacrifice-action" onclick="sacrificeGod('war')">SACRIFICE (-10 ❤️)</button>
+          <button class="btn-altar-sacrifice" onclick="sacrificeToGod('war')">SACRIFICE (-10 ❤️)</button>
         </div>
       </div>
     </section>
 
     <!-- ══════════════════════════════════════════════
-         TAB 5: TASKS (RIGHT 2)
+         TAB 5: TASKS (MISSIONS & SEASON PASS & CLAN)
          ══════════════════════════════════════════════ -->
-    <section id="tab-tasks" class="tab-view">
-      <!-- Wheel of Fortune -->
-      <div class="fortune-wheel-card">
-        <h3 style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold);margin-bottom:2px">LUCKY FORTUNE WHEEL</h3>
-        <p style="font-size:0.7rem;color:var(--text-muted);margin-bottom:10px">Spin with energy to win Jackpots, Stars & Eggs!</p>
-        
-        <div class="wheel-container">
-          <div class="wheel-needle"></div>
-          <canvas id="wheelCanvas" width="180" height="180"></canvas>
-          <img src="assets/wheel_center.png" class="wheel-skull-hub" alt="Hub">
-        </div>
-
-        <button class="btn-spin-wheel-cta" id="btnSpin">SPIN WHEEL (-100 ⚡)</button>
+    <section id="tab-tasks" class="tab-section">
+      <div class="subnav-bar">
+        <button class="subnav-btn active" onclick="switchTasksSubTab('daily')">📋 Daily Quests</button>
+        <button class="subnav-btn" onclick="switchTasksSubTab('wheel')">🎡 Fortune Wheel</button>
+        <button class="subnav-btn" onclick="switchTasksSubTab('clan')">⚔️ Clan & Duels</button>
       </div>
 
-      <!-- Clan Sabotage -->
-      <div class="clan-raid-banner">
-        <img src="assets/orc_boss.png" alt="Orc Boss">
-        <div class="clan-raid-info">
-          <div class="clan-raid-title">CLAN SABOTAGE: ORC HORDE</div>
-          <div class="clan-raid-sub">Raid the Orc Camp every 4h to loot their Mushroom stores!</div>
-          <button class="btn-raid-start" onclick="doClanRaid()">⚔️ SABOTAGE RAID</button>
+      <!-- Daily Tasks List -->
+      <div id="tasksDailyView">
+        <div class="task-list-container">
+          <div class="task-item-row">
+            <div class="task-item-info">
+              <span class="task-item-title">Daily Check-in (Day 4)</span>
+              <span class="task-item-reward">+300 🍄 · +5 ❤️</span>
+            </div>
+            <button class="btn-claim-task" onclick="claimDailyQuest(this, 300, 5)">CLAIM</button>
+          </div>
+
+          <div class="task-item-row">
+            <div class="task-item-info">
+              <span class="task-item-title">Tap to Feed 50 Times</span>
+              <span class="task-item-reward">+250 🍄</span>
+            </div>
+            <button class="btn-claim-task" onclick="claimDailyQuest(this, 250, 0)">CLAIM</button>
+          </div>
+
+          <div class="task-item-row">
+            <div class="task-item-info">
+              <span class="task-item-title">Merge 5 Relic Eggs</span>
+              <span class="task-item-reward">+500 🍄 · +10 ❤️</span>
+            </div>
+            <button class="btn-claim-task" onclick="claimDailyQuest(this, 500, 10)">CLAIM</button>
+          </div>
+        </div>
+
+        <!-- Season Pass Collector's Path -->
+        <div class="season-pass-track">
+          <div class="pass-header-row">
+            <span class="pass-title">COLLECTOR'S PATH (SEASON 1)</span>
+            <span style="font-size:0.65rem;font-weight:800;color:var(--green)">Level 8 Active</span>
+          </div>
+          <div class="pass-milestone-strip">
+            <div class="pass-node unlocked"><div class="pass-node-lv">Lv.1</div><div class="pass-node-reward">100 🍄</div></div>
+            <div class="pass-node unlocked"><div class="pass-node-lv">Lv.2</div><div class="pass-node-reward">5 ❤️</div></div>
+            <div class="pass-node unlocked"><div class="pass-node-lv">Lv.3</div><div class="pass-node-reward">250 🍄</div></div>
+            <div class="pass-node unlocked"><div class="pass-node-lv">Lv.4</div><div class="pass-node-reward">T2 Egg</div></div>
+            <div class="pass-node"><div class="pass-node-lv">Lv.5</div><div class="pass-node-reward">10 ⭐</div></div>
+            <div class="pass-node"><div class="pass-node-lv">Lv.6</div><div class="pass-node-reward">1000 🍄</div></div>
+          </div>
         </div>
       </div>
 
-      <!-- 2-Tier Referral Widget -->
-      <div class="referral-card-clean">
-        <div class="ref-header-clean">👥 2-TIER REFERRAL NETWORK</div>
-        <div class="ref-sub-clean">Invite friends for +1,000 🍄 (+5,000 for Premium) + 10% Tier-1 & 2.5% Tier-2 passive reward share!</div>
-        <div class="ref-field-row">
-          <input type="text" class="ref-input-clean" id="refShareLink" value="https://t.me/GoblinClanBot/game?startapp=ref_user123" readonly>
-          <button class="btn-copy-ref-clean" onclick="copyShareLink()">COPY LINK</button>
+      <!-- Fortune Wheel View -->
+      <div id="tasksWheelView" style="display:none">
+        <div class="wheel-panel-card">
+          <h3 style="font-family:'Cinzel',serif;font-size:1.05rem;color:var(--gold);margin-bottom:2px">LUCKY FORTUNE WHEEL</h3>
+          <p style="font-size:0.7rem;color:var(--text-muted);margin-bottom:10px">Spin with energy to win Jackpots, Stars & Eggs!</p>
+          
+          <div class="wheel-arena">
+            <div class="wheel-arrow-pin"></div>
+            <canvas id="wheelCanvas" width="180" height="180"></canvas>
+            <img src="assets/wheel_center.png" class="wheel-hub-img" alt="Hub">
+          </div>
+
+          <button class="btn-spin-wheel" id="btnSpin">SPIN WHEEL (-100 ⚡)</button>
+        </div>
+      </div>
+
+      <!-- Clan & Referral View -->
+      <div id="tasksClanView" style="display:none">
+        <div class="clan-raid-box" style="margin-bottom:10px">
+          <img src="assets/orc_boss.png" alt="Orc Boss">
+          <div class="clan-raid-meta">
+            <div class="clan-raid-name">CLAN SABOTAGE: ORC HORDE</div>
+            <div class="clan-raid-desc">Raid the Orc Camp every 4h to loot their Mushroom stores!</div>
+            <button class="btn-raid-action" onclick="doClanRaid()">⚔️ SABOTAGE RAID</button>
+          </div>
+        </div>
+
+        <div class="referral-container-box">
+          <div class="ref-title-text">👥 2-TIER REFERRAL NETWORK</div>
+          <div class="ref-sub-text">Invite friends for +1,000 🍄 (+5,000 for Premium) + 10% Tier-1 & 2.5% Tier-2 passive reward share!</div>
+          <div class="ref-input-strip">
+            <input type="text" class="ref-link-input" id="refShareLink" value="https://t.me/GoblinClanBot/game?startapp=ref_user123" readonly>
+            <button class="btn-copy-ref-link" onclick="copyShareLink()">COPY LINK</button>
+          </div>
         </div>
       </div>
     </section>
@@ -1395,45 +1692,45 @@
        BOTTOM FLOATING DOCK (EXACT 5-TAB ORDER)
        1: Market, 2: Eggs, 3: Goblins (Center), 4: Gods, 5: Tasks
        ══════════════════════════════════════════════ -->
-  <nav class="bottom-floating-dock">
-    <button class="dock-tab" onclick="switchDockTab('market')">
+  <nav class="bottom-dock-nav">
+    <button class="dock-tab-btn" onclick="switchDockTab('market')">
       <img src="assets/dock_market.png" alt="Market">
       <span>Market</span>
     </button>
-    <button class="dock-tab" onclick="switchDockTab('eggs')">
+    <button class="dock-tab-btn" onclick="switchDockTab('eggs')">
       <img src="assets/dock_egg.png" alt="Eggs">
       <span>Eggs</span>
     </button>
-    <button class="dock-tab center-hero active" onclick="switchDockTab('goblins')">
+    <button class="dock-tab-btn center-hero active" onclick="switchDockTab('goblins')">
       <img src="assets/dock_goblin.png" alt="Goblins">
       <span>Goblins</span>
     </button>
-    <button class="dock-tab" onclick="switchDockTab('gods')">
+    <button class="dock-tab-btn" onclick="switchDockTab('gods')">
       <img src="assets/dock_gods.png" alt="Gods">
       <span>Gods</span>
     </button>
-    <button class="dock-tab" onclick="switchDockTab('tasks')">
+    <button class="dock-tab-btn" onclick="switchDockTab('tasks')">
       <img src="assets/dock_tasks.png" alt="Tasks">
       <span>Tasks</span>
     </button>
   </nav>
 
   <!-- Breeding Ritual Modal -->
-  <div class="breeding-modal-overlay" id="breedModal">
-    <div class="breeding-modal-card">
-      <h3 style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);margin-bottom:6px" id="breedModalTitle">BREEDING RITUAL</h3>
+  <div class="generic-modal-overlay" id="breedModal">
+    <div class="generic-modal-card">
+      <h3 style="font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);margin-bottom:6px" id="breedModalHeadline">BREEDING RITUAL</h3>
       <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px" id="breedModalSub">Combine arcane essences to hatch a rare Goblin!</p>
       
-      <img src="assets/breeding_nest.png" class="breeding-nest-img" id="breedNestImg" alt="Nest">
+      <img src="assets/breeding_nest.png" class="modal-hero-img" id="breedNestImg" alt="Nest">
       
-      <div id="breedModalActions">
-        <button class="btn-hatch-action" onclick="performBreedingRitual()">✨ HATCH EGG (-10 ❤️)</button>
+      <div id="breedModalBtns">
+        <button class="btn-modal-action" onclick="executeBreedingRitual()">✨ HATCH EGG (-10 ❤️)</button>
       </div>
     </div>
   </div>
 
   <!-- ══════════════════════════════════════════════
-       GAME LOGIC & AUDIO SYNTHESIS
+       AUDIO SFX SYNTHESIZER & COMPLETE GAME LOGIC
        ══════════════════════════════════════════════ -->
   <script>
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -1464,6 +1761,13 @@
           gain.gain.exponentialRampToValueAtTime(0.01, t + 0.28);
           osc.start(t);
           osc.stop(t + 0.28);
+        } else if (type === 'crack') {
+          osc.frequency.setValueAtTime(220, t);
+          osc.frequency.exponentialRampToValueAtTime(880, t + 0.15);
+          gain.gain.setValueAtTime(0.4, t);
+          gain.gain.exponentialRampToValueAtTime(0.01, t + 0.2);
+          osc.start(t);
+          osc.stop(t + 0.2);
         } else if (type === 'fanfare') {
           osc.frequency.setValueAtTime(587.33, t);
           osc.frequency.exponentialRampToValueAtTime(1174.66, t + 0.3);
@@ -1516,44 +1820,69 @@
       document.getElementById("hdrHearts").innerText = STATE.hearts;
       document.getElementById("hdrStars").innerText = STATE.stars;
       document.getElementById("txtEnergy").innerText = `${STATE.energy}/${STATE.maxEnergy}`;
-      document.getElementById("energyBar").style.width = `${(STATE.energy / STATE.maxEnergy) * 100}%`;
+      document.getElementById("energyFill").style.width = `${(STATE.energy / STATE.maxEnergy) * 100}%`;
     }
 
     function switchDockTab(tabKey) {
       playSound('tap');
       triggerHaptic('light');
-      document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.dock-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.dock-tab-btn').forEach(b => b.classList.remove('active'));
 
       const target = document.getElementById(`tab-${tabKey}`);
       if (target) target.classList.add('active');
 
-      const btn = Array.from(document.querySelectorAll('.dock-tab')).find(b => b.getAttribute('onclick').includes(tabKey));
+      const btn = Array.from(document.querySelectorAll('.dock-tab-btn')).find(b => b.getAttribute('onclick').includes(tabKey));
       if (btn) btn.classList.add('active');
 
       if (tabKey === 'eggs') renderMergeGrid();
     }
 
-    function selectGoblin(idx) {
+    function switchMarketSubTab(sub, btn) {
+      playSound('tap');
+      document.querySelectorAll('#tab-market .subnav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      else {
+        const target = Array.from(document.querySelectorAll('#tab-market .subnav-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(sub));
+        if (target) target.classList.add('active');
+      }
+      document.getElementById('marketAuctionsView').style.display = sub === 'auctions' ? 'grid' : 'none';
+      document.getElementById('marketFixedView').style.display = sub === 'fixed' ? 'grid' : 'none';
+    }
+
+    function switchTasksSubTab(sub, btn) {
+      playSound('tap');
+      document.querySelectorAll('#tab-tasks .subnav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      else {
+        const target = Array.from(document.querySelectorAll('#tab-tasks .subnav-btn')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(sub));
+        if (target) target.classList.add('active');
+      }
+      document.getElementById('tasksDailyView').style.display = sub === 'daily' ? 'block' : 'none';
+      document.getElementById('tasksWheelView').style.display = sub === 'wheel' ? 'block' : 'none';
+      document.getElementById('tasksClanView').style.display = sub === 'clan' ? 'block' : 'none';
+    }
+
+    function selectGoblinCard(idx) {
       STATE.activeGoblin = idx;
       const g = STATE.goblins[idx];
-      document.getElementById("goblinName").innerText = g.name;
-      document.getElementById("goblinRarity").innerText = `✨ ${g.rarity} TIER`;
-      document.getElementById("goblinMiningRate").innerText = `${g.mult}x Mining Boost`;
-      document.getElementById("activeAvatar").src = g.img;
-      document.getElementById("goblinLevel").innerText = g.lv;
-      document.getElementById("progressFill").style.width = `${g.exp}%`;
-      document.getElementById("txtEggProgress").innerText = `Egg Bar: ${g.exp}%`;
+      document.getElementById("heroNameTxt").innerText = g.name;
+      document.getElementById("heroRarityBadge").innerText = `✨ ${g.rarity} TIER`;
+      document.getElementById("heroYieldTxt").innerText = `${g.mult}x Mining Boost`;
+      document.getElementById("heroAvatarImg").src = g.img;
+      document.getElementById("heroLevelVal").innerText = g.lv;
+      document.getElementById("heroProgressBar").style.width = `${g.exp}%`;
+      document.getElementById("heroEggGaugeVal").innerText = `Egg Bar: ${g.exp}%`;
 
-      document.querySelectorAll('.flock-item-box').forEach((c, i) => {
+      document.querySelectorAll('.nft-card-thumb').forEach((c, i) => {
         c.classList.toggle('active', i === idx);
       });
       playSound('tap');
     }
 
-    // Tap to Feed Interaction
-    const tapArena = document.getElementById("tapArena");
-    const activeAvatar = document.getElementById("activeAvatar");
+    // Tap Feed
+    const tapStage = document.getElementById("tapAvatarStage");
+    const heroAvatarImg = document.getElementById("heroAvatarImg");
 
     function tapFeed(e) {
       if (STATE.mushrooms < STATE.feedCost) {
@@ -1578,43 +1907,43 @@
       }
 
       // Squish animation
-      activeAvatar.classList.add("squish");
-      setTimeout(() => activeAvatar.classList.remove("squish"), 80);
+      heroAvatarImg.classList.add("squish");
+      setTimeout(() => heroAvatarImg.classList.remove("squish"), 80);
 
-      // Floating Particle
-      const rect = tapArena.getBoundingClientRect();
+      // Floating particle
+      const rect = tapStage.getBoundingClientRect();
       const x = (e && e.clientX) ? (e.clientX - rect.left) : (rect.width / 2);
       const y = (e && e.clientY) ? (e.clientY - rect.top) : (rect.height / 2);
 
       const fPop = document.createElement("div");
-      fPop.className = "tap-pop-text";
+      fPop.className = "float-score-text";
       fPop.style.left = `${x}px`;
       fPop.style.top = `${y}px`;
       fPop.style.color = "#ffcc00";
       fPop.innerText = `+${yieldVal.toFixed(2)} $GOB`;
-      tapArena.appendChild(fPop);
+      tapStage.appendChild(fPop);
       setTimeout(() => fPop.remove(), 850);
 
       playSound('tap');
       triggerHaptic('medium');
       updateUI();
-      selectGoblin(STATE.activeGoblin);
+      selectGoblinCard(STATE.activeGoblin);
     }
 
-    tapArena.addEventListener("pointerdown", tapFeed);
-    document.getElementById("btnFeedCTA").addEventListener("click", tapFeed);
+    tapStage.addEventListener("pointerdown", tapFeed);
+    document.getElementById("btnFeedAction").addEventListener("click", tapFeed);
 
     // Breeding Modal & Ritual
-    function openBreedingModal() {
-      document.getElementById("breedModal").classList.add("open");
+    function openBreedModal() {
+      document.getElementById("breedModal").classList.add("active");
       document.getElementById("breedNestImg").src = "assets/breeding_nest.png";
       document.getElementById("breedNestImg").classList.remove("vibrate");
-      document.getElementById("breedModalTitle").innerText = "BREEDING RITUAL";
+      document.getElementById("breedModalHeadline").innerText = "BREEDING RITUAL";
       document.getElementById("breedModalSub").innerText = "Combine arcane essences to hatch a rare Goblin!";
-      document.getElementById("breedModalActions").innerHTML = `<button class="btn-hatch-action" onclick="performBreedingRitual()">✨ HATCH EGG (-10 ❤️)</button>`;
+      document.getElementById("breedModalBtns").innerHTML = `<button class="btn-modal-action" onclick="executeBreedingRitual()">✨ HATCH EGG (-10 ❤️)</button>`;
     }
 
-    function performBreedingRitual() {
+    function executeBreedingRitual() {
       if (STATE.hearts < 10) {
         alert("Not enough Hearts! Merge eggs to earn ❤️ Hearts.");
         return;
@@ -1632,18 +1961,18 @@
         nest.src = "assets/egg_cracked.png";
         playSound('fanfare');
         triggerHaptic('heavy');
-        document.getElementById("breedModalTitle").innerText = "HATCH SUCCESSFUL!";
+        document.getElementById("breedModalHeadline").innerText = "HATCH SUCCESSFUL!";
         document.getElementById("breedModalSub").innerText = "You hatched a Legendary Grom Warlord!";
-        document.getElementById("breedModalActions").innerHTML = `<button class="btn-close-modal" onclick="closeBreedingModal()">COLLECT WARRIOR</button>`;
+        document.getElementById("breedModalBtns").innerHTML = `<button class="btn-modal-action" onclick="closeBreedModal()">COLLECT WARRIOR</button>`;
       }, 1200);
     }
 
-    function closeBreedingModal() {
-      document.getElementById("breedModal").classList.remove("open");
+    function closeBreedModal() {
+      document.getElementById("breedModal").classList.remove("active");
     }
 
-    // 7x7 Merge Matrix Engine
-    let activeCell = null;
+    // 7x7 Merge Matrix
+    let selectedRelicSlot = null;
 
     function initMatrix() {
       for (let i = 0; i < 16; i++) {
@@ -1655,64 +1984,94 @@
     }
 
     function renderMergeGrid() {
-      const mat = document.getElementById("gridMatrix");
+      const mat = document.getElementById("relicGridMatrix");
       mat.innerHTML = "";
 
       STATE.gridSlots.forEach((val, idx) => {
-        const slot = document.createElement("div");
-        slot.className = `matrix-slot ${activeCell === idx ? 'selected' : ''}`;
+        const cell = document.createElement("div");
+        cell.className = `relic-cell ${selectedRelicSlot === idx ? 'active-selected' : ''}`;
 
         if (val) {
           const img = document.createElement("img");
           img.src = STATE.eggAssets[Math.min(val - 1, 4)];
-          slot.appendChild(img);
+          cell.appendChild(img);
 
           const badge = document.createElement("div");
-          badge.className = "slot-tier-tag";
+          badge.className = "cell-tier-tag";
           badge.innerText = `T${val}`;
-          slot.appendChild(badge);
+          cell.appendChild(badge);
         }
 
-        slot.onclick = () => onSlotClick(idx);
-        mat.appendChild(slot);
+        cell.onclick = () => onCellClick(idx);
+        mat.appendChild(cell);
       });
     }
 
-    function onSlotClick(idx) {
-      if (activeCell === null) {
+    function onCellClick(idx) {
+      if (selectedRelicSlot === null) {
         if (STATE.gridSlots[idx]) {
-          activeCell = idx;
+          selectedRelicSlot = idx;
           renderMergeGrid();
         }
       } else {
-        if (activeCell === idx) {
-          activeCell = null;
+        if (selectedRelicSlot === idx) {
+          selectedRelicSlot = null;
           renderMergeGrid();
-        } else if (STATE.gridSlots[activeCell] && STATE.gridSlots[idx] && STATE.gridSlots[activeCell] === STATE.gridSlots[idx]) {
+        } else if (STATE.gridSlots[selectedRelicSlot] && STATE.gridSlots[idx] && STATE.gridSlots[selectedRelicSlot] === STATE.gridSlots[idx]) {
           // Merge Match!
           const curTier = STATE.gridSlots[idx];
-          const newTier = Math.min(curTier + 1, 5);
-          STATE.gridSlots[idx] = newTier;
-          STATE.gridSlots[activeCell] = null;
-          activeCell = null;
+          const evolvedTier = Math.min(curTier + 1, 5);
+          STATE.gridSlots[idx] = evolvedTier;
+          STATE.gridSlots[selectedRelicSlot] = null;
+          selectedRelicSlot = null;
 
-          STATE.hearts += newTier * 2;
-          STATE.mushrooms += newTier * 50;
+          STATE.hearts += evolvedTier * 2;
+          STATE.mushrooms += evolvedTier * 50;
 
           playSound('merge');
           triggerHaptic('heavy');
           updateUI();
           renderMergeGrid();
         } else if (!STATE.gridSlots[idx]) {
-          STATE.gridSlots[idx] = STATE.gridSlots[activeCell];
-          STATE.gridSlots[activeCell] = null;
-          activeCell = null;
+          STATE.gridSlots[idx] = STATE.gridSlots[selectedRelicSlot];
+          STATE.gridSlots[selectedRelicSlot] = null;
+          selectedRelicSlot = null;
           renderMergeGrid();
         } else {
-          activeCell = idx;
+          selectedRelicSlot = idx;
           renderMergeGrid();
         }
       }
+    }
+
+    function crackSelectedEgg() {
+      if (selectedRelicSlot === null || !STATE.gridSlots[selectedRelicSlot]) {
+        alert("Select an egg on the grid to crack!");
+        return;
+      }
+      const tier = STATE.gridSlots[selectedRelicSlot];
+      STATE.gridSlots[selectedRelicSlot] = null;
+      selectedRelicSlot = null;
+
+      const mushLoot = tier * 150;
+      const heartLoot = tier * 5;
+      STATE.mushrooms += mushLoot;
+      STATE.hearts += heartLoot;
+
+      playSound('crack');
+      triggerHaptic('heavy');
+      updateUI();
+      renderMergeGrid();
+      alert(`🔨 CRACKED T${tier} EGG! Plundered +${mushLoot} Mushrooms and +${heartLoot} Hearts!`);
+    }
+
+    function claimIncubator(slotIdx) {
+      playSound('fanfare');
+      triggerHaptic('heavy');
+      STATE.hearts += 10;
+      STATE.mushrooms += 200;
+      updateUI();
+      alert("🐣 Incubator hatched! Unlocked +200 Mushrooms & +10 Hearts!");
     }
 
     document.getElementById("btnSpawnEgg").onclick = () => {
@@ -1829,6 +2188,29 @@
       requestAnimationFrame(animSpin);
     };
 
+    function claimDailyQuest(btn, mush, hearts) {
+      if (btn.classList.contains('claimed')) return;
+      btn.classList.add('claimed');
+      btn.innerText = "DONE ✅";
+      STATE.mushrooms += mush;
+      STATE.hearts += hearts;
+      playSound('fanfare');
+      triggerHaptic('medium');
+      updateUI();
+    }
+
+    function placeAuctionBid(item, price) {
+      playSound('tap');
+      triggerHaptic('medium');
+      alert(`🏷️ Bid of ${price} placed for ${item}! You are currently the highest bidder.`);
+    }
+
+    function buyFixedItem(item, price) {
+      playSound('tap');
+      triggerHaptic('medium');
+      alert(`🛒 Purchased ${item} for ${price}!`);
+    }
+
     function doClanRaid() {
       playSound('tap');
       triggerHaptic('heavy');
@@ -1853,11 +2235,7 @@
       }
     }
 
-    function buyItem(item, price) {
-      alert(`Purchased ${item} for ${price}!`);
-    }
-
-    function sacrificeGod(god) {
+    function sacrificeToGod(god) {
       if (STATE.hearts < 10) {
         alert("You need at least 10 Hearts to sacrifice to the Gods!");
         return;
