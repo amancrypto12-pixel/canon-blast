@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Goblin Clan — Telegram Mini App Game</title>
+  <title>Goblin Clan — Market & Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #0c1017;
-      --bg-card: #151c28;
-      --bg-card-sub: #1e2838;
+      --bg-main: #14161f;
+      --bg-card: #1c1d29;
+      --bg-card-sub: #12131b;
       --accent-green: #22c55e;
       --accent-gold: #f59e0b;
       --accent-red: #ef4444;
       --accent-purple: #a855f7;
       --accent-blue: #3b82f6;
       --text-white: #ffffff;
-      --text-muted: #94a3b8;
-      --border-dark: #2d3748;
-      --border-glow: rgba(34, 197, 94, 0.4);
+      --text-muted: #8b92a5;
+      --border-dark: #272a3b;
+      --nav-height: 64px;
     }
 
     * {
@@ -35,7 +35,7 @@
     }
 
     body {
-      background: var(--bg-dark);
+      background: var(--bg-main);
       font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-white);
       height: 100vh;
@@ -45,82 +45,56 @@
       justify-content: space-between;
     }
 
-    /* TELEGRAM APP HEADER */
+    /* TOP HEADER (100% MATCH TO SCREENSHOT) */
     .app-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 16px;
-      background: rgba(12, 16, 23, 0.95);
+      padding: 10px 14px;
+      background: rgba(20, 22, 31, 0.98);
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       z-index: 100;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
     .btn-pack {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: #000;
-      font-weight: 900;
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.5px;
-      border: 1px solid #fde68a;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+      background: #1c1b29;
+      color: #f59e0b;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 12px;
+      border: 1px solid #36344d;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
     .header-resources {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .resource-pill {
-      background: var(--bg-card);
+      background: #121318;
       border: 1px solid var(--border-dark);
-      border-radius: 20px;
-      padding: 4px 10px;
+      border-radius: 12px;
+      padding: 5px 10px;
       display: flex;
       align-items: center;
       gap: 6px;
       font-size: 13px;
-      font-weight: 800;
+      font-weight: 900;
       color: #fff;
     }
 
     .resource-pill img {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       object-fit: contain;
-    }
-
-    /* PASS STRIP (DUCKER / CHIEFTAIN PASS) */
-    .pass-banner {
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      padding: 6px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 800;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
-    }
-
-    .pass-banner .tag {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
     /* MAIN VIEW CONTAINER */
@@ -129,15 +103,15 @@
       overflow-y: auto;
       overflow-x: hidden;
       position: relative;
-      padding-bottom: 70px;
+      padding-bottom: var(--nav-height);
       -webkit-overflow-scrolling: touch;
     }
 
     .tab-page {
       display: none;
       flex-direction: column;
-      height: 100%;
-      padding: 12px 16px;
+      min-height: 100%;
+      padding: 10px 14px;
     }
 
     .tab-page.active {
@@ -145,155 +119,315 @@
     }
 
     /* =========================================
-       TAB 3: GOBLINS (MAIN HERO STAGE)
+       TAB 1: MARKET (EXACT MATCH TO USER SCREENSHOT)
        ========================================= */
-    .hero-stage {
+    .market-subnav-toggle {
+      display: flex;
+      background: #12131b;
+      border-radius: 14px;
+      padding: 4px;
+      margin: 4px auto 10px;
+      width: 200px;
+      border: 1px solid var(--border-dark);
+    }
+
+    .market-toggle-btn {
+      flex: 1;
+      text-align: center;
+      padding: 6px 0;
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text-muted);
+      border-radius: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .market-toggle-btn.active {
+      background: #252838;
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    .market-filters-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .market-filters-strip::-webkit-scrollbar { display: none; }
+
+    .market-filter-pill {
+      background: #141724;
+      border: 1px solid #282c3f;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      white-space: nowrap;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .market-filter-pill.active {
+      background: #22c55e;
+      color: #000;
+      font-weight: 900;
+      border-color: #4ade80;
+    }
+
+    /* MAIN HERO CARD OF MARKET QUEUE (MATCHES SCREENSHOT) */
+    .market-hero-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-dark);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card-top-tags {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .card-lvl-badge {
+      background: #12131b;
+      padding: 3px 8px;
+      border-radius: 8px;
+      color: #f59e0b;
+      border: 1px solid #36344d;
+    }
+
+    .card-power-score {
+      color: var(--text-muted);
+    }
+
+    .market-sprite-box {
+      width: 170px;
+      height: 170px;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .market-sprite-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+    }
+
+    .card-owner-handle {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .card-status-badge {
+      font-size: 11px;
+      font-weight: 900;
+      color: #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card-price-display {
+      font-size: 26px;
+      font-weight: 900;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* FIFO QUEUE LADDER (MATCHES SCREENSHOT) */
+    .market-queue-ladder {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .queue-ladder-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card-sub);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .ladder-gain {
+      color: #22c55e;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .hot-market-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #f87171;
+    }
+
+    .btn-sell-goblin {
+      width: 100%;
+      background: linear-gradient(180deg, #22c55e, #16a34a);
+      border: none;
+      border-bottom: 3px solid #15803d;
+      border-radius: 14px;
+      padding: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 900;
+      margin-top: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .market-explanation-box {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: #93c5fd;
+      line-height: 1.4;
+      margin-top: 10px;
+    }
+
+    /* =========================================
+       TAB 3: GOBLINS (HERO SCREEN)
+       ========================================= */
+    .hero-view-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       flex: 1;
+      padding-top: 10px;
     }
 
-    .hero-stat-badge {
-      background: rgba(30, 40, 56, 0.7);
+    .hero-stat-card {
+      background: var(--bg-card);
       border: 1px solid var(--border-dark);
       border-radius: 16px;
-      padding: 8px 16px;
+      padding: 10px 18px;
       text-align: center;
-      margin-top: 5px;
-      width: 80%;
+      width: 90%;
     }
 
-    .hero-rarity {
-      color: #22c55e;
-      font-weight: 800;
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      font-size: 20px;
-      font-weight: 900;
-      color: #fff;
-    }
-
-    .hero-sprite-container {
-      position: relative;
+    .hero-avatar-box {
       width: 220px;
       height: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      margin: 10px 0;
+      margin: 15px 0;
     }
 
-    .hero-sprite-container img {
+    .hero-avatar-box img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
-      transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 0.08s ease;
     }
 
-    .hero-sprite-container:active img {
-      transform: scale(0.92) rotate(-2deg);
+    .hero-avatar-box:active img {
+      transform: scale(0.92);
     }
 
-    .hero-actions {
+    .hero-controls {
+      width: 100%;
       display: flex;
       flex-direction: column;
-      width: 100%;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .btn-feed-main {
+    .btn-feed-action {
       background: linear-gradient(180deg, #22c55e, #16a34a);
       border: none;
       border-bottom: 4px solid #15803d;
       border-radius: 16px;
       padding: 14px;
       color: #fff;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 900;
-      letter-spacing: 0.5px;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
       cursor: pointer;
     }
 
-    .btn-feed-main:active {
-      transform: translateY(2px);
-      border-bottom-width: 2px;
-    }
-
-    .hero-sub-actions {
+    .hero-dual-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .btn-sub-action {
+    .btn-side-action {
       background: var(--bg-card);
       border: 1px solid var(--border-dark);
       border-radius: 12px;
-      padding: 10px;
+      padding: 12px;
       color: #fff;
       font-weight: 800;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      font-size: 13px;
+      text-align: center;
       cursor: pointer;
     }
 
-    .btn-sub-action.breed {
-      background: linear-gradient(135deg, #ec4899, #db2777);
-      border: none;
-      box-shadow: 0 2px 8px rgba(219, 39, 119, 0.3);
-    }
-
-    .btn-sub-action.stake {
-      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-      border: none;
-      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
-    }
-
     /* =========================================
-       TAB 2: EGGS (7x7 RELIC MERGE GRID)
+       TAB 2: EGGS (7x7 GRID)
        ========================================= */
-    .eggs-header-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .merge-level-badge {
-      font-weight: 900;
-      font-size: 14px;
-      color: #f59e0b;
-    }
-
-    .grid-container-7x7 {
+    .grid-7x7 {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 4px;
-      background: #0f1520;
+      background: #0f121a;
       padding: 8px;
       border-radius: 14px;
       border: 1px solid var(--border-dark);
       aspect-ratio: 1;
       width: 100%;
+      margin: 10px 0;
     }
 
-    .grid-slot {
+    .grid-cell {
       background: var(--bg-card);
       border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.04);
@@ -302,167 +436,51 @@
       justify-content: center;
       position: relative;
       cursor: pointer;
-      transition: all 0.15s;
     }
 
-    .grid-slot.selected {
+    .grid-cell.selected {
       border: 2px solid #22c55e;
       background: rgba(34, 197, 94, 0.15);
     }
 
-    .grid-slot img {
-      width: 80%;
-      height: 80%;
+    .grid-cell img {
+      width: 75%;
+      height: 75%;
       object-fit: contain;
     }
 
-    .grid-slot .egg-lvl-num {
-      position: absolute;
-      bottom: 2px;
-      right: 3px;
-      font-size: 9px;
-      font-weight: 900;
-      color: #f59e0b;
-      text-shadow: 0 1px 2px #000;
-    }
-
-    .egg-grid-controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
     /* =========================================
-       TAB 1: MARKET (LIVE FIFO QUEUE & FIXED)
+       TAB 4: GODS (NFTs)
        ========================================= */
-    .market-filter-strip {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-      margin-bottom: 8px;
-    }
-
-    .filter-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-dark);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-muted);
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .filter-btn.active {
-      background: #3b82f6;
-      color: #fff;
-      border-color: #60a5fa;
-    }
-
-    .market-queue-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-dark);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .queue-header {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .queue-price-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .queue-price-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-card-sub);
-      padding: 8px 12px;
-      border-radius: 10px;
-      font-weight: 800;
-      font-size: 13px;
-    }
-
-    .price-gain {
-      color: #22c55e;
-      font-size: 11px;
-    }
-
-    .market-info-box {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 11px;
-      color: #93c5fd;
-      line-height: 1.4;
-      margin-top: 10px;
-    }
-
-    /* =========================================
-       TAB 4: GODS (NFTS & BLESSINGS)
-       ========================================= */
-    .god-nft-card {
-      background: linear-gradient(180deg, #2d1840, #151c28);
+    .god-card {
+      background: linear-gradient(180deg, #2b173d, #1a1b26);
       border: 1px solid #a855f7;
-      border-radius: 16px;
-      padding: 14px;
+      border-radius: 18px;
+      padding: 16px;
       text-align: center;
       margin-bottom: 12px;
     }
 
-    .god-nft-card img {
-      width: 140px;
-      height: 140px;
+    .god-card img {
+      width: 150px;
+      height: 150px;
       object-fit: contain;
-      filter: drop-shadow(0 8px 16px rgba(168, 85, 247, 0.4));
-    }
-
-    .god-blessing-yield {
-      font-size: 18px;
-      font-weight: 900;
-      color: #f59e0b;
-      margin: 8px 0;
-    }
-
-    .wallet-connect-bar {
-      background: var(--bg-card);
-      border: 1px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 10px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 800;
+      margin: 10px 0;
     }
 
     /* =========================================
-       TAB 5: TASKS (DUELS, COLLECTIONS, QUESTS)
+       TAB 5: TASKS (COLLECTIONS & WHEEL)
        ========================================= */
-    .subnav-tabs-bar {
+    .tasks-subnav {
       display: flex;
-      background: #0f1520;
+      background: #12131b;
       border-radius: 12px;
       padding: 3px;
-      gap: 3px;
+      gap: 4px;
       margin-bottom: 12px;
     }
 
-    .subnav-tab {
+    .task-sub-btn {
       flex: 1;
       padding: 8px 0;
       text-align: center;
@@ -474,105 +492,22 @@
       text-transform: uppercase;
     }
 
-    .subnav-tab.active {
+    .task-sub-btn.active {
       background: #22c55e;
       color: #000;
       font-weight: 900;
-    }
-
-    .collection-banner-card {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-      border: 1px solid var(--border-dark);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .collection-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .collection-slots-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
-      margin: 8px 0;
-    }
-
-    .col-slot {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      aspect-ratio: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-size: 9px;
-      color: var(--text-muted);
-      font-weight: 800;
-      text-align: center;
-      padding: 2px;
-    }
-
-    .col-slot.filled {
-      border: 1px solid #22c55e;
-      background: rgba(34, 197, 94, 0.1);
-    }
-
-    .col-slot img {
-      width: 70%;
-      height: 70%;
-      object-fit: contain;
-    }
-
-    .task-item-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-dark);
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 8px;
-    }
-
-    .task-info h4 {
-      font-size: 13px;
-      font-weight: 800;
-      margin-bottom: 2px;
-    }
-
-    .task-info p {
-      font-size: 11px;
-      color: #22c55e;
-      font-weight: 800;
-    }
-
-    .btn-claim-task {
-      background: #22c55e;
-      color: #000;
-      font-weight: 900;
-      font-size: 12px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
     }
 
     /* =========================================
-       BOTTOM 5-TAB DOCK NAVIGATION (100% DUCK MY DUCK)
+       BOTTOM 5-TAB DOCK (MATCHES SCREENSHOT)
        ========================================= */
-    .bottom-nav-dock {
+    .bottom-dock {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 64px;
-      background: rgba(12, 16, 23, 0.96);
+      height: var(--nav-height);
+      background: rgba(20, 22, 31, 0.98);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -581,52 +516,51 @@
       z-index: 1000;
     }
 
-    .nav-dock-btn {
+    .dock-tab {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
+      gap: 2px;
       color: var(--text-muted);
       cursor: pointer;
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      transition: all 0.15s ease;
     }
 
-    .nav-dock-btn.active {
+    .dock-tab.active {
       color: #22c55e;
     }
 
-    .nav-dock-btn img {
-      width: 24px;
-      height: 24px;
+    .dock-tab img {
+      width: 22px;
+      height: 22px;
       object-fit: contain;
-      opacity: 0.6;
-      transition: all 0.15s ease;
+      opacity: 0.5;
     }
 
-    .nav-dock-btn.active img {
+    .dock-tab.active img {
       opacity: 1;
-      transform: scale(1.15);
-      filter: drop-shadow(0 2px 8px rgba(34, 197, 94, 0.6));
+      transform: scale(1.1);
+      filter: drop-shadow(0 2px 6px rgba(34, 197, 94, 0.5));
     }
 
-    /* FLOATING FEEDBACK PARTICLES */
-    .floating-popup {
+    /* FLOATING POPUP */
+    .pop-number {
       position: absolute;
       font-weight: 900;
       font-size: 16px;
+      color: #22c55e;
       pointer-events: none;
-      animation: floatUp 0.8s ease-out forwards;
+      animation: floatEffect 0.7s ease-out forwards;
       z-index: 999;
     }
 
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0) scale(0.8); }
-      100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
+    @keyframes floatEffect {
+      0% { opacity: 1; transform: translateY(0) scale(0.9); }
+      100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
     }
   </style>
 </head>
@@ -634,248 +568,245 @@
 
   <!-- HEADER STATS BAR -->
   <div class="app-header">
-    <div class="header-left">
-      <div class="btn-pack">📦 PACK</div>
+    <div class="btn-pack" onclick="openPack()">
+      📦 PACK
     </div>
     <div class="header-resources">
       <div class="resource-pill">
         <img src="assets/icon_mushroom_hd.png" alt="Mushroom">
-        <span id="headerMushroomVal">92,935</span>
+        <span id="headerMushroom">92,935</span>
       </div>
       <div class="resource-pill">
         <img src="assets/icon_stars_hd.png" alt="Stars">
-        <span id="headerStarsVal">50</span>
+        <span id="headerStars">50</span>
       </div>
     </div>
-  </div>
-
-  <!-- CHIEFTAIN (DUCKER) PASS STRIP -->
-  <div class="pass-banner">
-    <div>👑 CHIEFTAIN PASS</div>
-    <div class="tag">5 DAYS ACTIVE</div>
   </div>
 
   <!-- VIEWPORT TABS -->
   <div class="tab-viewport">
 
-    <!-- TAB 1: MARKET (LIVE FIFO QUEUES & GODS) -->
-    <div id="view-market" class="tab-page">
-      <div class="market-filter-strip">
-        <div class="filter-btn active" onclick="setMarketFilter('uncommon')">UNCOMMON</div>
-        <div class="filter-btn" onclick="setMarketFilter('rare')">RARE</div>
-        <div class="filter-btn" onclick="setMarketFilter('epic')">EPIC</div>
-        <div class="filter-btn" onclick="setMarketFilter('legendary')">LEGENDARY</div>
+    <!-- =========================================
+         TAB 1: MARKET (EXACT TO USER SCREENSHOT)
+         ========================================= -->
+    <div id="tab-market" class="tab-page active">
+      <!-- DUCKS/GOBLINS | GODS SUBNAV -->
+      <div class="market-subnav-toggle">
+        <div class="market-toggle-btn active" onclick="setMarketSub('goblins', this)">GOBLINS</div>
+        <div class="market-toggle-btn" onclick="setMarketSub('gods', this)">GODS</div>
       </div>
 
-      <div class="market-queue-card">
-        <div class="queue-header">
-          <span>UNCOMMON GOBLINS PRICES</span>
-          <span style="color: #ef4444;">🔥 HOT MARKET: 09:13</span>
+      <!-- RARITY FILTER STRIP -->
+      <div class="market-filters-strip">
+        <div class="market-filter-pill active" onclick="setFilter('uncommon', this)">UNCOMMON</div>
+        <div class="market-filter-pill" onclick="setFilter('rare', this)">RARE</div>
+        <div class="market-filter-pill" onclick="setFilter('epic', this)">EPIC</div>
+        <div class="market-filter-pill" onclick="setFilter('legendary', this)">LEGENDARY</div>
+        <div class="market-filter-pill" onclick="setFilter('my_market', this)">MY MARKET</div>
+      </div>
+
+      <!-- MAIN HERO CARD OF MARKET QUEUE -->
+      <div class="market-hero-card">
+        <div class="card-top-tags">
+          <span class="card-lvl-badge">LVL 5</span>
+          <span class="card-power-score">40.8 ⚡</span>
         </div>
-        <div class="queue-price-list">
-          <div class="queue-price-item">
+
+        <div class="market-sprite-box">
+          <img src="assets/goblin_scout.png" id="marketHeroSprite" alt="Market Goblin">
+        </div>
+
+        <div class="card-owner-handle">@BATARD_MONTRACHET</div>
+        <div class="card-status-badge">SOLD TO ANOTHER COLLECTOR</div>
+
+        <div class="card-price-display">
+          <span>400</span>
+          <img src="assets/icon_mushroom_hd.png" style="width: 22px; height: 22px;" alt="Mushroom">
+        </div>
+
+        <!-- FIFO LADDER -->
+        <div class="market-queue-ladder">
+          <div class="queue-ladder-item">
             <span>#1 Goblin #4892</span>
-            <span>160.9K 🍄 <span class="price-gain">+7%</span></span>
+            <span>160.9K 🍄 <span class="ladder-gain">+7%</span></span>
           </div>
-          <div class="queue-price-item">
+          <div class="queue-ladder-item">
             <span>#2 Goblin #5120</span>
-            <span>240.0K 🍄 <span class="price-gain">+33%</span></span>
+            <span>240.0K 🍄 <span class="ladder-gain">+33%</span></span>
           </div>
-          <div class="queue-price-item">
+          <div class="queue-ladder-item">
             <span>#3 Goblin #7891</span>
-            <span>400.0K 🍄 <span class="price-gain">+33%</span></span>
+            <span>400.0K 🍄 <span class="ladder-gain">+33%</span></span>
+          </div>
+          <div class="queue-ladder-item">
+            <span>#4 Goblin #8902</span>
+            <span>432.7K 🍄 <span class="ladder-gain">+15%</span></span>
           </div>
         </div>
-        <button class="btn-feed-main" style="margin-top: 10px; font-size: 14px; padding: 10px;" onclick="sellGoblinQueue()">SELL YOUR GOBLIN</button>
+
+        <div class="hot-market-banner">
+          <span>🔥 Hot market ends in 09:58</span>
+          <span>19 SEC</span>
+        </div>
+
+        <button class="btn-sell-goblin" onclick="sellGoblin()">SELL YOUR GOBLIN</button>
       </div>
 
-      <div class="market-info-box">
+      <div class="market-explanation-box">
         <strong>PILOT VERSION (FIFO QUEUE)</strong><br>
-        Goblins of each quality are sold on market in a single queue. First in, first out. Prices increase when goblins are purchased or when queue is empty!
+        Goblins of each quality are sold on market in a single queue. First in, first out. Prices increase when goblin is purchased or there are no goblins in the queue.
       </div>
     </div>
 
-    <!-- TAB 2: EGGS (7x7 MERGE GRID & AUTO-MERGE) -->
-    <div id="view-eggs" class="tab-page">
-      <div class="eggs-header-bar">
-        <span class="merge-level-badge">LVL 4 XL (7×7 MATRIX)</span>
+    <!-- =========================================
+         TAB 2: EGGS (7x7 MERGE GRID)
+         ========================================= -->
+    <div id="tab-eggs" class="tab-page">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 900; color: #f59e0b; font-size: 14px;">LVL 4 XL (7×7 MATRIX)</span>
         <span style="font-size: 12px; color: var(--text-muted);">READY TO MERGE</span>
       </div>
 
-      <div class="grid-container-7x7" id="relicGrid49">
-        <!-- 49 dynamic interactive merge slots rendered via JS -->
-      </div>
+      <div class="grid-7x7" id="mergeGrid49"></div>
 
-      <div class="egg-grid-controls">
-        <button class="btn-sub-action" onclick="spawnRelicEgg()">🥚 SPAWN (-50 🍄)</button>
-        <button class="btn-sub-action" style="background: #22c55e; color: #000; border: none;" onclick="autoMergeGrid()">⚡ AUTO-MERGE</button>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+        <button class="btn-side-action" onclick="spawnEgg()">🥚 SPAWN (-50 🍄)</button>
+        <button class="btn-side-action" style="background: #22c55e; color: #000; border: none; font-weight: 900;" onclick="autoMerge()">⚡ AUTO-MERGE</button>
       </div>
     </div>
 
-    <!-- TAB 3: GOBLINS (HERO SCREEN & TAPPING) -->
-    <div id="view-goblins" class="tab-page active">
-      <div class="hero-stage">
-        <div class="hero-stat-badge">
-          <div class="hero-rarity" id="heroRarityText">~ UNCOMMON</div>
-          <div class="hero-title" id="heroNameText">GOBLIN SCOUT</div>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">LVL 4 XL • 12 QDD MINING</div>
+    <!-- =========================================
+         TAB 3: GOBLINS (HERO TAP STAGE)
+         ========================================= -->
+    <div id="tab-goblins" class="tab-page">
+      <div class="hero-view-container">
+        <div class="hero-stat-card">
+          <div style="color: #22c55e; font-weight: 800; font-size: 12px; text-transform: uppercase;">~ UNCOMMON</div>
+          <div style="font-size: 20px; font-weight: 900;">GOBLIN SCOUT</div>
+          <div style="font-size: 11px; color: var(--text-muted);">LVL 4 XL • 12 QDD MINING</div>
         </div>
 
-        <div class="hero-sprite-container" id="heroSpriteBox" onclick="handleHeroTap(event)">
-          <img src="assets/goblin_scout.png" id="heroMainImg" alt="Goblin Hero">
+        <div class="hero-avatar-box" onclick="tapHero(event)">
+          <img src="assets/goblin_scout.png" alt="Goblin Hero">
         </div>
 
-        <div class="hero-actions">
-          <button class="btn-feed-main" onclick="handleHeroTap(event)">
+        <div class="hero-controls">
+          <button class="btn-feed-action" onclick="tapHero(event)">
             TAP TO FEED (-25 🍄)
           </button>
-
-          <div class="hero-sub-actions">
-            <button class="btn-sub-action breed" onclick="openBreedingModal()">
-              💖 BREED (4/5)
-            </button>
-            <button class="btn-sub-action stake" onclick="stakeGoblin()">
-              ⚡ STAKE
-            </button>
+          <div class="hero-dual-actions">
+            <button class="btn-side-action" style="background: linear-gradient(135deg, #ec4899, #db2777); border: none;" onclick="openBreed()">💖 BREED (4/5)</button>
+            <button class="btn-side-action" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); border: none;" onclick="stake()">⚡ STAKE</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB 4: GODS (NFT BLESSINGS & WALLET) -->
-    <div id="view-gods" class="tab-page">
-      <div class="god-nft-card">
-        <div style="font-size: 11px; color: #a855f7; font-weight: 900;">GODDESS OF FERTILITY (NFT)</div>
-        <img src="assets/totem_fertility.png" alt="God Totem">
-        <div class="god-blessing-yield">YIELD: UP TO 8,760 ❤️</div>
+    <!-- =========================================
+         TAB 4: GODS (NFT BLESSINGS & WALLET)
+         ========================================= -->
+    <div id="tab-gods" class="tab-page">
+      <div class="god-card">
+        <div style="font-size: 11px; color: #a855f7; font-weight: 900; text-transform: uppercase;">GODDESS OF FERTILITY (NFT)</div>
+        <img src="assets/totem_fertility.png" alt="God NFT">
+        <div style="font-size: 18px; font-weight: 900; color: #f59e0b;">YIELD: UP TO 8,760 ❤️</div>
         <div style="font-size: 11px; color: var(--text-muted);">Permanent +50% Breeding Speed & Merge Multipliers</div>
       </div>
 
-      <div class="wallet-connect-bar">
+      <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <div>TON WALLET</div>
-          <div style="color: #22c55e; font-size: 10px;">CONNECTED (UQAV...FELI)</div>
+          <div style="font-size: 12px; font-weight: 800;">TON WALLET</div>
+          <div style="font-size: 10px; color: #22c55e;">CONNECTED (UQAV...FELI)</div>
         </div>
-        <button class="btn-sub-action" style="padding: 4px 10px; font-size: 11px;">IMPORT NFT</button>
+        <button class="btn-side-action" style="padding: 6px 12px; font-size: 11px;">IMPORT NFT</button>
       </div>
     </div>
 
-    <!-- TAB 5: TASKS (DUELS, COLLECTIONS, ACHIEVEMENTS) -->
-    <div id="view-tasks" class="tab-page">
-      <div class="subnav-tabs-bar">
-        <div class="subnav-tab active" onclick="switchTaskSub('collections', this)">COLLECTIONS</div>
-        <div class="subnav-tab" onclick="switchTaskSub('wheel', this)">WHEEL</div>
-        <div class="subnav-tab" onclick="switchTaskSub('achievements', this)">ACHIEVEMENTS</div>
+    <!-- =========================================
+         TAB 5: TASKS (COLLECTIONS & DUELS WHEEL)
+         ========================================= -->
+    <div id="tab-tasks" class="tab-page">
+      <div class="tasks-subnav">
+        <div class="task-sub-btn active" onclick="setTaskTab('collections', this)">COLLECTIONS</div>
+        <div class="task-sub-btn" onclick="setTaskTab('wheel', this)">WHEEL</div>
+        <div class="task-sub-btn" onclick="setTaskTab('achievements', this)">ACHIEVEMENTS</div>
       </div>
 
-      <!-- COLLECTIONS SUBVIEW -->
-      <div id="tasks-collections">
-        <div class="collection-banner-card">
-          <div class="collection-header">
+      <!-- COLLECTIONS -->
+      <div id="sub-collections">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 14px; padding: 12px; margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <div>
-              <strong style="color: #f59e0b;">JOLLY ROGER PIRATES</strong>
+              <strong style="color: #f59e0b; font-size: 13px;">JOLLY ROGER PIRATES</strong>
               <div style="font-size: 10px; color: var(--text-muted);">Reward: 150.0K 🍄 • 3 of 10 Collected</div>
             </div>
-            <button class="btn-claim-task" onclick="claimCollectionReward()">CLAIM</button>
+            <button class="btn-side-action" style="background: #22c55e; color: #000; border: none; font-weight: 900; padding: 6px 12px; font-size: 11px;" onclick="claimCollection()">CLAIM</button>
           </div>
-          <div class="collection-slots-grid">
-            <div class="col-slot filled"><img src="assets/goblin_peon.png"><br>Lv.5+</div>
-            <div class="col-slot filled"><img src="assets/goblin_scout.png"><br>Lv.5+</div>
-            <div class="col-slot filled"><img src="assets/goblin_warrior.png"><br>Lv.5+</div>
-            <div class="col-slot">+<br>Add</div>
-            <div class="col-slot">+<br>Add</div>
-          </div>
-        </div>
-
-        <div class="collection-banner-card">
-          <div class="collection-header">
-            <div>
-              <strong style="color: #3b82f6;">COUNTRY CRUISE CLAN</strong>
-              <div style="font-size: 10px; color: var(--text-muted);">Reward: 125.0K 🍄 • 1 of 5 Collected</div>
-            </div>
-            <span style="font-size: 10px; color: var(--text-muted);">IN PROGRESS</span>
-          </div>
-          <div class="collection-slots-grid">
-            <div class="col-slot filled"><img src="assets/goblin_shaman.png"><br>Lv.5+</div>
-            <div class="col-slot">+<br>Add</div>
-            <div class="col-slot">+<br>Add</div>
-            <div class="col-slot">+<br>Add</div>
-            <div class="col-slot">+<br>Add</div>
+          <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;">
+            <div style="background: #12131b; border: 1px solid #22c55e; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;"><img src="assets/goblin_peon.png" style="width: 70%;"></div>
+            <div style="background: #12131b; border: 1px solid #22c55e; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;"><img src="assets/goblin_scout.png" style="width: 70%;"></div>
+            <div style="background: #12131b; border: 1px solid #22c55e; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;"><img src="assets/goblin_warrior.png" style="width: 70%;"></div>
+            <div style="background: #12131b; border: 1px dashed #36344d; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 10px;">+Add</div>
+            <div style="background: #12131b; border: 1px dashed #36344d; border-radius: 8px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 10px;">+Add</div>
           </div>
         </div>
       </div>
 
-      <!-- WHEEL SUBVIEW -->
-      <div id="tasks-wheel" style="display: none; text-align: center;">
-        <h3 style="margin-bottom: 8px;">DUELS FORTUNE WHEEL</h3>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Earn wheel tokens in duels to unlock DUCKER GOD NFTs!</p>
-        <img src="assets/wheel_center.png" style="width: 160px; height: 160px; margin-bottom: 12px;" alt="Wheel">
-        <button class="btn-feed-main" onclick="spinWheel()">SPIN THE WHEEL</button>
+      <!-- WHEEL -->
+      <div id="sub-wheel" style="display: none; text-align: center; padding: 20px 0;">
+        <h3 style="margin-bottom: 6px;">DUELS FORTUNE WHEEL</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Earn wheel tokens in duels to unlock Goblin God NFTs!</p>
+        <img src="assets/wheel_center.png" style="width: 150px; height: 150px; margin-bottom: 12px;" alt="Wheel">
+        <button class="btn-feed-action" style="width: 80%; margin: 0 auto;" onclick="spinWheel()">SPIN THE WHEEL</button>
       </div>
 
-      <!-- ACHIEVEMENTS SUBVIEW -->
-      <div id="tasks-achievements" style="display: none;">
-        <div class="task-item-row">
-          <div class="task-info">
-            <h4>Merge 100 Eggs [9] or Better</h4>
-            <p>Reward: Prince Ducker Pass (1 Week) • 60/100</p>
+      <!-- ACHIEVEMENTS -->
+      <div id="sub-achievements" style="display: none;">
+        <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="font-size: 13px; font-weight: 800;">Open 10 Love Eggs [12]</div>
+            <div style="font-size: 11px; color: #22c55e;">+30,000 🍄</div>
           </div>
-          <button class="btn-claim-task" style="background: #334155; color: #fff;">60/100</button>
-        </div>
-
-        <div class="task-item-row">
-          <div class="task-info">
-            <h4>Open 10 Love Eggs [12]</h4>
-            <p>Reward: +30,000 🍄</p>
-          </div>
-          <button class="btn-claim-task" onclick="claimTask(30000)">CLAIM</button>
-        </div>
-
-        <div class="task-item-row">
-          <div class="task-info">
-            <h4>Watch & Earn Video Ad</h4>
-            <p>Reward: +100 🍄 + Tournament Points</p>
-          </div>
-          <button class="btn-claim-task" onclick="claimTask(100)">WATCH</button>
+          <button class="btn-side-action" style="background: #22c55e; color: #000; font-weight: 900; padding: 6px 14px;" onclick="claimReward(30000)">CLAIM</button>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- BOTTOM 5-TAB DOCK (EXACT DUCK MY DUCK HIERARCHY) -->
-  <div class="bottom-nav-dock">
-    <div class="nav-dock-btn" onclick="switchNavTab('market', this)">
+  <!-- BOTTOM 5-TAB DOCK (100% MATCH TO SCREENSHOT) -->
+  <div class="bottom-dock">
+    <div class="dock-tab active" onclick="switchTab('market', this)">
       <img src="assets/dock_market.png" alt="Market">
       <span>MARKET</span>
     </div>
-    <div class="nav-dock-btn" onclick="switchNavTab('eggs', this)">
+    <div class="dock-tab" onclick="switchTab('eggs', this)">
       <img src="assets/dock_egg.png" alt="Eggs">
       <span>EGGS</span>
     </div>
-    <div class="nav-dock-btn active" onclick="switchNavTab('goblins', this)">
+    <div class="dock-tab" onclick="switchTab('goblins', this)">
       <img src="assets/dock_goblin.png" alt="Goblins">
       <span>GOBLINS</span>
     </div>
-    <div class="nav-dock-btn" onclick="switchNavTab('gods', this)">
+    <div class="dock-tab" onclick="switchTab('gods', this)">
       <img src="assets/dock_gods.png" alt="Gods">
       <span>GODS</span>
     </div>
-    <div class="nav-dock-btn" onclick="switchNavTab('tasks', this)">
+    <div class="dock-tab" onclick="switchTab('tasks', this)">
       <img src="assets/dock_tasks.png" alt="Tasks">
       <span>TASKS</span>
     </div>
   </div>
 
-  <!-- GAME LOGIC JAVASCRIPT -->
+  <!-- JAVASCRIPT GAME ENGINE -->
   <script>
-    let state = {
+    let gameState = {
       mushrooms: 92935,
       stars: 50,
       grid: Array(49).fill(0).map(() => Math.floor(Math.random() * 4) + 1)
     };
 
-    const eggAssets = [
+    const eggImages = [
       '',
       'assets/egg_wood.png',
       'assets/egg_bronze.png',
@@ -884,182 +815,185 @@
       'assets/egg_celestial.png'
     ];
 
-    function initGrid() {
-      const container = document.getElementById('relicGrid49');
+    function initMergeGrid() {
+      const container = document.getElementById('mergeGrid49');
       container.innerHTML = '';
-      state.grid.forEach((lvl, idx) => {
-        const slot = document.createElement('div');
-        slot.className = 'grid-slot';
-        slot.onclick = () => selectSlot(idx);
+      gameState.grid.forEach((lvl, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        cell.onclick = () => onCellClick(i);
         if (lvl > 0) {
           const img = document.createElement('img');
-          img.src = eggAssets[lvl] || eggAssets[1];
-          slot.appendChild(img);
-          const lvlNum = document.createElement('span');
-          lvlNum.className = 'egg-lvl-num';
-          lvlNum.innerText = lvl;
-          slot.appendChild(lvlNum);
+          img.src = eggImages[lvl] || eggImages[1];
+          cell.appendChild(img);
         }
-        container.appendChild(slot);
+        container.appendChild(cell);
       });
     }
 
-    let selectedIdx = null;
-    function selectSlot(idx) {
-      if (selectedIdx === null) {
-        if (state.grid[idx] > 0) {
-          selectedIdx = idx;
-          renderSelectedSlot();
+    let selectedCell = null;
+    function onCellClick(idx) {
+      if (selectedCell === null) {
+        if (gameState.grid[idx] > 0) {
+          selectedCell = idx;
+          highlightCells();
         }
       } else {
-        if (selectedIdx === idx) {
-          selectedIdx = null;
-          renderSelectedSlot();
-        } else if (state.grid[selectedIdx] === state.grid[idx] && state.grid[idx] < 5) {
-          // Merge
-          state.grid[idx] += 1;
-          state.grid[selectedIdx] = 0;
-          selectedIdx = null;
-          state.mushrooms += 500;
-          updateHeader();
-          initGrid();
-          triggerHaptic('medium');
+        if (selectedCell === idx) {
+          selectedCell = null;
+          highlightCells();
+        } else if (gameState.grid[selectedCell] === gameState.grid[idx] && gameState.grid[idx] < 5) {
+          gameState.grid[idx] += 1;
+          gameState.grid[selectedCell] = 0;
+          selectedCell = null;
+          gameState.mushrooms += 500;
+          updateUI();
+          initMergeGrid();
+          haptic('medium');
         } else {
-          selectedIdx = idx;
-          renderSelectedSlot();
+          selectedCell = idx;
+          highlightCells();
         }
       }
     }
 
-    function renderSelectedSlot() {
-      const slots = document.querySelectorAll('.grid-slot');
-      slots.forEach((s, i) => {
-        if (i === selectedIdx) s.classList.add('selected');
-        else s.classList.remove('selected');
+    function highlightCells() {
+      document.querySelectorAll('.grid-cell').forEach((c, i) => {
+        if (i === selectedCell) c.classList.add('selected');
+        else c.classList.remove('selected');
       });
     }
 
-    function autoMergeGrid() {
+    function autoMerge() {
       let merged = false;
       for (let i = 0; i < 49; i++) {
-        if (state.grid[i] === 0) continue;
+        if (gameState.grid[i] === 0) continue;
         for (let j = i + 1; j < 49; j++) {
-          if (state.grid[i] === state.grid[j] && state.grid[i] < 5) {
-            state.grid[i] += 1;
-            state.grid[j] = 0;
+          if (gameState.grid[i] === gameState.grid[j] && gameState.grid[i] < 5) {
+            gameState.grid[i] += 1;
+            gameState.grid[j] = 0;
             merged = true;
-            state.mushrooms += 500;
+            gameState.mushrooms += 500;
             break;
           }
         }
       }
       if (merged) {
-        updateHeader();
-        initGrid();
-        triggerHaptic('heavy');
+        updateUI();
+        initMergeGrid();
+        haptic('heavy');
       }
     }
 
-    function spawnRelicEgg() {
-      if (state.mushrooms < 50) return;
-      const emptyIndices = state.grid.map((v, i) => v === 0 ? i : -1).filter(v => v !== -1);
-      if (emptyIndices.length > 0) {
-        const randIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-        state.grid[randIdx] = 1;
-        state.mushrooms -= 50;
-        updateHeader();
-        initGrid();
-        triggerHaptic('light');
+    function spawnEgg() {
+      if (gameState.mushrooms < 50) return;
+      const empties = gameState.grid.map((v, i) => v === 0 ? i : -1).filter(v => v !== -1);
+      if (empties.length > 0) {
+        const rand = empties[Math.floor(Math.random() * empties.length)];
+        gameState.grid[rand] = 1;
+        gameState.mushrooms -= 50;
+        updateUI();
+        initMergeGrid();
+        haptic('light');
       }
     }
 
-    function handleHeroTap(e) {
-      if (state.mushrooms < 25) return;
-      state.mushrooms -= 25;
-      updateHeader();
-      triggerHaptic('light');
+    function tapHero(e) {
+      if (gameState.mushrooms < 25) return;
+      gameState.mushrooms -= 25;
+      updateUI();
+      haptic('light');
 
-      // Floating popup
+      // Spawn pop number
       const pop = document.createElement('div');
-      pop.className = 'floating-popup';
-      pop.style.color = '#22c55e';
+      pop.className = 'pop-number';
       pop.innerText = '-25 🍄';
       pop.style.left = (e.clientX || (window.innerWidth / 2)) + 'px';
       pop.style.top = (e.clientY || (window.innerHeight / 2)) + 'px';
       document.body.appendChild(pop);
-      setTimeout(() => pop.remove(), 800);
+      setTimeout(() => pop.remove(), 700);
     }
 
-    function switchNavTab(tabName, btn) {
+    function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-dock-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.dock-tab').forEach(b => b.classList.remove('active'));
       
-      const targetView = document.getElementById(`view-${tabName}`);
-      if (targetView) targetView.classList.add('active');
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add('active');
       if (btn) btn.classList.add('active');
       
-      if (tabName === 'eggs') initGrid();
-      triggerHaptic('light');
+      if (tabId === 'eggs') initMergeGrid();
+      haptic('light');
     }
 
-    function switchTaskSub(subName, btn) {
-      document.querySelectorAll('.subnav-tab').forEach(b => b.classList.remove('active'));
+    function setFilter(filter, btn) {
+      document.querySelectorAll('.market-filter-pill').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      
-      document.getElementById('tasks-collections').style.display = subName === 'collections' ? 'block' : 'none';
-      document.getElementById('tasks-wheel').style.display = subName === 'wheel' ? 'block' : 'none';
-      document.getElementById('tasks-achievements').style.display = subName === 'achievements' ? 'block' : 'none';
     }
 
-    function updateHeader() {
-      document.getElementById('headerMushroomVal').innerText = state.mushrooms.toLocaleString();
-      document.getElementById('headerStarsVal').innerText = state.stars;
+    function setMarketSub(sub, btn) {
+      document.querySelectorAll('.market-toggle-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
     }
 
-    function triggerHaptic(type) {
+    function setTaskTab(tab, btn) {
+      document.querySelectorAll('.task-sub-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      document.getElementById('sub-collections').style.display = tab === 'collections' ? 'block' : 'none';
+      document.getElementById('sub-wheel').style.display = tab === 'wheel' ? 'block' : 'none';
+      document.getElementById('sub-achievements').style.display = tab === 'achievements' ? 'block' : 'none';
+    }
+
+    function updateUI() {
+      document.getElementById('headerMushroom').innerText = gameState.mushrooms.toLocaleString();
+      document.getElementById('headerStars').innerText = gameState.stars;
+    }
+
+    function haptic(type) {
       if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
       }
     }
 
-    function openBreedingModal() {
-      alert("💖 Breeding ritual activated! Ready to hatch rare Goblin Scout.");
+    function openPack() {
+      alert("📦 Daily Clan Pack opened! Received +1,000 🍄");
+      gameState.mushrooms += 1000;
+      updateUI();
     }
 
-    function stakeGoblin() {
-      alert("⚡ Goblin staked in Clan Altar! Earning passive mushrooms.");
+    function sellGoblin() {
+      alert("✅ Your Goblin has been placed in the FIFO Market Queue at 160.9K 🍄!");
     }
 
-    function claimCollectionReward() {
-      state.mushrooms += 150000;
-      updateHeader();
-      alert("🎉 Claimed 150,000 🍄 Jolly Roger pirate collection reward!");
+    function openBreed() {
+      alert("💖 Breeding Nest opened! 4/5 daily breedings available.");
     }
 
-    function claimTask(amount) {
-      state.mushrooms += amount;
-      updateHeader();
-      alert(`🎉 Claimed +${amount} 🍄!`);
+    function stake() {
+      alert("⚡ Goblin staked successfully into the Clan Totem!");
+    }
+
+    function claimCollection() {
+      gameState.mushrooms += 150000;
+      updateUI();
+      alert("🎉 Claimed 150,000 🍄 Jolly Roger Pirates collection reward!");
+    }
+
+    function claimReward(val) {
+      gameState.mushrooms += val;
+      updateUI();
+      alert(`🎉 Claimed +${val} 🍄!`);
     }
 
     function spinWheel() {
-      state.mushrooms += 5000;
-      updateHeader();
-      alert("🎡 Wheel landed on +5,000 🍄 & Rare Duel Token!");
+      gameState.mushrooms += 5000;
+      updateUI();
+      alert("🎡 Wheel landed on +5,000 🍄!");
     }
 
-    function setMarketFilter(filter) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-
-    function sellGoblinQueue() {
-      alert("✅ Your Goblin has been listed in the FIFO Market Queue at 160.9K 🍄!");
-    }
-
-    // Initialize on load
     window.onload = () => {
-      initGrid();
+      initMergeGrid();
       if (window.Telegram && window.Telegram.WebApp) {
         window.Telegram.WebApp.ready();
         window.Telegram.WebApp.expand();
