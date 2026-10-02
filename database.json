@@ -1,0 +1,120 @@
+{
+  "users": {
+    "123": {
+      "user_id": "123",
+      "username": "Goblin Warrior",
+      "mushrooms": 1500,
+      "gob_tokens": 100.0,
+      "hearts": 30,
+      "stars": 0,
+      "energy": 2000,
+      "max_energy": 2000,
+      "last_energy_update": 1790971333.4063687,
+      "goblins": [
+        {
+          "id": "g_1",
+          "tier": 1,
+          "rarity": "Common",
+          "level": 1,
+          "xp": 0,
+          "is_staked": false,
+          "breed_count": 0,
+          "max_breed": 5
+        }
+      ],
+      "active_goblin_id": "g_1",
+      "grid": [
+        1,
+        1,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "gods": {
+        "greed": 1,
+        "fertility": 1,
+        "war": 1
+      },
+      "vip_until": 0,
+      "referrer_id": null,
+      "referrer_tier2_id": null,
+      "referral_count": 0,
+      "referral_earnings_mush": 0,
+      "clan_id": "clan_1",
+      "sabotage_cards": 3,
+      "last_sabotage_time": 1790971333.4063745,
+      "created_at": 1790971333.4063745
+    }
+  },
+  "clans": {
+    "clan_1": {
+      "id": "clan_1",
+      "name": "Blood Moon Tribe",
+      "fans": 12500,
+      "members": 142,
+      "rating": 1,
+      "tomatoes": 0
+    },
+    "clan_2": {
+      "id": "clan_2",
+      "name": "Orcish Horde",
+      "fans": 9800,
+      "members": 115,
+      "rating": 2,
+      "tomatoes": 0
+    },
+    "clan_3": {
+      "id": "clan_3",
+      "name": "Shadow Dagger Guild",
+      "fans": 8400,
+      "members": 98,
+      "rating": 3,
+      "tomatoes": 0
+    }
+  },
+  "market_history": []
+}

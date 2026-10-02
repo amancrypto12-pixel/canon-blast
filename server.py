@@ -296,8 +296,12 @@ async def api_clan_sabotage(request: web.Request) -> web.Response:
         "clans": db.data["clans"]
     })
 
+async def serve_index(request: web.Request) -> web.FileResponse:
+    return web.FileResponse("/home/ubuntu/goblin-pro-game/public/index.html")
+
 def create_app() -> web.Application:
     app = web.Application()
+    app.router.add_get("/", serve_index)
     app.router.add_get("/api/profile", api_get_profile)
     app.router.add_post("/api/feed", api_feed_goblin)
     app.router.add_post("/api/merge", api_merge_grid)
@@ -305,7 +309,7 @@ def create_app() -> web.Application:
 
     # Static assets and WebApp index
     app.router.add_static("/assets/", path="/home/ubuntu/goblin-pro-game/assets", name="assets")
-    app.router.add_static("/", path="/home/ubuntu/goblin-pro-game/public", name="public")
+    app.router.add_static("/public/", path="/home/ubuntu/goblin-pro-game/public", name="public")
     return app
 
 if __name__ == "__main__":
