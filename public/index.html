@@ -3,27 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Dolphin Pearl — PixiJS Edition</title>
+  <title>Dolphin Pearl — Telegram Mini App Game</title>
   
-  <!-- Telegram SDK -->
+  <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   
-  <!-- PixiJS v7 Engine (High-Performance WebGL 2D) -->
+  <!-- PixiJS v7 Engine (High-Performance 2D WebGL) -->
   <script src="https://pixijs.download/v7.3.2/pixi.min.js"></script>
   
-  <!-- Fonts -->
+  <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;0,900;1,800&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
+    /* =========================================
+       DESIGN TOKENS (02_UI_SPEC.md & 1:1 Parity)
+       ========================================= */
     :root {
       --bg-main: #0D0F17;
       --bg-card: #171A25;
       --bg-card2: #1E2230;
+      --bg-glass: rgba(23, 26, 37, 0.85);
       --stroke: #2A2F40;
+      --stroke-light: rgba(255, 255, 255, 0.08);
+      
       --text-primary: #FFFFFF;
       --text-secondary: #9AA0B4;
+      --text-muted: #64748B;
+      
       --accent-gold: #FFC933;
       --accent-orange: #FF9F1C;
       --accent-cyan: #00D4FF;
@@ -32,26 +40,44 @@
       --heart-pink: #FF4D8D;
       --danger: #FF3B3B;
       
+      --rarity-common: #D8DCE8;
+      --rarity-uncommon: #3DDC68;
+      --rarity-rare: #3B82FF;
+      --rarity-epic: #A855F7;
+      --rarity-legendary: #FFC933;
+
       --nav-height: 72px;
       --topbar-height: 56px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     body {
       background: var(--bg-main);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-primary);
-      width: 100vw; height: 100vh;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
-      display: flex; flex-direction: column;
+      display: flex;
+      flex-direction: column;
+      position: relative;
     }
 
-    /* WEBEGL CANVAS LAYER */
+    /* WEBEGL CANVAS LAYER (Underneath semantic UI) */
     #pixi-canvas-container {
       position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: 1;
       pointer-events: auto;
     }
@@ -59,120 +85,680 @@
     /* SEMANTIC UI OVERLAY LAYER */
     .ui-layer {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 10;
       pointer-events: none;
-      display: flex; flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
 
     .pointer-auto { pointer-events: auto; }
 
-    /* ================= GLOBAL TOP BAR ================= */
+    /* =========================================
+       GLOBAL TOP BAR
+       ========================================= */
     .app-topbar {
       height: var(--topbar-height);
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 6px 14px;
       background: rgba(13, 15, 23, 0.95);
       border-bottom: 1px solid rgba(42, 47, 64, 0.5);
       position: relative;
     }
-    .topbar-left { display: flex; align-items: center; gap: 8px; }
-    .user-profile-badge { display: flex; align-items: center; gap: 6px; }
-    .user-avatar-circle {
-      width: 26px; height: 26px; border-radius: 50%;
-      background: linear-gradient(135deg, #00D4FF, #0284C7);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 900; color: #fff;
-      overflow: hidden; border: 1.5px solid rgba(255, 255, 255, 0.25);
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .user-avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
-    .username-label { font-size: 13px; font-weight: 800; }
-    .btn-pod-pill {
-      background: var(--bg-card2); border: 1px solid var(--stroke); border-radius: 20px;
-      padding: 4px 10px; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 800; color: var(--accent-gold);
-      display: flex; align-items: center; cursor: pointer;
-    }
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .currency-pill {
-      display: flex; align-items: center; gap: 5px;
-      font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800;
+
+    .user-profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
     }
-    .currency-pill img { width: 22px; height: 22px; object-fit: contain; }
 
-    /* ================= MAIN VIEWPORT ================= */
+    .user-avatar-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00D4FF, #0284C7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #fff;
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .user-avatar-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .username-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .btn-pod-badge {
+      background: var(--bg-card2);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .currency-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .currency-pill img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+
+    /* =========================================
+       MAIN VIEWPORT TABS
+       ========================================= */
     .tab-viewport {
-      flex: 1; position: relative; width: 100%; overflow: hidden;
+      flex: 1;
+      position: relative;
+      width: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-bottom: calc(var(--nav-height) + 16px);
+      -webkit-overflow-scrolling: touch;
     }
+
     .tab-page {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; opacity: 0; transition: opacity 0.2s;
-      display: flex; flex-direction: column;
+      display: none;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 8px 14px;
     }
-    .tab-page.active { pointer-events: auto; opacity: 1; }
 
-    /* ================= TAB 1: DOLPHINS (HOME) UI ================= */
-    .lobby-ui-top {
-      padding: 10px 16px;
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    .tab-page.active {
+      display: flex;
     }
-    .lobby-header-balance { display: flex; align-items: center; gap: 10px; }
-    .dlp-logo { width: 38px; height: 38px; object-fit: contain; filter: drop-shadow(0 0 12px rgba(0,212,255,0.6)); }
-    .dlp-counter { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 900; text-shadow: 0 0 16px rgba(0,212,255,0.4); }
-    
+
+    /* =========================================
+       TAB 1: DOLPHINS (HOME LOBBY)
+       ========================================= */
+    .lobby-header-balance {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 2px 0 6px;
+    }
+
+    .dlp-logo {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6));
+    }
+
+    .dlp-counter {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 44px;
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 16px rgba(0, 212, 255, 0.4);
+    }
+
     .lobby-trio-chips {
-      display: grid; grid-template-columns: 1fr auto 1fr; width: 100%; gap: 8px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+      margin-bottom: 6px;
     }
-    .chip-left { background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 14px; padding: 6px 12px; }
-    .chip-center { background: var(--bg-card2); border: 1px solid #363d54; border-radius: 14px; padding: 5px 16px; text-align: center; }
-    .chip-right { background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 14px; padding: 6px 12px; text-align: right; }
-    
+
+    .chip-left {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .chip-center {
+      background: var(--bg-card2);
+      border: 1px solid #363d54;
+      border-radius: 14px;
+      padding: 5px 14px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .chip-right {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .rarity-pill {
+      font-size: 10px;
+      font-weight: 900;
+      color: var(--rarity-uncommon);
+      background: rgba(61, 220, 104, 0.15);
+      border: 1px solid rgba(61, 220, 104, 0.35);
+      padding: 1px 8px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
     .card-space-placeholder {
-      flex: 1; width: 100%; min-height: 380px; max-height: 460px;
+      width: 100%;
+      min-height: 380px;
+      max-height: 440px;
+      margin: 4px 0;
     }
 
-    .lobby-ui-bottom {
-      padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px;
-      background: linear-gradient(0deg, rgba(13,15,23,1) 30%, rgba(13,15,23,0) 100%);
+    .slot-dots-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0;
     }
 
-    .slot-dots-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 0; }
-    .slot-dot { width: 14px; height: 14px; border-radius: 50%; background: #2A2F40; transition: 0.2s; }
-    .slot-dot.active { background: #FFF; box-shadow: 0 0 10px #FFF; transform: scale(1.25); }
-    .slot-dot.owned { background: var(--fish-green); }
+    .slot-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #2A2F40;
+      cursor: pointer;
+      transition: 0.2s;
+    }
 
-    .breed-control-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-breed-pill { background: linear-gradient(135deg, var(--heart-pink), #BE185D); border: none; border-radius: 16px; padding: 12px; color: #FFF; font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; width: 100%; cursor: pointer; }
-    .btn-stake-pill { background: linear-gradient(135deg, #8B5CF6, #6D28D9); border: none; border-radius: 16px; padding: 12px; color: #FFF; font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; width: 100%; cursor: pointer; }
+    .slot-dot.active {
+      background: #FFF;
+      box-shadow: 0 0 10px #FFF;
+      transform: scale(1.25);
+    }
 
-    /* ================= TAB 2: PEARLS (MERGE BOARD) UI ================= */
-    .merge-ui-layer { padding: 10px 16px; }
+    .slot-dot.owned {
+      background: var(--fish-green);
+    }
+
+    .slot-dot.locked {
+      background: #171A25;
+      border: 1px solid var(--stroke);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+    }
+
+    .breed-control-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn-breed-pill {
+      background: linear-gradient(135deg, var(--heart-pink), #BE185D);
+      border: none;
+      border-radius: 16px;
+      padding: 12px;
+      color: #FFF;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(255, 77, 141, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-stake-pill {
+      background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+      border: none;
+      border-radius: 16px;
+      padding: 12px;
+      color: #FFF;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(139, 92, 246, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .lobby-sub-card {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .lobby-sub-card:active { transform: scale(0.98); }
+
+    /* =========================================
+       TAB 2: PEARLS (7x7 MERGE BOARD & 12 LEVELS)
+       ========================================= */
     .merge-stage-banner {
-      display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 16px; padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
     }
+
+    .pearl-egg-level-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+
+    .egg-tier-chip {
+      background: var(--bg-card2);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .egg-tier-chip.active {
+      border-color: var(--accent-gold);
+      background: rgba(255, 201, 51, 0.15);
+    }
+
     .merge-board-space {
-      width: 100%; aspect-ratio: 1; margin: 10px auto; 
+      width: 100%;
+      aspect-ratio: 1;
+      margin: 4px auto 10px;
     }
 
-    /* ================= BOTTOM NAVIGATION ================= */
+    /* =========================================
+       TAB 3: MARKET (FIFO QUEUE & PRICE GRAPH)
+       ========================================= */
+    .market-tabs-row {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      margin-bottom: 10px;
+      padding-bottom: 4px;
+    }
+
+    .market-tab-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .market-tab-btn.active {
+      background: #FFFFFF;
+      color: #0D0F17;
+      border-color: #FFFFFF;
+    }
+
+    .market-price-chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .chart-timeframe-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .btn-tf {
+      background: var(--bg-card2);
+      border: 1px solid var(--stroke);
+      color: var(--text-secondary);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-tf.active {
+      background: var(--accent-cyan);
+      color: #0D0F17;
+      border-color: var(--accent-cyan);
+    }
+
+    .hot-listing-card {
+      background: radial-gradient(circle at top right, #1E2230 0%, #171A25 100%);
+      border: 2px solid var(--stroke);
+      border-radius: 24px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.6);
+    }
+
+    /* =========================================
+       TAB 4: COLLECTIONS (32 EVENTS & 150+ SKINS)
+       ========================================= */
+    .collections-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .event-collection-card {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .collection-slots-matrix {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin: 6px 0;
+    }
+
+    .col-slot-box {
+      aspect-ratio: 1;
+      background: var(--bg-card2);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .col-slot-box img {
+      width: 75%;
+      height: 75%;
+      object-fit: contain;
+    }
+
+    .col-slot-box.filled {
+      border-color: var(--accent-gold);
+      background: rgba(255, 201, 51, 0.1);
+    }
+
+    .slot-added-tag {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      background: var(--accent-gold);
+      color: #0D0F17;
+      font-size: 8px;
+      font-weight: 900;
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    /* =========================================
+       TAB 5: GODS & TASKS
+       ========================================= */
+    .god-medallion-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .god-size-tab {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .god-size-tab.active {
+      background: var(--rarity-epic);
+      color: #fff;
+      border-color: var(--rarity-epic);
+    }
+
+    /* =========================================
+       BOTTOM NAVIGATION DOCK (5 TABS)
+       ========================================= */
     .app-bottom-nav {
-      height: var(--nav-height); background: rgba(13, 15, 23, 0.98);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(42, 47, 64, 0.75);
-      display: grid; grid-template-columns: repeat(5, 1fr); z-index: 1000;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: rgba(13, 15, 23, 0.98);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(42, 47, 64, 0.75);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 1000;
     }
-    .nav-tab-item {
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-secondary);
-      font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 800; transition: color 0.15s; cursor: pointer;
-    }
-    .nav-tab-item.active { color: var(--accent-gold); }
-    .nav-tab-item img { width: 26px; height: 26px; object-fit: contain; opacity: 0.6; }
-    .nav-tab-item.active img { opacity: 1; transform: scale(1.15); filter: drop-shadow(0 2px 10px rgba(255, 201, 51, 0.6)); }
 
-    /* ================= TOAST ================= */
+    .nav-tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      transition: color 0.15s;
+      position: relative;
+    }
+
+    .nav-tab-item.active {
+      color: var(--accent-gold);
+    }
+
+    .nav-tab-item img {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      opacity: 0.6;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .nav-tab-item.active img {
+      opacity: 1;
+      transform: scale(1.15);
+      filter: drop-shadow(0 2px 10px rgba(255, 201, 51, 0.6));
+    }
+
+    .nav-badge-dot {
+      position: absolute;
+      top: 10px;
+      right: 22px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--danger);
+    }
+
+    /* =========================================
+       MODALS & DIALOGS
+       ========================================= */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 7, 12, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-content-card {
+      background: var(--bg-card);
+      border: 1px solid var(--stroke);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 380px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.9);
+      animation: modalSpring 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalSpring {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-close-icon {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--bg-card2);
+      border: 1px solid var(--stroke);
+      color: var(--text-secondary);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn-gold-primary {
+      background: linear-gradient(180deg, var(--accent-gold), #EAB308);
+      border: none;
+      border-bottom: 5px solid #CA8A04;
+      border-radius: 44px;
+      padding: 14px;
+      color: #0D0F17;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      width: 100%;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(255, 201, 51, 0.4);
+      transition: transform 0.08s;
+    }
+    .btn-gold-primary:active {
+      transform: translateY(3px);
+      border-bottom-width: 2px;
+    }
+
     #appToast {
-      position: fixed; top: 64px; left: 50%; transform: translateX(-50%); background: rgba(23,26,37,0.95); border: 1px solid var(--accent-cyan);
-      color: #fff; padding: 8px 18px; border-radius: 24px; font-size: 12px; font-weight: 800; display: none; z-index: 3000;
+      position: fixed;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(23, 26, 37, 0.95);
+      border: 1px solid var(--accent-cyan);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-weight: 800;
+      display: none;
+      z-index: 3000;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.8);
     }
   </style>
 </head>
@@ -191,117 +777,406 @@
           <div class="user-avatar-circle" id="userAvatarWrap"><span id="userAvatarChar">W</span></div>
           <span class="username-label" id="usernameText">Wild_airdrop</span>
         </div>
-        <div class="btn-pod-pill">🐬 POD #102</div>
+        <div class="btn-pod-badge" onclick="openModal('modalPod')">
+          📦 PACK #102
+        </div>
       </div>
       <div class="topbar-right">
-        <div class="currency-pill"><img src="assets/icon_user_fish.png" alt="Fish Food"><span id="counterFish">91,339</span></div>
-        <div class="currency-pill"><img src="assets/icon_user_star.png" alt="Stars"><span id="counterStars">45</span></div>
+        <div class="currency-pill"><img src="assets/icon_user_fish.png" alt="Fish"><span id="counterFish">92,935</span></div>
+        <div class="currency-pill" onclick="openModal('modalReefPass')"><img src="assets/icon_user_star.png" alt="Stars"><span id="counterStars">50</span></div>
       </div>
     </div>
 
     <!-- VIEWPORT TABS -->
     <div class="tab-viewport">
       
-      <!-- TAB 1: DOLPHINS (MAIN MASCOT) -->
+      <!-- =========================================
+           TAB 1: DOLPHINS (HOME LOBBY)
+           ========================================= -->
       <div id="tab-dolphins" class="tab-page active">
         <div class="lobby-ui-top pointer-auto">
-          <!-- DLP Counter -->
           <div class="lobby-header-balance">
             <img src="assets/blue_token_coin.png" class="dlp-logo" alt="DLP">
-            <div class="dlp-counter" id="mainDlpCounter">183.49</div>
+            <div class="dlp-counter" id="mainDlpCounter">183.38</div>
           </div>
-          <!-- Trio Stats -->
           <div class="lobby-trio-chips">
-            <div class="chip-left"><div style="font-family:'Barlow Condensed'; font-size:14px; font-weight:800; color:var(--accent-gold);">REEF PASS</div><div style="font-size:10px; color:var(--text-secondary);">DAILY PASS 5 DAYS</div></div>
-            <div class="chip-center"><div style="font-family:'Barlow Condensed'; font-size:16px; font-weight:900; color:var(--accent-gold);">LVL 5</div><div style="font-size:10px; font-weight:900; color:#3DDC68;">~ COMMON</div></div>
-            <div class="chip-right"><div style="font-family:'Barlow Condensed'; font-size:15px; font-weight:900; color:var(--accent-cyan);">64.9K</div><div style="font-size:10px; color:var(--text-secondary);">/ 2,000</div></div>
+            <div class="chip-left" onclick="openModal('modalReefPass')">
+              <div style="font-family:'Barlow Condensed'; font-size:14px; font-weight:800; color:var(--accent-gold);">REEF PASS</div>
+              <div style="font-size:10px; color:var(--text-secondary);">DAILY PASS 5 DAYS</div>
+            </div>
+            <div class="chip-center">
+              <div style="font-family:'Barlow Condensed'; font-size:16px; font-weight:900; color:var(--accent-gold);">LVL 5</div>
+              <div class="rarity-pill">~ COMMON</div>
+            </div>
+            <div class="chip-right">
+              <div style="font-family:'Barlow Condensed'; font-size:15px; font-weight:900; color:var(--accent-cyan);">62.4K</div>
+              <div style="font-size:10px; color:var(--text-secondary);">/ 2,000</div>
+            </div>
           </div>
         </div>
         
-        <!-- Empty space so Pixi card rendering is touchable -->
+        <!-- Touch Target for Pixi Card -->
         <div class="card-space-placeholder" id="pixiCardTargetArea"></div>
         
         <div class="lobby-ui-bottom pointer-auto">
-          <!-- Slot Dots -->
           <div class="slot-dots-row">
-            <div class="slot-dot active"></div><div class="slot-dot owned"></div><div class="slot-dot owned"></div><div class="slot-dot owned"></div><div class="slot-dot"></div>
+            <div class="slot-dot active"></div><div class="slot-dot owned"></div><div class="slot-dot owned"></div><div class="slot-dot owned"></div><div class="slot-dot owned"></div><div class="slot-dot"></div><div class="slot-dot locked">🔒</div>
           </div>
-          <!-- Action Buttons -->
           <div class="breed-control-bar">
-            <button class="btn-breed-pill" onclick="showToast('Breed Ready (5/5)')">💖 BREED 5/5</button>
-            <button class="btn-stake-pill" onclick="showToast('Dolphin Staked into Totem')">⚡ STAKE</button>
+            <button class="btn-breed-pill" onclick="openModal('modalBreeding')">💖 BREED 5/5</button>
+            <button class="btn-stake-pill" id="btnStakeToggle" onclick="toggleStaking()">⚡ STAKE</button>
+          </div>
+
+          <!-- Lower Discovery Cards -->
+          <div class="lobby-sub-card" onclick="openModal('modalWheel')">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 26px;">🎡</span>
+              <div>
+                <div style="font-family: 'Barlow Condensed'; font-size: 16px; font-weight: 800; color: var(--accent-gold);">TIDE WHEEL (DUELS WHEEL)</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Earn tokens & get closer to owning an Ocean God NFT</div>
+              </div>
+            </div>
+            <span style="color: var(--accent-gold); font-size: 18px;">➔</span>
+          </div>
+
+          <div class="lobby-sub-card" onclick="switchNavTab('collections', document.querySelectorAll('.nav-tab-item')[3])">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 26px;">🏆</span>
+              <div>
+                <div style="font-family: 'Barlow Condensed'; font-size: 16px; font-weight: 800; color: #38BDF8;">EVENTS & COLLECTIONS</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">Complete 32 event sets for up to 13.5M 🐟 & ⭐ 25K</div>
+              </div>
+            </div>
+            <span style="color: #38BDF8; font-size: 18px;">➔</span>
           </div>
         </div>
       </div>
 
-      <!-- TAB 2: PEARLS (MERGE BOARD) -->
+      <!-- =========================================
+           TAB 2: PEARLS (7x7 MERGE & 12 LEVELS CRACKING)
+           ========================================= -->
       <div id="tab-pearls" class="tab-page">
-        <div class="merge-ui-layer pointer-auto">
+        <div class="pointer-auto">
           <div class="merge-stage-banner">
-            <div><div style="font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; color: var(--heart-pink);">COMBO X1</div><div style="font-size: 11px; color: var(--text-secondary);">Shells Yield: ♪5</div></div>
-            <div class="btn-pod-pill" style="border-radius:12px;" onclick="showToast('Auto Merging...')">⚡ AUTO MERGE</div>
+            <div>
+              <div style="font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; color: var(--heart-pink);">COMBO X13</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">Shells Yield: ♪65</div>
+            </div>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn-pod-badge" onclick="openCrackPearlModal()">💥 CRACK EGG</button>
+              <button class="btn-pod-badge" style="color:#FFF;" onclick="triggerAutoMerge()">⚡ AUTO MERGE</button>
+            </div>
           </div>
-          
+
+          <!-- 12 Egg Tiers Slider -->
+          <div class="pearl-egg-level-chips" id="eggTiersChipRow"></div>
+
+          <!-- 7x7 Merge Board Target -->
           <div class="merge-board-space" id="pixiMergeTargetArea"></div>
         </div>
       </div>
 
-      <!-- Other tabs -->
-      <div id="tab-market" class="tab-page"><h2 style="text-align:center; margin-top:50px;">MARKET (FIFO QUEUE)</h2></div>
-      <div id="tab-gods" class="tab-page"><h2 style="text-align:center; margin-top:50px;">OCEAN GODS (TOTEMS)</h2></div>
-      <div id="tab-tasks" class="tab-page"><h2 style="text-align:center; margin-top:50px;">TASKS & REWARDS</h2></div>
+      <!-- =========================================
+           TAB 3: MARKET (FIFO ORDER BOOK & PRICE GRAPH)
+           ========================================= -->
+      <div id="tab-market" class="tab-page">
+        <div class="pointer-auto">
+          <div class="market-tabs-row">
+            <button class="market-tab-btn active">UNCOMMON</button>
+            <button class="market-tab-btn">RARE</button>
+            <button class="market-tab-btn">EPIC</button>
+            <button class="market-tab-btn">LEGENDARY</button>
+            <button class="market-tab-btn">MY MARKET</button>
+          </div>
+
+          <!-- Dynamic Trading Price Graph -->
+          <div class="market-price-chart-card">
+            <div class="chart-timeframe-row">
+              <span style="font-family: 'Barlow Condensed'; font-size: 14px; font-weight: 900; color: var(--accent-cyan);">UNCOMMON DOLPHIN PRICING</span>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-tf active">10S</button>
+                <button class="btn-tf">5M</button>
+                <button class="btn-tf">1H</button>
+                <button class="btn-tf">1D</button>
+              </div>
+            </div>
+            <canvas id="marketPriceCanvas" width="340" height="110" style="width: 100%; height: 110px; border-radius: 8px; background: #131622;"></canvas>
+            <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; font-weight: 800;">
+              <span style="color: var(--fish-green);">Current Price: 160.9K 🐟 (+7%)</span>
+              <span style="color: var(--accent-gold);">Stars: ⭐ 400 (+33%)</span>
+            </div>
+          </div>
+
+          <!-- Hot Listing Card with 24s Countdown -->
+          <div class="hot-listing-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-family: 'Barlow Condensed'; font-size: 14px; font-weight: 900; color: var(--danger);">🔥 HOT LISTING (ENDS 00:24)</span>
+              <span style="font-size: 11px; color: var(--text-secondary);">FIFO Queue</span>
+            </div>
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <img src="assets/dolphin_uncommon.png" style="width: 75px; height: 75px; object-fit: contain;">
+              <div>
+                <div style="font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; color: var(--rarity-uncommon);">SAILOR DOLPHIN #9102</div>
+                <div style="font-size: 12px; color: var(--text-secondary);">Yield: 2.5 DLP / hr (Lv5)</div>
+                <div style="font-size: 14px; font-weight: 800; color: var(--accent-gold); margin-top: 4px;">Price: 15,000 🐟 or ⭐ 38</div>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button class="btn-gold-primary" style="padding: 10px; font-size: 16px;" onclick="showToast('Bought with 🐟 Fish!')">BUY WITH 🐟</button>
+              <button class="btn-gold-primary" style="padding: 10px; font-size: 16px; background: linear-gradient(180deg, #5B7CFF, #3B82FF); border-bottom-color: #1D4ED8; color: #fff;" onclick="showToast('Bought with ⭐ Stars!')">BUY WITH ⭐</button>
+            </div>
+          </div>
+
+          <button class="btn-gold-primary" style="background: var(--bg-card2); border: 1px solid var(--stroke); color: #fff; font-size: 16px;" onclick="showToast('Dolphin placed in FIFO Queue!')">
+            SELL YOUR DOLPHIN (QUEUE: FIRST IN FIRST OUT)
+          </button>
+        </div>
+      </div>
+
+      <!-- =========================================
+           TAB 4: COLLECTIONS (32 EVENTS WITH 150+ SKINS)
+           ========================================= -->
+      <div id="tab-collections" class="tab-page">
+        <div class="pointer-auto">
+          <div class="collections-header-row">
+            <div>
+              <h3 style="font-family: 'Barlow Condensed'; font-size: 20px; font-weight: 900; color: var(--accent-gold);">EVENT COLLECTIONS (32 SETS)</h3>
+              <p style="font-size: 11px; color: var(--text-secondary);">Feed & add Lv5+ dolphins to earn big prizes</p>
+            </div>
+            <button class="btn-pod-badge" onclick="openModal('modalTopCollectors')">👑 TOP RANKS</button>
+          </div>
+
+          <!-- Dynamic Event Collection Cards -->
+          <div id="eventCollectionsContainer"></div>
+        </div>
+      </div>
+
+      <!-- =========================================
+           TAB 5: GODS & TASKS
+           ========================================= -->
+      <div id="tab-tasks" class="tab-page">
+        <div class="pointer-auto">
+          <!-- Ocean Gods Section -->
+          <div style="background: var(--bg-card); border: 1px solid var(--stroke); border-radius: 20px; padding: 14px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-family: 'Barlow Condensed'; font-size: 16px; font-weight: 900; color: var(--rarity-epic);">OCEAN GODS (TOTEMS)</span>
+              <div style="display: flex; gap: 4px;">
+                <button class="god-size-tab">SMALL</button>
+                <button class="god-size-tab">MEDIUM</button>
+                <button class="god-size-tab active">GREAT</button>
+              </div>
+            </div>
+            <div style="text-align: center; margin: 8px 0;">
+              <img src="assets/dolphin_epic.png" style="width: 110px; height: 110px; object-fit: contain; filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.6));">
+              <div style="font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; color: #fff;">POSEIDON THE ABUNDANCE</div>
+              <div style="font-size: 11px; color: var(--fish-green); font-weight: 800;">Automated Gathering: +95,700 🐟 Fish / Day</div>
+            </div>
+            <button class="btn-gold-primary" style="padding: 10px; font-size: 16px;" onclick="showToast('Poseidon God Unlocked!')">UNLOCK WITH ⭐ 1,500</button>
+          </div>
+
+          <!-- Tasks & Achievements -->
+          <h3 style="font-family: 'Barlow Condensed'; font-size: 18px; font-weight: 900; color: var(--accent-gold); margin-bottom: 8px;">DAILY TASKS & ACHIEVEMENTS</h3>
+          
+          <div class="lobby-sub-card">
+            <div>
+              <div style="font-family: 'Barlow Condensed'; font-size: 15px; font-weight: 800;">Feed Dolphin 70 Times</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">Progress: 42 / 70</div>
+            </div>
+            <button class="btn-pod-badge" onclick="showToast('Progress updated!')">OPEN</button>
+          </div>
+
+          <div class="lobby-sub-card">
+            <div>
+              <div style="font-family: 'Barlow Condensed'; font-size: 15px; font-weight: 800;">Open Ten Love Eggs [12]</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">Progress: 10 / 10 (Claimable)</div>
+            </div>
+            <button class="btn-pod-badge" style="color:#0D0F17; background:var(--accent-gold);" onclick="showToast('🎁 Claimed +1,200 ❤️ Hearts!')">CLAIM ❤️</button>
+          </div>
+
+          <div class="lobby-sub-card">
+            <div>
+              <div style="font-family: 'Barlow Condensed'; font-size: 15px; font-weight: 800;">Merge 70 Pearls on Board</div>
+              <div style="font-size: 11px; color: var(--text-secondary);">Reward: +10,000 🐟 Fish</div>
+            </div>
+            <button class="btn-pod-badge" style="color:#0D0F17; background:var(--fish-green);" onclick="showToast('🎁 Claimed +10,000 🐟!')">CLAIM 🐟</button>
+          </div>
+        </div>
+      </div>
 
     </div>
 
-    <!-- BOTTOM NAV -->
+    <!-- =========================================
+       BOTTOM 5-TAB DOCK ROUTER
+       ========================================= -->
     <div class="app-bottom-nav pointer-auto">
-      <div class="nav-tab-item" onclick="switchTab('market', this)"><img src="assets/dock_market.png"><span>MARKET</span></div>
-      <div class="nav-tab-item" onclick="switchTab('pearls', this)"><img src="assets/pearl_egg_lvl1.png"><span>PEARLS</span></div>
-      <div class="nav-tab-item active" onclick="switchTab('dolphins', this)"><img src="assets/dolphin_hero_icon.png"><span>DOLPHINS</span></div>
-      <div class="nav-tab-item" onclick="switchTab('gods', this)"><img src="assets/dock_gods.png"><span>GODS</span></div>
-      <div class="nav-tab-item" onclick="switchTab('tasks', this)"><img src="assets/dock_tasks.png"><span>TASKS</span></div>
+      <div class="nav-tab-item" onclick="switchNavTab('market', this)"><img src="assets/dock_market.png"><span>MARKET</span></div>
+      <div class="nav-tab-item" onclick="switchNavTab('pearls', this)"><img src="assets/pearl_egg_lvl1.png"><div class="nav-badge-dot"></div><span>PEARLS</span></div>
+      <div class="nav-tab-item active" onclick="switchNavTab('dolphins', this)"><img src="assets/dolphin_hero_icon.png"><span>DOLPHINS</span></div>
+      <div class="nav-tab-item" onclick="switchNavTab('collections', this)"><img src="assets/dock_tasks.png"><span>EVENTS</span></div>
+      <div class="nav-tab-item" onclick="switchNavTab('tasks', this)"><img src="assets/dock_gods.png"><span>TASKS</span></div>
     </div>
 
+  </div>
+
+  <!-- =========================================
+       MODALS SYSTEM
+       ========================================= -->
+  <!-- MODAL: PACK / POD CLAN -->
+  <div class="modal-backdrop" id="modalPod">
+    <div class="modal-content-card">
+      <div class="modal-close-icon" onclick="closeModal('modalPod')">✕</div>
+      <h3 style="font-family: 'Barlow Condensed'; font-size: 22px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">📦 POD / CLAN #102</h3>
+      <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 12px;">Clan Power: 4,890 DLP/hr (42/50 Members)</p>
+      
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between;"><span>Daily Pod Activity Pool:</span> <span style="color: var(--fish-green); font-weight: 800;">+50,000 🐟</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>Auto-Merge Speed:</span> <span style="color: var(--accent-cyan); font-weight: 800;">+10% Boost</span></div>
+        <div style="display: flex; justify-content: space-between;"><span>Breeding Cooldown Cut:</span> <span style="color: var(--heart-pink); font-weight: 800;">-1 Hour</span></div>
+      </div>
+
+      <button class="btn-gold-primary" onclick="claimPodHarvest()">CLAIM DAILY POD HARVEST</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CRACK EGG FOR FISH / HEARTS -->
+  <div class="modal-backdrop" id="modalCrackEgg">
+    <div class="modal-content-card">
+      <div class="modal-close-icon" onclick="closeModal('modalCrackEgg')">✕</div>
+      <h3 style="font-family: 'Barlow Condensed'; font-size: 22px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">💥 CRACK PEARL EGG</h3>
+      <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 12px;">Crack high-tier pearl to gain instant Fish Food or Love Hearts!</p>
+      
+      <div style="position: relative; width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+        <img src="assets/pearl_egg_lvl7.png" id="crackEggSprite" style="width: 85px; height: 85px; object-fit: contain;">
+      </div>
+
+      <div id="crackRewardDisplay" style="display: none; text-align: center; margin-bottom: 12px;">
+        <div style="font-family: 'Barlow Condensed'; font-size: 20px; font-weight: 900; color: var(--fish-green);">+125,000 🐟 FISH FOOD!</div>
+        <div style="font-size: 12px; color: var(--heart-pink); font-weight: 800;">+5 ❤️ Love Hearts</div>
+      </div>
+
+      <button class="btn-gold-primary" id="btnCrackAction" onclick="executeCrackEgg()">CRACK TIER 7 PEARL</button>
+    </div>
+  </div>
+
+  <!-- MODAL: BREEDING NEST -->
+  <div class="modal-backdrop" id="modalBreeding">
+    <div class="modal-content-card">
+      <div class="modal-close-icon" onclick="closeModal('modalBreeding')">✕</div>
+      <h3 style="font-family: 'Barlow Condensed'; font-size: 22px; font-weight: 900; color: var(--heart-pink); margin-bottom: 4px;">💖 BREEDING NEST</h3>
+      <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 12px;">Pair dolphins to hatch higher-tier pearls!</p>
+      
+      <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+        <img src="assets/breeding_nest.png" style="position: absolute; width: 100%; height: 100%; object-fit: contain;">
+        <img src="assets/heart_egg_lvl1.png" id="breedingEggSprite" style="position: relative; width: 70px; height: 70px; object-fit: contain; z-index: 5;">
+      </div>
+
+      <button class="btn-gold-primary" id="btnStartBreed" style="background: linear-gradient(180deg, var(--heart-pink), #BE185D); border-bottom-color: #9D174D; color: #fff;" onclick="runBreedingSequence()">
+        INCUBATE & HATCH (-5 ❤️)
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: TIDE WHEEL -->
+  <div class="modal-backdrop" id="modalWheel">
+    <div class="modal-content-card">
+      <div class="modal-close-icon" onclick="closeModal('modalWheel')">✕</div>
+      <h3 style="font-family: 'Barlow Condensed'; font-size: 22px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">🎡 TIDE WHEEL (DUELS WHEEL)</h3>
+      <p style="font-size: 12px; color: var(--text-secondary); text-align: center; margin-bottom: 12px;">Spin for Fish, Pearls & Rare God Shards</p>
+      
+      <div style="width: 140px; height: 140px; border-radius: 50%; border: 6px solid var(--accent-gold); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; background: radial-gradient(circle, #1E2230, #0D0F17);" id="wheelWheelDisc">
+        <span style="font-size: 38px;">🎯</span>
+      </div>
+
+      <button class="btn-gold-primary" id="btnSpinWheel" onclick="spinTideWheel()">SPIN FOR ◎ 100 TOKENS</button>
+    </div>
+  </div>
+
+  <!-- MODAL: REEF PASS -->
+  <div class="modal-backdrop" id="modalReefPass">
+    <div class="modal-content-card">
+      <div class="modal-close-icon" onclick="closeModal('modalReefPass')">✕</div>
+      <h3 style="font-family: 'Barlow Condensed'; font-size: 22px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">👑 REEF PASS (14-DAYS)</h3>
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; font-size: 12px;">
+        <div>✔ <strong>Pearl Prince:</strong> +5,000 Daily Fish & 1-Level Auto Merge</div>
+        <div>✔ <strong>Sea King:</strong> +10,000 Daily Fish & 2x Breeding Luck</div>
+        <div>✔ <strong>VIP Leviathan:</strong> Smart Dolphin Trader Bot & +15,000 Fish</div>
+      </div>
+      <button class="btn-gold-primary" onclick="buyReefPass()">ACTIVATE FOR ⭐ 299 STARS</button>
+    </div>
+  </div>
+
+  <!-- MODAL: TOP COLLECTORS -->
+  <div class="modal-backdrop" id="modalTopCollectors">
+    <div class="modal-content-card">
+      <div class="modal-close-icon" onclick="closeModal('modalTopCollectors')">✕</div>
+      <h3 style="font-family: 'Barlow Condensed'; font-size: 22px; font-weight: 900; color: var(--accent-gold); margin-bottom: 4px;">👑 TOP CONTENDERS</h3>
+      <p style="font-size: 11px; color: var(--text-secondary); text-align: center; margin-bottom: 12px;">The sooner you complete a collection, the more rewards you get.</p>
+      
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+        <div style="display:flex; justify-content:space-between; padding:6px; background:#1C1F2D; border-radius:8px;"><span>#1 🥇 OceanKing</span> <span style="color:var(--accent-gold); font-weight:800;">31/32 Sets</span></div>
+        <div style="display:flex; justify-content:space-between; padding:6px; background:#1C1F2D; border-radius:8px;"><span>#2 🥈 PearlHunter</span> <span style="color:var(--accent-gold); font-weight:800;">28/32 Sets</span></div>
+        <div style="display:flex; justify-content:space-between; padding:6px; background:#1C1F2D; border-radius:8px;"><span>#3 🥉 DolphinPro</span> <span style="color:var(--accent-gold); font-weight:800;">24/32 Sets</span></div>
+        <div style="display:flex; justify-content:space-between; padding:6px; background:#141722; border-radius:8px; border:1px solid var(--accent-cyan);"><span>#42 ⭐ You (@Wild_airdrop)</span> <span style="color:var(--accent-cyan); font-weight:800;">1/32 Sets</span></div>
+      </div>
+    </div>
   </div>
 
   <div id="appToast">Notification</div>
 
   <!-- =========================================
-       PIXIJS GAME ENGINE LOGIC
+       GAME SCRIPT & ENGINE
        ========================================= -->
   <script>
+    // State
     const state = {
-      dlp: 183.49, fish: 91339, stars: 45,
+      dlp: 183.38,
+      fish: 92935,
+      stars: 50,
+      hearts: 45,
       activeTab: 'dolphins',
-      feedCount: 0,
-      grid: Array(49).fill(0)
+      grid: Array(49).fill(0),
+      collections: []
     };
-    
+
     function showToast(msg) {
       const t = document.getElementById('appToast');
-      t.innerText = msg; t.style.display = 'block';
+      t.innerText = msg;
+      t.style.display = 'block';
       clearTimeout(window.toastTimer);
-      window.toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2000);
+      window.toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2200);
     }
 
-    function switchTab(id, el) {
+    function switchNavTab(id, el) {
       state.activeTab = id;
       document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-tab-item').forEach(b => b.classList.remove('active'));
-      document.getElementById('tab-' + id).classList.add('active');
-      el.classList.add('active');
       
+      const target = document.getElementById('tab-' + id);
+      if (target) target.classList.add('active');
+      if (el) el.classList.add('active');
+
       if (app && app.stage) {
         heroGroup.visible = (id === 'dolphins');
         mergeGroup.visible = (id === 'pearls');
       }
 
-      if(window.Telegram?.WebApp?.HapticFeedback) {
+      if (id === 'market') drawMarketChart();
+      if (window.Telegram?.WebApp?.HapticFeedback) {
         window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
       }
     }
 
-    // --- PIXI JS SETUP ---
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('open');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('open');
+    }
+
+    // --- PIXIJS WEBGEL ENGINE SETUP ---
     const app = new PIXI.Application({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -313,45 +1188,45 @@
     });
     document.getElementById('pixi-canvas-container').appendChild(app.view);
 
-    // Containers (Layers)
     const ambientGroup = new PIXI.Container();
     const heroGroup = new PIXI.Container();
     const mergeGroup = new PIXI.Container();
     const fxGroup = new PIXI.Container();
-    
+
     app.stage.addChild(ambientGroup);
     app.stage.addChild(heroGroup);
     app.stage.addChild(mergeGroup);
     app.stage.addChild(fxGroup);
-    
     mergeGroup.visible = false;
 
-    // 1. Ambient Background Particles
+    // Ambient Micro-Orbs
     const particles = [];
-    for(let i=0; i<30; i++){
+    for (let i = 0; i < 32; i++) {
       const p = new PIXI.Graphics();
-      p.beginFill(0x00D4FF, Math.random()*0.4 + 0.1);
-      p.drawCircle(0, 0, Math.random()*2 + 1);
+      p.beginFill(0x00D4FF, Math.random() * 0.4 + 0.1);
+      p.drawCircle(0, 0, Math.random() * 2 + 1);
       p.endFill();
       p.x = Math.random() * app.screen.width;
       p.y = Math.random() * app.screen.height;
-      p.vx = (Math.random()-0.5) * 0.3;
+      p.vx = (Math.random() - 0.5) * 0.3;
       p.vy = -Math.random() * 0.4 - 0.2;
       ambientGroup.addChild(p);
       particles.push(p);
     }
-    
-    // 2. Load Assets
-    PIXI.Assets.addBundle('game', {
+
+    // Load Game Textures
+    PIXI.Assets.addBundle('gameAssets', {
       dolphin: 'assets/dolphin_hero_stage.png',
       fishFood: 'assets/icon_user_fish.png',
       coin: 'assets/blue_token_coin.png',
       pearl1: 'assets/pearl_egg_lvl1.png',
       pearl2: 'assets/pearl_egg_lvl2.png',
-      pearl3: 'assets/pearl_egg_lvl3.png'
+      pearl3: 'assets/pearl_egg_lvl3.png',
+      pearl4: 'assets/pearl_egg_lvl4.png',
+      pearl7: 'assets/pearl_egg_lvl7.png'
     });
 
-    PIXI.Assets.loadBundle('game').then(textures => {
+    PIXI.Assets.loadBundle('gameAssets').then(textures => {
       buildHeroCard(textures);
       buildMergeBoard(textures);
       
@@ -359,36 +1234,32 @@
         gameLoop(delta);
       });
 
-      if (window.Telegram?.WebApp) {
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
-      }
+      syncTelegram();
+      initEggTierChips();
+      loadCollectionsData();
     });
 
-    // --- HERO STAGE (DOLPHIN MAIN CHARACTER) ---
+    // --- HERO CARD STAGE ---
     let dolphinSprite, dlpTween = 0;
-    
     function buildHeroCard(textures) {
       const targetRect = document.getElementById('pixiCardTargetArea').getBoundingClientRect();
       const cardHeight = Math.min(380, targetRect.height - 20);
-      const cardWidth = Math.min(380, targetRect.width - 40);
+      const cardWidth = Math.min(380, targetRect.width - 32);
       const cx = targetRect.left + (targetRect.width / 2);
       const cy = targetRect.top + (targetRect.height / 2);
-      
+
       heroGroup.x = cx;
       heroGroup.y = cy;
 
-      // Card BG
       const cardBg = new PIXI.Graphics();
       cardBg.beginFill(0x1B1E2B, 1);
       cardBg.lineStyle(2, 0x2A2F40, 1);
-      cardBg.drawRoundedRect(-cardWidth/2, -cardHeight/2, cardWidth, cardHeight, 28);
+      cardBg.drawRoundedRect(-cardWidth / 2, -cardHeight / 2, cardWidth, cardHeight, 28);
       cardBg.endFill();
       cardBg.eventMode = 'static';
       cardBg.cursor = 'pointer';
       heroGroup.addChild(cardBg);
 
-      // Glow behind dolphin
       const glow = new PIXI.Graphics();
       glow.beginFill(0x00D4FF, 0.2);
       glow.drawCircle(0, -10, 120);
@@ -396,14 +1267,12 @@
       glow.filters = [new PIXI.filters.BlurFilter(30)];
       heroGroup.addChild(glow);
 
-      // Main Mascot: Dolphin Character Sprite
       dolphinSprite = new PIXI.Sprite(textures.dolphin);
       dolphinSprite.anchor.set(0.5);
-      dolphinSprite.scale.set(0.20); // Scaled for high-res dolphin sprite
+      dolphinSprite.scale.set(0.20);
       dolphinSprite.position.set(0, -15);
       heroGroup.addChild(dolphinSprite);
 
-      // Tap to Feed Action
       cardBg.on('pointerdown', (e) => {
         if (state.fish < 150) { showToast('Need 150 🐟 Fish to feed Dolphin!'); return; }
         state.fish -= 150;
@@ -411,82 +1280,76 @@
         document.getElementById('counterFish').innerText = state.fish.toLocaleString();
         document.getElementById('mainDlpCounter').innerText = state.dlp.toFixed(2);
         
-        // Squash & Stretch
         dlpTween = 1.0;
-        
-        if(window.Telegram?.WebApp?.HapticFeedback) {
+        if (window.Telegram?.WebApp?.HapticFeedback) {
           window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
         }
 
-        // Spawn Floating Text Particles in Pixi
         spawnFloatingText(e.global.x, e.global.y - 30, '+0.02 DLP', 0x6BE35A);
         spawnFloatingText(e.global.x, e.global.y + 10, '-150 🐟', 0xFF9F1C);
       });
-      
-      // Feed Tag (White Tilted Tag)
+
       const tagBg = new PIXI.Graphics();
       tagBg.beginFill(0xFFFFFF);
       tagBg.lineStyle(2, 0xE2E8F0);
-      tagBg.drawRoundedRect(-140, cardHeight/2 - 50, 280, 60, 16);
+      tagBg.drawRoundedRect(-140, cardHeight / 2 - 50, 280, 60, 16);
       tagBg.endFill();
       tagBg.rotation = -0.02;
       heroGroup.addChild(tagBg);
-      
+
       const txtConfig = new PIXI.TextStyle({ fontFamily: 'Arial', fontWeight: '900', fontSize: 19, fill: '#0D0F17' });
       const tagTxt = new PIXI.Text('TAP TO FEED  🐟 150', txtConfig);
       tagTxt.anchor.set(0.5);
-      tagTxt.position.set(0, cardHeight/2 - 28);
+      tagTxt.position.set(0, cardHeight / 2 - 28);
       tagTxt.rotation = -0.02;
       heroGroup.addChild(tagTxt);
     }
 
-    // --- MERGE BOARD (PEARLS) ---
+    // --- 7x7 MERGE BOARD ---
     const CELL_SIZE = 48;
+    const gridSprites = {};
     function buildMergeBoard(textures) {
       const gRect = document.getElementById('pixiMergeTargetArea').getBoundingClientRect();
       const cx = gRect.left + (gRect.width / 2);
       const cy = gRect.top + (gRect.height / 2);
-      mergeGroup.x = cx; mergeGroup.y = cy;
+      mergeGroup.x = cx;
+      mergeGroup.y = cy;
 
       const boardBg = new PIXI.Graphics();
       boardBg.beginFill(0x1E2230);
       boardBg.drawRoundedRect(-180, -180, 360, 360, 20);
       boardBg.endFill();
       mergeGroup.addChild(boardBg);
-      
+
       const grid = new PIXI.Container();
-      grid.x = -163; grid.y = -163;
+      grid.x = -163;
+      grid.y = -163;
       mergeGroup.addChild(grid);
 
       const lockedCorners = [0, 6, 42, 48];
-      
-      for(let i = 0; i < 49; i++) {
+      for (let i = 0; i < 49; i++) {
         const _row = Math.floor(i / 7);
         const _col = i % 7;
-        
         const cell = new PIXI.Graphics();
-        
+
         if (lockedCorners.includes(i)) {
           cell.beginFill(0x090B10);
           cell.drawRoundedRect(0, 0, 44, 44, 8);
         } else {
           cell.beginFill(0x141722);
           cell.drawRoundedRect(0, 0, 44, 44, 8);
-          
           cell.eventMode = 'static';
           cell.cursor = 'pointer';
           cell.on('pointerdown', (e) => {
             handleMergeTap(i, cell, textures, e.global);
           });
         }
-        
         cell.x = _col * CELL_SIZE;
         cell.y = _row * CELL_SIZE;
         grid.addChild(cell);
       }
     }
 
-    const gridSprites = {};
     function handleMergeTap(i, cellGroup, textures, globalPos) {
       if (state.grid[i] === 0) {
         state.grid[i] = 1;
@@ -495,26 +1358,217 @@
         sp.x = 22; sp.y = 22; sp.scale.set(0.85);
         cellGroup.addChild(sp);
         gridSprites[i] = sp;
-        if(window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
-        spawnFloatingText(globalPos.x, globalPos.y, 'Pearl Placed!', 0x22C55E);
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        spawnFloatingText(globalPos.x, globalPos.y, 'Placed Tier 1!', 0x22C55E);
       } else {
-        state.grid[i] = Math.min(state.grid[i] + 1, 3);
-        const tex = textures['pearl' + state.grid[i]];
-        if (tex) gridSprites[i].texture = tex;
-        if(window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
-        spawnFloatingText(globalPos.x, globalPos.y, 'Merged Tier ' + state.grid[i], 0xFFC933);
-        
+        state.grid[i] = Math.min(state.grid[i] + 1, 12);
+        const texKey = 'pearl' + Math.min(state.grid[i], 4);
+        if (textures[texKey]) gridSprites[i].texture = textures[texKey];
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+        spawnFloatingText(globalPos.x, globalPos.y, `Merged Tier ${state.grid[i]}!`, 0xFFC933);
         gridSprites[i].scale.set(1.2);
       }
     }
 
-    // --- GAME LOOP & PARTICLES ---
+    function triggerAutoMerge() {
+      showToast('⚡ Auto Merge Triggered across board!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+    }
+
+    // --- EGG CRACKING & RITUALS ---
+    function openCrackPearlModal() {
+      openModal('modalCrackEgg');
+      document.getElementById('crackRewardDisplay').style.display = 'none';
+      document.getElementById('btnCrackAction').style.display = 'block';
+    }
+
+    function executeCrackEgg() {
+      state.fish += 125000;
+      state.hearts += 5;
+      document.getElementById('counterFish').innerText = state.fish.toLocaleString();
+      document.getElementById('crackRewardDisplay').style.display = 'block';
+      document.getElementById('btnCrackAction').style.display = 'none';
+      showToast('🎉 Cracked Tier 7 Pearl: +125,000 🐟 Fish!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+    }
+
+    function runBreedingSequence() {
+      if (state.hearts < 5) { showToast('Need 5 ❤️ Love Hearts!'); return; }
+      state.hearts -= 5;
+      closeModal('modalBreeding');
+      showToast('💖 Breeding in progress (Ready in 6h)!');
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+    }
+
+    function spinTideWheel() {
+      const disc = document.getElementById('wheelWheelDisc');
+      disc.style.transition = 'transform 3s cubic-bezier(0.12, 0.8, 0.32, 1)';
+      disc.style.transform = 'rotate(1080deg)';
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+
+      setTimeout(() => {
+        state.fish += 5000;
+        document.getElementById('counterFish').innerText = state.fish.toLocaleString();
+        showToast('🎉 Won 5,000 🐟 Fish & 1 God Shard!');
+        if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('heavy');
+      }, 3100);
+    }
+
+    function claimPodHarvest() {
+      state.fish += 50000;
+      document.getElementById('counterFish').innerText = state.fish.toLocaleString();
+      closeModal('modalPod');
+      showToast('🎁 Claimed 50,000 🐟 Pod Harvest!');
+    }
+
+    function buyReefPass() {
+      closeModal('modalReefPass');
+      showToast('👑 Reef Pass Activated for 14 Days!');
+    }
+
+    function toggleStaking() {
+      const btn = document.getElementById('btnStakeToggle');
+      if (btn.innerText.includes('STAKE')) {
+        btn.innerText = '⚡ STAKED';
+        btn.style.background = 'linear-gradient(135deg, var(--fish-green), #16A34A)';
+        showToast('✅ Dolphin Staked into Ocean Totem!');
+      } else {
+        btn.innerText = '⚡ STAKE';
+        btn.style.background = 'linear-gradient(135deg, #8B5CF6, #6D28D9)';
+        showToast('Unstaked.');
+      }
+    }
+
+    // --- 12 EGG TIER CHIPS ---
+    function initEggTierChips() {
+      const row = document.getElementById('eggTiersChipRow');
+      row.innerHTML = '';
+      for (let i = 1; i <= 12; i++) {
+        const chip = document.createElement('div');
+        chip.className = 'egg-tier-chip' + (i === 1 ? ' active' : '');
+        chip.innerHTML = `<img src="assets/pearl_egg_lvl${i}.png" style="width:16px; height:16px; object-fit:contain;"> <span>Tier ${i}</span>`;
+        chip.onclick = () => {
+          document.querySelectorAll('.egg-tier-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          showToast(`Selected Pearl Tier ${i}`);
+        };
+        row.appendChild(chip);
+      }
+    }
+
+    // --- LOAD 32 COLLECTIONS DATA ---
+    function loadCollectionsData() {
+      fetch('data/collections_expanded.json')
+        .then(r => r.json())
+        .then(cols => {
+          state.collections = cols;
+          renderCollections();
+        })
+        .catch(() => {
+          // Fallback static 6 sets
+          state.collections = [
+            { id: 'c1', name: 'Spring Cruise', size: 8, reward_fish: 125000, reward_stars: 250, claimed_count: 991, max_claimable: 1000 },
+            { id: 'c2', name: 'Jolly Roger Pirates', size: 6, reward_fish: 250000, reward_stars: 500, claimed_count: 450, max_claimable: 1000 },
+            { id: 'c3', name: 'Abyssal Mystics', size: 20, reward_fish: 500000, reward_stars: 1000, claimed_count: 120, max_claimable: 500 },
+            { id: 'c4', name: 'Golden Overlords', size: 3, reward_fish: 1000000, reward_stars: 2500, claimed_count: 35, max_claimable: 100 }
+          ];
+          renderCollections();
+        });
+    }
+
+    function renderCollections() {
+      const container = document.getElementById('eventCollectionsContainer');
+      container.innerHTML = '';
+
+      state.collections.slice(0, 10).forEach(col => {
+        const card = document.createElement('div');
+        card.className = 'event-collection-card';
+        
+        let slotBoxes = '';
+        const slotsCount = Math.min(col.size, 8);
+        for (let s = 1; s <= slotsCount; s++) {
+          const isFilled = s <= 2;
+          slotBoxes += `
+            <div class="col-slot-box ${isFilled ? 'filled' : ''}" onclick="depositToCollection('${col.name}', ${s})">
+              ${isFilled ? '<div class="slot-added-tag">ADDED</div>' : ''}
+              <img src="assets/dolphin_hero_stage.png" style="${isFilled ? '' : 'opacity:0.35; filter:grayscale(1);'}">
+              <span style="font-size:9px; font-weight:800; color:${isFilled ? '#FFC933' : '#64748B'};">#${s}</span>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'Barlow Condensed'; font-size:17px; font-weight:900; color:#FFF;">${col.name.toUpperCase()}</div>
+              <div style="font-size:10px; color:var(--text-secondary);">${col.claimed_count} of ${col.max_claimable} players received reward</div>
+            </div>
+            <span class="rarity-pill">${col.size} SKINS</span>
+          </div>
+
+          <div class="collection-slots-matrix">${slotBoxes}</div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#1E2230; padding:8px 12px; border-radius:12px;">
+            <div style="font-size:12px; font-weight:800; color:var(--fish-green);">+${col.reward_fish.toLocaleString()} 🐟 | ⭐ ${col.reward_stars}</div>
+            <button class="btn-pod-badge" onclick="depositToCollection('${col.name}', 1)">FEED & ADD [Lv5+]</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function depositToCollection(colName, slotIdx) {
+      showToast(`Added fully-fed Lv5 Dolphin to ${colName} #${slotIdx}!`);
+      if (window.Telegram?.WebApp?.HapticFeedback) window.Telegram.WebApp.HapticFeedback.impactOccurred('medium');
+    }
+
+    // --- MARKET TRADING CANVAS CHART ---
+    function drawMarketChart() {
+      const canvas = document.getElementById('marketPriceCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Gradient Fill
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(0, 212, 255, 0.35)');
+      grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
+
+      ctx.beginPath();
+      ctx.moveTo(10, h - 20);
+      ctx.lineTo(60, h - 35);
+      ctx.lineTo(120, h - 25);
+      ctx.lineTo(180, h - 60);
+      ctx.lineTo(240, h - 45);
+      ctx.lineTo(300, h - 85);
+      ctx.lineTo(330, h - 95);
+
+      ctx.strokeStyle = '#00D4FF';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.lineTo(330, h);
+      ctx.lineTo(10, h);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Current Price Point
+      ctx.beginPath();
+      ctx.arc(330, h - 95, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFC933';
+      ctx.fill();
+    }
+
+    // --- VFX & FLOATING PARTICLES ---
     const texts = [];
     function spawnFloatingText(x, y, msg, color) {
       const s = new PIXI.TextStyle({ fontFamily: 'Arial', fontWeight: '900', fontSize: 24, fill: color, dropShadow: true, dropShadowDistance: 2, dropShadowAlpha: 0.8 });
       const t = new PIXI.Text(msg, s);
       t.anchor.set(0.5); t.x = x; t.y = y;
-      t.vy = -3 - Math.random()*2;
+      t.vy = -3 - Math.random() * 2;
       t.alpha = 1;
       fxGroup.addChild(t);
       texts.push(t);
@@ -524,38 +1578,54 @@
     function gameLoop(delta) {
       time += delta * 0.05;
 
-      // Ambient Particles
       particles.forEach(p => {
         p.x += p.vx * delta; p.y += p.vy * delta;
-        if(p.y < 0) { p.y = app.screen.height; p.x = Math.random() * app.screen.width; }
+        if (p.y < 0) { p.y = app.screen.height; p.x = Math.random() * app.screen.width; }
       });
 
-      // Hero Dolphin Mascot Idle Breathing & Squash/Stretch
       if (dolphinSprite) {
         const baseScale = 0.20;
         if (dlpTween > 0) {
           dlpTween -= 0.1 * delta;
-          dolphinSprite.scale.set(baseScale - dlpTween*0.02, baseScale + dlpTween*0.04);
+          dolphinSprite.scale.set(baseScale - dlpTween * 0.02, baseScale + dlpTween * 0.04);
         } else {
-          dolphinSprite.scale.set(baseScale, baseScale + Math.sin(time)*0.005);
-          dolphinSprite.y = -15 + Math.sin(time)*4;
+          dolphinSprite.scale.set(baseScale, baseScale + Math.sin(time) * 0.005);
+          dolphinSprite.y = -15 + Math.sin(time) * 4;
         }
       }
 
-      // Merge Sprites scale decay
-      for(let key in gridSprites) {
+      for (let key in gridSprites) {
         const sp = gridSprites[key];
         if (sp.scale.x > 0.85) {
           sp.scale.set(sp.scale.x - 0.04 * delta);
         }
       }
 
-      // Floating Texts
-      for(let i = texts.length - 1; i >= 0; i--) {
+      for (let i = texts.length - 1; i >= 0; i--) {
         const t = texts[i];
         t.y += t.vy * delta;
         t.alpha -= 0.02 * delta;
-        if(t.alpha <= 0) { fxGroup.removeChild(t); texts.splice(i, 1); }
+        if (t.alpha <= 0) { fxGroup.removeChild(t); texts.splice(i, 1); }
+      }
+    }
+
+    function syncTelegram() {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const user = window.Telegram.WebApp.initDataUnsafe?.user;
+        if (user) {
+          const nameEl = document.getElementById('usernameText');
+          if (nameEl) nameEl.innerText = user.username ? `@${user.username}` : (user.first_name || 'Player');
+
+          const avatarEl = document.getElementById('userAvatarWrap');
+          if (user.photo_url && avatarEl) {
+            avatarEl.innerHTML = `<img src="${user.photo_url}">`;
+          } else if (avatarEl) {
+            const letter = (user.first_name || user.username || 'W').charAt(0).toUpperCase();
+            avatarEl.innerHTML = `<span id="userAvatarChar">${letter}</span>`;
+          }
+        }
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
       }
     }
   </script>

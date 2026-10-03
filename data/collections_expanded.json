@@ -1,0 +1,3674 @@
+[
+  {
+    "id": "col_1",
+    "name": "Reef Explorers",
+    "theme": "Spring Cruise",
+    "size": 24,
+    "reward_fish": 125000,
+    "reward_stars": 250,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 1000,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_1_1",
+        "name": "Reef Explorers #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_2",
+        "name": "Reef Explorers #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_3",
+        "name": "Reef Explorers #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_4",
+        "name": "Reef Explorers #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_5",
+        "name": "Reef Explorers #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_6",
+        "name": "Reef Explorers #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_7",
+        "name": "Reef Explorers #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_8",
+        "name": "Reef Explorers #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_9",
+        "name": "Reef Explorers #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_10",
+        "name": "Reef Explorers #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_11",
+        "name": "Reef Explorers #11",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_12",
+        "name": "Reef Explorers #12",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_13",
+        "name": "Reef Explorers #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_14",
+        "name": "Reef Explorers #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_15",
+        "name": "Reef Explorers #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_16",
+        "name": "Reef Explorers #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_17",
+        "name": "Reef Explorers #17",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_18",
+        "name": "Reef Explorers #18",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_19",
+        "name": "Reef Explorers #19",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_20",
+        "name": "Reef Explorers #20",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_21",
+        "name": "Reef Explorers #21",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_22",
+        "name": "Reef Explorers #22",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_23",
+        "name": "Reef Explorers #23",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_1_24",
+        "name": "Reef Explorers #24",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_2",
+    "name": "Jolly Roger Pirates",
+    "theme": "Pirate Haven",
+    "size": 8,
+    "reward_fish": 85000,
+    "reward_stars": 150,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 972,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_2_1",
+        "name": "Jolly Roger Pirates #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_2",
+        "name": "Jolly Roger Pirates #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_3",
+        "name": "Jolly Roger Pirates #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_4",
+        "name": "Jolly Roger Pirates #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_5",
+        "name": "Jolly Roger Pirates #5",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_6",
+        "name": "Jolly Roger Pirates #6",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_7",
+        "name": "Jolly Roger Pirates #7",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_2_8",
+        "name": "Jolly Roger Pirates #8",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_3",
+    "name": "Abyssal Mystics",
+    "theme": "Deep Ocean",
+    "size": 20,
+    "reward_fish": 250000,
+    "reward_stars": 500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 944,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_3_1",
+        "name": "Abyssal Mystics #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_2",
+        "name": "Abyssal Mystics #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_3",
+        "name": "Abyssal Mystics #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_4",
+        "name": "Abyssal Mystics #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_5",
+        "name": "Abyssal Mystics #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_6",
+        "name": "Abyssal Mystics #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_7",
+        "name": "Abyssal Mystics #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_8",
+        "name": "Abyssal Mystics #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_9",
+        "name": "Abyssal Mystics #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_10",
+        "name": "Abyssal Mystics #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_11",
+        "name": "Abyssal Mystics #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_12",
+        "name": "Abyssal Mystics #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_13",
+        "name": "Abyssal Mystics #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_14",
+        "name": "Abyssal Mystics #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_15",
+        "name": "Abyssal Mystics #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_16",
+        "name": "Abyssal Mystics #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_17",
+        "name": "Abyssal Mystics #17",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_18",
+        "name": "Abyssal Mystics #18",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_19",
+        "name": "Abyssal Mystics #19",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_3_20",
+        "name": "Abyssal Mystics #20",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_4",
+    "name": "Cyber Currents",
+    "theme": "Neon Wave",
+    "size": 12,
+    "reward_fish": 500000,
+    "reward_stars": 1000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 916,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_4_1",
+        "name": "Cyber Currents #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_2",
+        "name": "Cyber Currents #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_3",
+        "name": "Cyber Currents #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_4",
+        "name": "Cyber Currents #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_5",
+        "name": "Cyber Currents #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_6",
+        "name": "Cyber Currents #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_7",
+        "name": "Cyber Currents #7",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_8",
+        "name": "Cyber Currents #8",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_9",
+        "name": "Cyber Currents #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_10",
+        "name": "Cyber Currents #10",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_11",
+        "name": "Cyber Currents #11",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_4_12",
+        "name": "Cyber Currents #12",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_5",
+    "name": "Golden Overlords",
+    "theme": "Royal Court",
+    "size": 6,
+    "reward_fish": 1000000,
+    "reward_stars": 2500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 888,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_5_1",
+        "name": "Golden Overlords #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_5_2",
+        "name": "Golden Overlords #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_5_3",
+        "name": "Golden Overlords #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_5_4",
+        "name": "Golden Overlords #4",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_5_5",
+        "name": "Golden Overlords #5",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_5_6",
+        "name": "Golden Overlords #6",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_6",
+    "name": "Sailor Squad",
+    "theme": "Summer Regatta",
+    "size": 24,
+    "reward_fish": 150000,
+    "reward_stars": 300,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 860,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_6_1",
+        "name": "Sailor Squad #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_2",
+        "name": "Sailor Squad #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_3",
+        "name": "Sailor Squad #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_4",
+        "name": "Sailor Squad #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_5",
+        "name": "Sailor Squad #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_6",
+        "name": "Sailor Squad #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_7",
+        "name": "Sailor Squad #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_8",
+        "name": "Sailor Squad #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_9",
+        "name": "Sailor Squad #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_10",
+        "name": "Sailor Squad #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_11",
+        "name": "Sailor Squad #11",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_12",
+        "name": "Sailor Squad #12",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_13",
+        "name": "Sailor Squad #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_14",
+        "name": "Sailor Squad #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_15",
+        "name": "Sailor Squad #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_16",
+        "name": "Sailor Squad #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_17",
+        "name": "Sailor Squad #17",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_18",
+        "name": "Sailor Squad #18",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_19",
+        "name": "Sailor Squad #19",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_20",
+        "name": "Sailor Squad #20",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_21",
+        "name": "Sailor Squad #21",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_22",
+        "name": "Sailor Squad #22",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_23",
+        "name": "Sailor Squad #23",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_6_24",
+        "name": "Sailor Squad #24",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_7",
+    "name": "Volcanic Vent Tribe",
+    "theme": "Lava Reef",
+    "size": 16,
+    "reward_fish": 350000,
+    "reward_stars": 750,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 832,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_7_1",
+        "name": "Volcanic Vent Tribe #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_2",
+        "name": "Volcanic Vent Tribe #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_3",
+        "name": "Volcanic Vent Tribe #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_4",
+        "name": "Volcanic Vent Tribe #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_5",
+        "name": "Volcanic Vent Tribe #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_6",
+        "name": "Volcanic Vent Tribe #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_7",
+        "name": "Volcanic Vent Tribe #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_8",
+        "name": "Volcanic Vent Tribe #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_9",
+        "name": "Volcanic Vent Tribe #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_10",
+        "name": "Volcanic Vent Tribe #10",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_11",
+        "name": "Volcanic Vent Tribe #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_12",
+        "name": "Volcanic Vent Tribe #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_13",
+        "name": "Volcanic Vent Tribe #13",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_14",
+        "name": "Volcanic Vent Tribe #14",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_15",
+        "name": "Volcanic Vent Tribe #15",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_7_16",
+        "name": "Volcanic Vent Tribe #16",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_8",
+    "name": "Arctic Polar Clan",
+    "theme": "Glacier Drift",
+    "size": 8,
+    "reward_fish": 120000,
+    "reward_stars": 200,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 804,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_8_1",
+        "name": "Arctic Polar Clan #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_2",
+        "name": "Arctic Polar Clan #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_3",
+        "name": "Arctic Polar Clan #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_4",
+        "name": "Arctic Polar Clan #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_5",
+        "name": "Arctic Polar Clan #5",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_6",
+        "name": "Arctic Polar Clan #6",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_7",
+        "name": "Arctic Polar Clan #7",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_8_8",
+        "name": "Arctic Polar Clan #8",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_9",
+    "name": "Bioluminescent Glow",
+    "theme": "Midnight Zone",
+    "size": 20,
+    "reward_fish": 450000,
+    "reward_stars": 900,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 776,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_9_1",
+        "name": "Bioluminescent Glow #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_2",
+        "name": "Bioluminescent Glow #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_3",
+        "name": "Bioluminescent Glow #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_4",
+        "name": "Bioluminescent Glow #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_5",
+        "name": "Bioluminescent Glow #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_6",
+        "name": "Bioluminescent Glow #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_7",
+        "name": "Bioluminescent Glow #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_8",
+        "name": "Bioluminescent Glow #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_9",
+        "name": "Bioluminescent Glow #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_10",
+        "name": "Bioluminescent Glow #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_11",
+        "name": "Bioluminescent Glow #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_12",
+        "name": "Bioluminescent Glow #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_13",
+        "name": "Bioluminescent Glow #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_14",
+        "name": "Bioluminescent Glow #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_15",
+        "name": "Bioluminescent Glow #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_16",
+        "name": "Bioluminescent Glow #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_17",
+        "name": "Bioluminescent Glow #17",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_18",
+        "name": "Bioluminescent Glow #18",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_19",
+        "name": "Bioluminescent Glow #19",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_9_20",
+        "name": "Bioluminescent Glow #20",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_10",
+    "name": "Coral Symphony",
+    "theme": "Melody Shoal",
+    "size": 6,
+    "reward_fish": 900000,
+    "reward_stars": 2000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 748,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_10_1",
+        "name": "Coral Symphony #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_10_2",
+        "name": "Coral Symphony #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_10_3",
+        "name": "Coral Symphony #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_10_4",
+        "name": "Coral Symphony #4",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_10_5",
+        "name": "Coral Symphony #5",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_10_6",
+        "name": "Coral Symphony #6",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_11",
+    "name": "Ancient Leviathans",
+    "theme": "Titan Trench",
+    "size": 3,
+    "reward_fish": 2500000,
+    "reward_stars": 5000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 720,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_11_1",
+        "name": "Ancient Leviathans #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_11_2",
+        "name": "Ancient Leviathans #2",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_11_3",
+        "name": "Ancient Leviathans #3",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_12",
+    "name": "Space Odyssey Dolphins",
+    "theme": "Cosmic Tide",
+    "size": 12,
+    "reward_fish": 750000,
+    "reward_stars": 1500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 692,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_12_1",
+        "name": "Space Odyssey Dolphins #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_2",
+        "name": "Space Odyssey Dolphins #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_3",
+        "name": "Space Odyssey Dolphins #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_4",
+        "name": "Space Odyssey Dolphins #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_5",
+        "name": "Space Odyssey Dolphins #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_6",
+        "name": "Space Odyssey Dolphins #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_7",
+        "name": "Space Odyssey Dolphins #7",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_8",
+        "name": "Space Odyssey Dolphins #8",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_9",
+        "name": "Space Odyssey Dolphins #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_10",
+        "name": "Space Odyssey Dolphins #10",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_11",
+        "name": "Space Odyssey Dolphins #11",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_12_12",
+        "name": "Space Odyssey Dolphins #12",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_13",
+    "name": "Samurai Shoal",
+    "theme": "Blade Coast",
+    "size": 8,
+    "reward_fish": 200000,
+    "reward_stars": 400,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 664,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_13_1",
+        "name": "Samurai Shoal #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_2",
+        "name": "Samurai Shoal #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_3",
+        "name": "Samurai Shoal #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_4",
+        "name": "Samurai Shoal #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_5",
+        "name": "Samurai Shoal #5",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_6",
+        "name": "Samurai Shoal #6",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_7",
+        "name": "Samurai Shoal #7",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_13_8",
+        "name": "Samurai Shoal #8",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_14",
+    "name": "Viking Raiders",
+    "theme": "Fjord Strike",
+    "size": 16,
+    "reward_fish": 400000,
+    "reward_stars": 800,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 636,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_14_1",
+        "name": "Viking Raiders #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_2",
+        "name": "Viking Raiders #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_3",
+        "name": "Viking Raiders #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_4",
+        "name": "Viking Raiders #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_5",
+        "name": "Viking Raiders #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_6",
+        "name": "Viking Raiders #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_7",
+        "name": "Viking Raiders #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_8",
+        "name": "Viking Raiders #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_9",
+        "name": "Viking Raiders #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_10",
+        "name": "Viking Raiders #10",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_11",
+        "name": "Viking Raiders #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_12",
+        "name": "Viking Raiders #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_13",
+        "name": "Viking Raiders #13",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_14",
+        "name": "Viking Raiders #14",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_15",
+        "name": "Viking Raiders #15",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_14_16",
+        "name": "Viking Raiders #16",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_15",
+    "name": "Steampunk Mariners",
+    "theme": "Brass Harbor",
+    "size": 20,
+    "reward_fish": 600000,
+    "reward_stars": 1200,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 608,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_15_1",
+        "name": "Steampunk Mariners #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_2",
+        "name": "Steampunk Mariners #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_3",
+        "name": "Steampunk Mariners #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_4",
+        "name": "Steampunk Mariners #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_5",
+        "name": "Steampunk Mariners #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_6",
+        "name": "Steampunk Mariners #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_7",
+        "name": "Steampunk Mariners #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_8",
+        "name": "Steampunk Mariners #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_9",
+        "name": "Steampunk Mariners #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_10",
+        "name": "Steampunk Mariners #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_11",
+        "name": "Steampunk Mariners #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_12",
+        "name": "Steampunk Mariners #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_13",
+        "name": "Steampunk Mariners #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_14",
+        "name": "Steampunk Mariners #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_15",
+        "name": "Steampunk Mariners #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_16",
+        "name": "Steampunk Mariners #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_17",
+        "name": "Steampunk Mariners #17",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_18",
+        "name": "Steampunk Mariners #18",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_19",
+        "name": "Steampunk Mariners #19",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_15_20",
+        "name": "Steampunk Mariners #20",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_16",
+    "name": "Pharaoh's Guard",
+    "theme": "Nile Delta",
+    "size": 6,
+    "reward_fish": 1200000,
+    "reward_stars": 3000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 580,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_16_1",
+        "name": "Pharaoh's Guard #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_16_2",
+        "name": "Pharaoh's Guard #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_16_3",
+        "name": "Pharaoh's Guard #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_16_4",
+        "name": "Pharaoh's Guard #4",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_16_5",
+        "name": "Pharaoh's Guard #5",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_16_6",
+        "name": "Pharaoh's Guard #6",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_17",
+    "name": "Dragonscale Pod",
+    "theme": "Mythic Gulf",
+    "size": 8,
+    "reward_fish": 300000,
+    "reward_stars": 600,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 552,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_17_1",
+        "name": "Dragonscale Pod #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_2",
+        "name": "Dragonscale Pod #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_3",
+        "name": "Dragonscale Pod #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_4",
+        "name": "Dragonscale Pod #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_5",
+        "name": "Dragonscale Pod #5",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_6",
+        "name": "Dragonscale Pod #6",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_7",
+        "name": "Dragonscale Pod #7",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_17_8",
+        "name": "Dragonscale Pod #8",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_18",
+    "name": "Neon Disco Divers",
+    "theme": "Retro Beat",
+    "size": 24,
+    "reward_fish": 220000,
+    "reward_stars": 450,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 524,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_18_1",
+        "name": "Neon Disco Divers #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_2",
+        "name": "Neon Disco Divers #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_3",
+        "name": "Neon Disco Divers #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_4",
+        "name": "Neon Disco Divers #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_5",
+        "name": "Neon Disco Divers #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_6",
+        "name": "Neon Disco Divers #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_7",
+        "name": "Neon Disco Divers #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_8",
+        "name": "Neon Disco Divers #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_9",
+        "name": "Neon Disco Divers #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_10",
+        "name": "Neon Disco Divers #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_11",
+        "name": "Neon Disco Divers #11",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_12",
+        "name": "Neon Disco Divers #12",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_13",
+        "name": "Neon Disco Divers #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_14",
+        "name": "Neon Disco Divers #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_15",
+        "name": "Neon Disco Divers #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_16",
+        "name": "Neon Disco Divers #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_17",
+        "name": "Neon Disco Divers #17",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_18",
+        "name": "Neon Disco Divers #18",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_19",
+        "name": "Neon Disco Divers #19",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_20",
+        "name": "Neon Disco Divers #20",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_21",
+        "name": "Neon Disco Divers #21",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_22",
+        "name": "Neon Disco Divers #22",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_23",
+        "name": "Neon Disco Divers #23",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_18_24",
+        "name": "Neon Disco Divers #24",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_19",
+    "name": "Shadow Assassin Pod",
+    "theme": "Dark Lagoon",
+    "size": 12,
+    "reward_fish": 650000,
+    "reward_stars": 1300,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 496,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_19_1",
+        "name": "Shadow Assassin Pod #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_2",
+        "name": "Shadow Assassin Pod #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_3",
+        "name": "Shadow Assassin Pod #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_4",
+        "name": "Shadow Assassin Pod #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_5",
+        "name": "Shadow Assassin Pod #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_6",
+        "name": "Shadow Assassin Pod #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_7",
+        "name": "Shadow Assassin Pod #7",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_8",
+        "name": "Shadow Assassin Pod #8",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_9",
+        "name": "Shadow Assassin Pod #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_10",
+        "name": "Shadow Assassin Pod #10",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_11",
+        "name": "Shadow Assassin Pod #11",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_19_12",
+        "name": "Shadow Assassin Pod #12",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_20",
+    "name": "Solar Eclipse Clan",
+    "theme": "Solar Flare",
+    "size": 6,
+    "reward_fish": 1500000,
+    "reward_stars": 3500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 468,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_20_1",
+        "name": "Solar Eclipse Clan #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_20_2",
+        "name": "Solar Eclipse Clan #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_20_3",
+        "name": "Solar Eclipse Clan #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_20_4",
+        "name": "Solar Eclipse Clan #4",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_20_5",
+        "name": "Solar Eclipse Clan #5",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_20_6",
+        "name": "Solar Eclipse Clan #6",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_21",
+    "name": "Tsunami Warriors",
+    "theme": "Storm Surge",
+    "size": 16,
+    "reward_fish": 550000,
+    "reward_stars": 1100,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 440,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_21_1",
+        "name": "Tsunami Warriors #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_2",
+        "name": "Tsunami Warriors #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_3",
+        "name": "Tsunami Warriors #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_4",
+        "name": "Tsunami Warriors #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_5",
+        "name": "Tsunami Warriors #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_6",
+        "name": "Tsunami Warriors #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_7",
+        "name": "Tsunami Warriors #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_8",
+        "name": "Tsunami Warriors #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_9",
+        "name": "Tsunami Warriors #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_10",
+        "name": "Tsunami Warriors #10",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_11",
+        "name": "Tsunami Warriors #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_12",
+        "name": "Tsunami Warriors #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_13",
+        "name": "Tsunami Warriors #13",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_14",
+        "name": "Tsunami Warriors #14",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_15",
+        "name": "Tsunami Warriors #15",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_21_16",
+        "name": "Tsunami Warriors #16",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_22",
+    "name": "Emerald Enchanters",
+    "theme": "Jade Atoll",
+    "size": 8,
+    "reward_fish": 280000,
+    "reward_stars": 550,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 412,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_22_1",
+        "name": "Emerald Enchanters #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_2",
+        "name": "Emerald Enchanters #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_3",
+        "name": "Emerald Enchanters #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_4",
+        "name": "Emerald Enchanters #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_5",
+        "name": "Emerald Enchanters #5",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_6",
+        "name": "Emerald Enchanters #6",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_7",
+        "name": "Emerald Enchanters #7",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_22_8",
+        "name": "Emerald Enchanters #8",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_23",
+    "name": "Obsidian Guardians",
+    "theme": "Black Trench",
+    "size": 20,
+    "reward_fish": 800000,
+    "reward_stars": 1600,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 384,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_23_1",
+        "name": "Obsidian Guardians #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_2",
+        "name": "Obsidian Guardians #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_3",
+        "name": "Obsidian Guardians #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_4",
+        "name": "Obsidian Guardians #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_5",
+        "name": "Obsidian Guardians #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_6",
+        "name": "Obsidian Guardians #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_7",
+        "name": "Obsidian Guardians #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_8",
+        "name": "Obsidian Guardians #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_9",
+        "name": "Obsidian Guardians #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_10",
+        "name": "Obsidian Guardians #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_11",
+        "name": "Obsidian Guardians #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_12",
+        "name": "Obsidian Guardians #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_13",
+        "name": "Obsidian Guardians #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_14",
+        "name": "Obsidian Guardians #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_15",
+        "name": "Obsidian Guardians #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_16",
+        "name": "Obsidian Guardians #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_17",
+        "name": "Obsidian Guardians #17",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_18",
+        "name": "Obsidian Guardians #18",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_19",
+        "name": "Obsidian Guardians #19",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_23_20",
+        "name": "Obsidian Guardians #20",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_24",
+    "name": "Galactic Nomads",
+    "theme": "Star Stream",
+    "size": 12,
+    "reward_fish": 700000,
+    "reward_stars": 1400,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 356,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_24_1",
+        "name": "Galactic Nomads #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_2",
+        "name": "Galactic Nomads #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_3",
+        "name": "Galactic Nomads #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_4",
+        "name": "Galactic Nomads #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_5",
+        "name": "Galactic Nomads #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_6",
+        "name": "Galactic Nomads #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_7",
+        "name": "Galactic Nomads #7",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_8",
+        "name": "Galactic Nomads #8",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_9",
+        "name": "Galactic Nomads #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_10",
+        "name": "Galactic Nomads #10",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_11",
+        "name": "Galactic Nomads #11",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_24_12",
+        "name": "Galactic Nomads #12",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_25",
+    "name": "Crystal Cavern Pod",
+    "theme": "Prism Deep",
+    "size": 6,
+    "reward_fish": 1800000,
+    "reward_stars": 4000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 328,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_25_1",
+        "name": "Crystal Cavern Pod #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_25_2",
+        "name": "Crystal Cavern Pod #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_25_3",
+        "name": "Crystal Cavern Pod #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_25_4",
+        "name": "Crystal Cavern Pod #4",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_25_5",
+        "name": "Crystal Cavern Pod #5",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_25_6",
+        "name": "Crystal Cavern Pod #6",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_26",
+    "name": "Quantum Shifters",
+    "theme": "Rift Core",
+    "size": 3,
+    "reward_fish": 3500000,
+    "reward_stars": 7500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 300,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_26_1",
+        "name": "Quantum Shifters #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_26_2",
+        "name": "Quantum Shifters #2",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_26_3",
+        "name": "Quantum Shifters #3",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_27",
+    "name": "Thunderbolt Shoal",
+    "theme": "Lightning Bay",
+    "size": 16,
+    "reward_fish": 480000,
+    "reward_stars": 950,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 272,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_27_1",
+        "name": "Thunderbolt Shoal #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_2",
+        "name": "Thunderbolt Shoal #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_3",
+        "name": "Thunderbolt Shoal #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_4",
+        "name": "Thunderbolt Shoal #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_5",
+        "name": "Thunderbolt Shoal #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_6",
+        "name": "Thunderbolt Shoal #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_7",
+        "name": "Thunderbolt Shoal #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_8",
+        "name": "Thunderbolt Shoal #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_9",
+        "name": "Thunderbolt Shoal #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_10",
+        "name": "Thunderbolt Shoal #10",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_11",
+        "name": "Thunderbolt Shoal #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_12",
+        "name": "Thunderbolt Shoal #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_13",
+        "name": "Thunderbolt Shoal #13",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_14",
+        "name": "Thunderbolt Shoal #14",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_15",
+        "name": "Thunderbolt Shoal #15",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_27_16",
+        "name": "Thunderbolt Shoal #16",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_28",
+    "name": "Poseidon Elite Guard",
+    "theme": "God's Throne",
+    "size": 8,
+    "reward_fish": 500000,
+    "reward_stars": 1000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 244,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_28_1",
+        "name": "Poseidon Elite Guard #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_2",
+        "name": "Poseidon Elite Guard #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_3",
+        "name": "Poseidon Elite Guard #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_4",
+        "name": "Poseidon Elite Guard #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_5",
+        "name": "Poseidon Elite Guard #5",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_6",
+        "name": "Poseidon Elite Guard #6",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_7",
+        "name": "Poseidon Elite Guard #7",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_28_8",
+        "name": "Poseidon Elite Guard #8",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_29",
+    "name": "Crimson Corsair",
+    "theme": "Blood Waters",
+    "size": 24,
+    "reward_fish": 260000,
+    "reward_stars": 500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 216,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_29_1",
+        "name": "Crimson Corsair #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_2",
+        "name": "Crimson Corsair #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_3",
+        "name": "Crimson Corsair #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_4",
+        "name": "Crimson Corsair #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_5",
+        "name": "Crimson Corsair #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_6",
+        "name": "Crimson Corsair #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_7",
+        "name": "Crimson Corsair #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_8",
+        "name": "Crimson Corsair #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_9",
+        "name": "Crimson Corsair #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_10",
+        "name": "Crimson Corsair #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_11",
+        "name": "Crimson Corsair #11",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_12",
+        "name": "Crimson Corsair #12",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_13",
+        "name": "Crimson Corsair #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_14",
+        "name": "Crimson Corsair #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_15",
+        "name": "Crimson Corsair #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_16",
+        "name": "Crimson Corsair #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_17",
+        "name": "Crimson Corsair #17",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_18",
+        "name": "Crimson Corsair #18",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_19",
+        "name": "Crimson Corsair #19",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_20",
+        "name": "Crimson Corsair #20",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_21",
+        "name": "Crimson Corsair #21",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_22",
+        "name": "Crimson Corsair #22",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_23",
+        "name": "Crimson Corsair #23",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_29_24",
+        "name": "Crimson Corsair #24",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_30",
+    "name": "Aurora Borealis",
+    "theme": "Northern Lights",
+    "size": 12,
+    "reward_fish": 850000,
+    "reward_stars": 1700,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 188,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_30_1",
+        "name": "Aurora Borealis #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_2",
+        "name": "Aurora Borealis #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_3",
+        "name": "Aurora Borealis #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_4",
+        "name": "Aurora Borealis #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_5",
+        "name": "Aurora Borealis #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_6",
+        "name": "Aurora Borealis #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_7",
+        "name": "Aurora Borealis #7",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_8",
+        "name": "Aurora Borealis #8",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_9",
+        "name": "Aurora Borealis #9",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_10",
+        "name": "Aurora Borealis #10",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_11",
+        "name": "Aurora Borealis #11",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_30_12",
+        "name": "Aurora Borealis #12",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_31",
+    "name": "Infinity Overlords",
+    "theme": "Eternal Ocean",
+    "size": 3,
+    "reward_fish": 5000000,
+    "reward_stars": 12500,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 160,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_31_1",
+        "name": "Infinity Overlords #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_31_2",
+        "name": "Infinity Overlords #2",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_31_3",
+        "name": "Infinity Overlords #3",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  },
+  {
+    "id": "col_32",
+    "name": "Grand Champion Decks",
+    "theme": "Master League",
+    "size": 20,
+    "reward_fish": 13500000,
+    "reward_stars": 25000,
+    "bonus_item": "Tier 7 Pearl",
+    "claimed_count": 132,
+    "max_claimable": 1000,
+    "items": [
+      {
+        "id": "skin_32_1",
+        "name": "Grand Champion Decks #1",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_2",
+        "name": "Grand Champion Decks #2",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_3",
+        "name": "Grand Champion Decks #3",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_4",
+        "name": "Grand Champion Decks #4",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_5",
+        "name": "Grand Champion Decks #5",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_6",
+        "name": "Grand Champion Decks #6",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_7",
+        "name": "Grand Champion Decks #7",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_8",
+        "name": "Grand Champion Decks #8",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_9",
+        "name": "Grand Champion Decks #9",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_10",
+        "name": "Grand Champion Decks #10",
+        "rarity": "Common",
+        "min_level": 5,
+        "feed_cost": 150,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_11",
+        "name": "Grand Champion Decks #11",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_12",
+        "name": "Grand Champion Decks #12",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_13",
+        "name": "Grand Champion Decks #13",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_14",
+        "name": "Grand Champion Decks #14",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_15",
+        "name": "Grand Champion Decks #15",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_16",
+        "name": "Grand Champion Decks #16",
+        "rarity": "Uncommon",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_17",
+        "name": "Grand Champion Decks #17",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_18",
+        "name": "Grand Champion Decks #18",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_19",
+        "name": "Grand Champion Decks #19",
+        "rarity": "Rare",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      },
+      {
+        "id": "skin_32_20",
+        "name": "Grand Champion Decks #20",
+        "rarity": "Epic",
+        "min_level": 5,
+        "feed_cost": 300,
+        "asset": "assets/dolphin_hero_stage.png"
+      }
+    ]
+  }
+]
