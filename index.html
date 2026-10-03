@@ -585,11 +585,11 @@
         📦 PACK
       </div>
       <div class="resource-pill">
-        <img src="assets/pearl_egg_lvl1.png" alt="Pearls">
+        <img src="assets/icon_user_fish.png" alt="Fish" style="width: 16px; height: 16px; object-fit: contain;">
         <span id="headerMeat">91,339</span>
       </div>
       <div class="resource-pill" onclick="openVipModal()">
-        <img src="assets/icon_stars_hd.png" alt="Stars">
+        <img src="assets/icon_user_star.png" alt="Stars" style="width: 16px; height: 16px; object-fit: contain;">
         <span id="headerStars">45</span>
       </div>
       <div class="settings-btn" onclick="openSettingsModal()">
@@ -654,9 +654,11 @@
           </div>
 
           <button class="btn-feed-action" id="btnFeedGoblin" onclick="tapHeroGoblin(event)">
-            <div style="display: flex; align-items: center; gap: 6px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
               <span>FEED</span>
-              <span style="font-size: 13px; color: #fef08a;">(144 ⚪)</span>
+              <span style="font-size: 13px; color: #fef08a; display: flex; align-items: center; gap: 3px;">
+                144 <img src="assets/icon_user_fish.png" style="width: 15px; height: 15px; object-fit: contain;" alt="Fish">
+              </span>
             </div>
             <div class="btn-feed-action-sub" id="feedResetText">RESET IN 6:02:39</div>
           </button>
