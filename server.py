@@ -83,19 +83,19 @@ class Database:
             self.data["users"][user_id] = {
                 "user_id": user_id,
                 "username": username,
-                "mushrooms": 1500,
+                "meat": 92935,
                 "gob_tokens": 100.0,
-                "hearts": 30,
-                "stars": 0,
+                "hearts": 45,
+                "stars": 50,
                 "energy": 2000,
                 "max_energy": 2000,
                 "last_energy_update": time.time(),
                 "goblins": [
                     {
                         "id": "g_1",
-                        "tier": 1,
-                        "rarity": "Common",
-                        "level": 1,
+                        "tier": 2,
+                        "rarity": "Uncommon",
+                        "level": 4,
                         "xp": 0,
                         "is_staked": False,
                         "breed_count": 0,
@@ -103,7 +103,7 @@ class Database:
                     }
                 ],
                 "active_goblin_id": "g_1",
-                "grid": [1, 1, 2, 0] + [0] * 45, # 49 slots
+                "grid": [1, 1, 2, 2, 3, 1, 0, 2, 3, 4, 5, 1, 2, 0] + [0] * 35, # 49 slots, 12 levels
                 "gods": {
                     "greed": 1,
                     "fertility": 1,
@@ -113,18 +113,17 @@ class Database:
                 "referrer_id": ref_tier1,
                 "referrer_tier2_id": ref_tier2,
                 "referral_count": 0,
-                "referral_earnings_mush": 0,
+                "referral_earnings_meat": 0,
                 "clan_id": "clan_1",
                 "sabotage_cards": 3,
                 "last_sabotage_time": time.time(),
                 "created_at": time.time()
             }
 
-            # Award referrer bonus
             if ref_tier1:
                 self.data["users"][ref_tier1]["referral_count"] += 1
-                self.data["users"][ref_tier1]["mushrooms"] += 1000
-                self.data["users"][ref_tier1]["referral_earnings_mush"] += 1000
+                self.data["users"][ref_tier1]["meat"] += 5000
+                self.data["users"][ref_tier1]["referral_earnings_meat"] += 5000
 
             self.save()
         return self.data["users"][user_id]
