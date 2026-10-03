@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Duck My Duck — 1:1 Telegram Game Lobby</title>
+  <title>Goblin Clan — 1:1 Telegram Game Lobby</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,9 +11,9 @@
   
   <style>
     :root {
-      --bg-main: #13131c;
-      --bg-card: #1d1c2b;
-      --bg-card-sub: #12121b;
+      --bg-main: #12131c;
+      --bg-card: #1c1b29;
+      --bg-card-sub: #161522;
       --accent-green: #22c55e;
       --accent-gold: #f59e0b;
       --accent-yellow: #fbbf24;
@@ -23,7 +23,7 @@
       --accent-blue: #3b82f6;
       --text-white: #ffffff;
       --text-muted: #8b92a5;
-      --border-dark: #2c2b3d;
+      --border-dark: #2a293d;
       --border-light: rgba(255, 255, 255, 0.08);
       --nav-height: 64px;
     }
@@ -62,51 +62,55 @@
     }
 
     /* =========================================
-       TOPMOST APP HEADER (100% MATCH TO SCREENSHOT)
+       TOPMOST APP HEADER (100% MATCH TO REFERENCE)
        ========================================= */
     .app-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 8px 12px;
-      background: rgba(19, 19, 28, 0.98);
+      background: rgba(18, 19, 28, 0.98);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       z-index: 100;
       position: relative;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .header-user-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: #1a1926;
+      background: #191826;
       border: 1px solid var(--border-dark);
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 12px;
       font-size: 11px;
       font-weight: 800;
       color: #fff;
+      cursor: pointer;
+      transition: background 0.15s;
     }
+    .header-user-badge:active { background: #252338; }
 
     .header-user-avatar {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      background: #f59e0b;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 10px;
       color: #000;
       font-weight: 900;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
     }
 
     .header-right-cluster {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
 
     .btn-pack {
@@ -146,15 +150,17 @@
       object-fit: contain;
     }
 
-    .sound-toggle-btn {
+    .settings-btn {
       background: #171622;
       border: 1px solid var(--border-dark);
       border-radius: 10px;
-      padding: 4px 6px;
+      padding: 4px 7px;
       font-size: 11px;
       cursor: pointer;
       color: var(--text-muted);
+      transition: color 0.15s;
     }
+    .settings-btn:active { color: #fff; }
 
     /* VIEWPORT CONTAINER */
     .tab-viewport {
@@ -179,7 +185,7 @@
     }
 
     /* =========================================
-       TAB 3: DUCKS LOBBY (EXACT 1:1 SCREENSHOT MATCH)
+       TAB 3: GOBLINS LOBBY (100% PARITY WITH DUCK GAME)
        ========================================= */
     .lobby-container {
       display: flex;
@@ -190,7 +196,7 @@
       padding: 4px 0;
     }
 
-    /* 1. BIG TOKEN BALANCE (183.49) */
+    /* 1. BIG TOKEN BALANCE (183.35) */
     .lobby-balance-header {
       display: flex;
       align-items: center;
@@ -232,7 +238,7 @@
     }
 
     .lobby-stat-chip-left {
-      background: #1c1b29;
+      background: var(--bg-card);
       border: 1px solid var(--border-dark);
       border-radius: 12px;
       padding: 6px 8px;
@@ -243,7 +249,7 @@
     }
 
     .lobby-stat-chip-center {
-      background: #181724;
+      background: var(--bg-card-sub);
       border: 1px solid #36344d;
       border-radius: 12px;
       padding: 4px 12px;
@@ -254,7 +260,7 @@
     }
 
     .lobby-stat-chip-right {
-      background: #1c1b29;
+      background: var(--bg-card);
       border: 1px solid var(--border-dark);
       border-radius: 12px;
       padding: 6px 8px;
@@ -263,7 +269,7 @@
       align-items: flex-end;
     }
 
-    /* 3. CENTER HERO STAGE & DUCK */
+    /* 3. CENTER HERO STAGE & CONSISTENT GOBLIN */
     .lobby-hero-stage {
       position: relative;
       width: 250px;
@@ -277,15 +283,15 @@
 
     .lobby-pedestal-ring {
       position: absolute;
-      bottom: 12px;
-      width: 180px;
-      height: 36px;
-      background: radial-gradient(ellipse at center, rgba(251, 191, 36, 0.35) 0%, rgba(251, 191, 36, 0) 70%);
+      bottom: 10px;
+      width: 190px;
+      height: 38px;
+      background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.4) 0%, rgba(34, 197, 94, 0) 70%);
       border-radius: 50%;
       pointer-events: none;
     }
 
-    .lobby-duck-avatar {
+    .lobby-goblin-avatar {
       width: 100%;
       height: 100%;
       object-fit: contain;
@@ -293,11 +299,11 @@
       transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .lobby-duck-avatar:active {
-      transform: scale(0.90, 1.12);
+    .lobby-goblin-avatar:active {
+      transform: scale(0.92, 1.10);
     }
 
-    /* 4. BREEDING IN PROGRESS BANNER (MATCHES SCREENSHOT) */
+    /* 4. BREEDING IN PROGRESS BANNER */
     .status-capsule-banner {
       background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(168, 85, 247, 0.25));
       border: 1px solid rgba(236, 72, 153, 0.5);
@@ -364,13 +370,22 @@
       font-size: 16px;
       font-weight: 900;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 2px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
     }
     .btn-feed-action:active { transform: scale(0.98); }
+
+    .btn-feed-action-sub {
+      font-size: 10px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
     .lobby-dual-actions {
       display: grid;
@@ -396,7 +411,7 @@
     .btn-side-action:active { transform: scale(0.96); }
 
     /* =========================================
-       BOTTOM 5-TAB DOCK (EXACT MATCH TO SCREENSHOT)
+       BOTTOM 5-TAB DOCK (100% PARITY)
        ========================================= */
     .bottom-dock {
       position: fixed;
@@ -404,7 +419,7 @@
       left: 0;
       right: 0;
       height: var(--nav-height);
-      background: rgba(19, 19, 28, 0.98);
+      background: rgba(18, 19, 28, 0.98);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border-top: 1px solid rgba(255, 255, 255, 0.06);
@@ -446,20 +461,37 @@
       filter: drop-shadow(0 2px 8px rgba(34, 197, 94, 0.6));
     }
 
-    /* FLOATING POPUP */
-    .pop-number {
+    /* FLOATING POPUP DUAL VALUES */
+    .pop-number-gain {
       position: absolute;
       font-weight: 900;
       font-size: 15px;
       color: #22c55e;
       pointer-events: none;
-      animation: floatEffect 0.7s ease-out forwards;
+      animation: floatGain 0.75s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
       z-index: 999;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
     }
 
-    @keyframes floatEffect {
-      0% { opacity: 1; transform: translateY(0) scale(0.9); }
-      100% { opacity: 0; transform: translateY(-45px) scale(1.15); }
+    .pop-number-cost {
+      position: absolute;
+      font-weight: 900;
+      font-size: 13px;
+      color: #f59e0b;
+      pointer-events: none;
+      animation: floatCost 0.75s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+      z-index: 999;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    }
+
+    @keyframes floatGain {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(0.9); }
+      100% { opacity: 0; transform: translate(-50%, -50px) scale(1.15); }
+    }
+
+    @keyframes floatCost {
+      0% { opacity: 1; transform: translate(-50%, 15px) scale(0.9); }
+      100% { opacity: 0; transform: translate(-50%, -35px) scale(1.1); }
     }
 
     /* MODALS */
@@ -534,17 +566,17 @@
 </head>
 <body>
 
-  <!-- AMBIENT SPORE CANVAS -->
+  <!-- AMBIENT PARTICLES -->
   <canvas id="ambientCanvas"></canvas>
 
   <!-- =========================================
-       TOPMOST HEADER (MATCHES SCREENSHOT)
+       TOPMOST HEADER (100% MATCH)
        ========================================= -->
   <div class="app-header">
-    <div class="header-user-badge">
+    <div class="header-user-badge" onclick="openSettingsModal()">
       <div class="header-user-avatar">W</div>
       <span>Wild_airdrop</span>
-      <span style="color: var(--text-muted); font-size: 9px; margin-left: 2px;">•••</span>
+      <span style="color: var(--text-muted); font-size: 10px; margin-left: 2px;">•••</span>
     </div>
 
     <div class="header-right-cluster">
@@ -552,15 +584,15 @@
         📦 PACK
       </div>
       <div class="resource-pill">
-        <img src="assets/icon_corn_hd.png" alt="Corn">
-        <span id="headerCorn">92,935</span>
+        <img src="assets/icon_meat_hd.png" alt="Meat">
+        <span id="headerMeat">91,339</span>
       </div>
       <div class="resource-pill" onclick="openVipModal()">
         <img src="assets/icon_stars_hd.png" alt="Stars">
-        <span id="headerStars">50</span>
+        <span id="headerStars">45</span>
       </div>
-      <div class="sound-toggle-btn" id="soundToggle" onclick="toggleSound()">
-        🔊
+      <div class="settings-btn" onclick="openSettingsModal()">
+        ⚙️
       </div>
     </div>
   </div>
@@ -569,42 +601,42 @@
   <div class="tab-viewport">
 
     <!-- =========================================
-         TAB 3: DUCKS LOBBY (MAIN 1:1 SCREENSHOT)
+         TAB 3: GOBLINS LOBBY (PARITY WITH DUCK GAME)
          ========================================= -->
     <div id="tab-goblins" class="tab-page active">
       <div class="lobby-container">
         
-        <!-- 1. BIG TOKEN BALANCE (183.49) -->
+        <!-- 1. BIG TOKEN BALANCE (183.35) -->
         <div class="lobby-balance-header">
           <div class="lobby-balance-icon">🪙</div>
-          <div class="lobby-balance-text" id="mainTokenBalance">183.49</div>
+          <div class="lobby-balance-text" id="mainTokenBalance">183.35</div>
         </div>
 
         <!-- 2. SUB-HEADER TRIO STAT CHIPS -->
         <div class="lobby-trio-row">
-          <!-- LEFT: DUCKER PASS -->
+          <!-- LEFT: GOBLIN PASS -->
           <div class="lobby-stat-chip-left" onclick="openVipModal()">
-            <div style="font-size: 10px; font-weight: 900; color: #f59e0b;">DUCKER PASS</div>
+            <div style="font-size: 10px; font-weight: 900; color: #f59e0b;">GOBLIN PASS</div>
             <div style="font-size: 9px; color: var(--text-muted);">~ DAILY PASS (5 DAYS)</div>
           </div>
 
-          <!-- CENTER: LEVEL & RARITY -->
-          <div class="lobby-stat-chip-center">
-            <div style="font-size: 14px; font-weight: 900; color: #f59e0b;" id="duckLvlText">LVL 5</div>
-            <div style="font-size: 9px; font-weight: 900; color: #22c55e; text-transform: uppercase;" id="duckRarityText">~ COMMON</div>
+          <!-- CENTER: LEVEL & RARITY WITH LEVEL CYCLER -->
+          <div class="lobby-stat-chip-center" onclick="cycleGoblinLevel()" title="Click to view higher level gear">
+            <div style="font-size: 14px; font-weight: 900; color: #f59e0b;" id="goblinLvlText">LVL 5</div>
+            <div style="font-size: 9px; font-weight: 900; color: #22c55e; text-transform: uppercase;" id="goblinRarityText">~ COMMON</div>
           </div>
 
           <!-- RIGHT: MINING YIELD -->
           <div class="lobby-stat-chip-right">
-            <div style="font-size: 10px; font-weight: 900; color: #3b82f6;" id="miningRateText">64.9K</div>
+            <div style="font-size: 10px; font-weight: 900; color: #3b82f6;" id="miningRateText">60.9K</div>
             <div style="font-size: 9px; color: var(--text-muted);">/ 2,000 CAP</div>
           </div>
         </div>
 
-        <!-- 3. CENTER HERO STAGE & DUCK IN BLUE SUIT -->
-        <div class="lobby-hero-stage" onclick="tapHeroDuck(event)">
+        <!-- 3. CENTER HERO STAGE & CONSISTENT GOBLIN -->
+        <div class="lobby-hero-stage" onclick="tapHeroGoblin(event)">
           <div class="lobby-pedestal-ring"></div>
-          <img src="assets/duck_suit_hero.png" id="heroDuckSprite" class="lobby-duck-avatar" alt="Duck In Suit">
+          <img src="assets/goblin_lvl5.png" id="heroGoblinSprite" class="lobby-goblin-avatar" alt="Goblin Hero">
         </div>
 
         <!-- 4. STATUS CAPSULE (BREEDING IN PROGRESS / DO NOT DISTURB) -->
@@ -620,13 +652,14 @@
             <span class="time-val" id="breedingCountdown">05:39:46</span>
           </div>
 
-          <button class="btn-feed-action" id="btnFeedDuck" onclick="tapHeroDuck(event)">
-            TAP TO FEED (-25 🌽)
+          <button class="btn-feed-action" id="btnFeedGoblin" onclick="tapHeroGoblin(event)">
+            <div>TAP TO FEED (-80 🍖)</div>
+            <div class="btn-feed-action-sub" id="feedResetText">RESET IN 06:02:39</div>
           </button>
 
           <div class="lobby-dual-actions">
             <button class="btn-side-action" style="background: linear-gradient(135deg, #ec4899, #db2777); border: none; font-weight: 900;" onclick="openBreedingModal()">
-              💖 BREED (4/5)
+              💖 BREED (5/5)
             </button>
             <button class="btn-side-action" id="btnStakeToggle" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); border: none; font-weight: 900;" onclick="toggleStake()">
               ⚡ STAKE
@@ -640,7 +673,7 @@
     <!-- TAB 1: MARKET -->
     <div id="tab-market" class="tab-page">
       <div style="text-align: center; padding: 20px 0;">
-        <h3 style="font-size: 16px; font-weight: 900;">MARKET (FIFO QUEUE)</h3>
+        <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b;">MARKET (FIFO QUEUE)</h3>
         <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Single-queue order book with dynamic price shifts.</p>
         <button class="btn-feed-action" style="width: 80%; margin: 16px auto 0;" onclick="switchTab('goblins', document.querySelectorAll('.dock-tab')[2])">BACK TO LOBBY</button>
       </div>
@@ -649,8 +682,8 @@
     <!-- TAB 2: EGGS -->
     <div id="tab-eggs" class="tab-page">
       <div style="text-align: center; padding: 20px 0;">
-        <h3 style="font-size: 16px; font-weight: 900;">7×7 EGG MATRIX</h3>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">12 Tiers of Duck Eggs ready to merge!</p>
+        <h3 style="font-size: 16px; font-weight: 900; color: #22c55e;">7×7 EGG MATRIX</h3>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">12 Tiers of Dragon/Goblin Eggs ready to merge!</p>
         <button class="btn-feed-action" style="width: 80%; margin: 16px auto 0;" onclick="switchTab('goblins', document.querySelectorAll('.dock-tab')[2])">BACK TO LOBBY</button>
       </div>
     </div>
@@ -658,7 +691,7 @@
     <!-- TAB 4: GODS -->
     <div id="tab-gods" class="tab-page">
       <div style="text-align: center; padding: 20px 0;">
-        <h3 style="font-size: 16px; font-weight: 900;">DUCKY GODS & TON NFTS</h3>
+        <h3 style="font-size: 16px; font-weight: 900; color: #a855f7;">GOBLIN GODS & TON NFTS</h3>
         <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Permanent Love God multipliers & staking.</p>
         <button class="btn-feed-action" style="width: 80%; margin: 16px auto 0;" onclick="switchTab('goblins', document.querySelectorAll('.dock-tab')[2])">BACK TO LOBBY</button>
       </div>
@@ -667,8 +700,8 @@
     <!-- TAB 5: TASKS -->
     <div id="tab-tasks" class="tab-page">
       <div style="text-align: center; padding: 20px 0;">
-        <h3 style="font-size: 16px; font-weight: 900;">COLLECTIONS & TASKS</h3>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Slotted Duck collections & Fortune Wheel.</p>
+        <h3 style="font-size: 16px; font-weight: 900; color: #ec4899;">COLLECTIONS & TASKS</h3>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Slotted Goblin collections & Fortune Wheel.</p>
         <button class="btn-feed-action" style="width: 80%; margin: 16px auto 0;" onclick="switchTab('goblins', document.querySelectorAll('.dock-tab')[2])">BACK TO LOBBY</button>
       </div>
     </div>
@@ -676,7 +709,7 @@
   </div>
 
   <!-- =========================================
-       BOTTOM 5-TAB DOCK (EXACT MATCH TO SCREENSHOT)
+       BOTTOM 5-TAB DOCK (100% PARITY)
        ========================================= -->
   <div class="bottom-dock">
     <div class="dock-tab" onclick="switchTab('market', this)">
@@ -688,8 +721,8 @@
       <span>EGGS</span>
     </div>
     <div class="dock-tab active" onclick="switchTab('goblins', this)">
-      <img src="assets/dock_duck.png" alt="Ducks">
-      <span>DUCKS</span>
+      <img src="assets/dock_goblin.png" alt="Goblins">
+      <span>GOBLINS</span>
     </div>
     <div class="dock-tab" onclick="switchTab('gods', this)">
       <img src="assets/dock_gods.png" alt="Gods">
@@ -701,25 +734,56 @@
     </div>
   </div>
 
+  <!-- MODAL: SETTINGS & ACCOUNT -->
+  <div class="modal-overlay" id="modalSettings">
+    <div class="modal-card">
+      <div class="modal-close-btn" onclick="closeModal('modalSettings')">✕</div>
+      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b; margin-bottom: 8px;">⚙️ GAME SETTINGS</h3>
+      
+      <div style="display: flex; flex-direction: column; gap: 8px; width: 100%; margin: 8px 0; font-size: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #151421; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-dark);">
+          <span style="font-weight: 800;">Audio SFX & Quacks</span>
+          <button style="background: #22c55e; border: none; color: #fff; padding: 4px 10px; border-radius: 8px; font-weight: 900; cursor: pointer;" id="settingSoundToggle" onclick="toggleSound()">ENABLED</button>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #151421; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-dark);">
+          <span style="font-weight: 800;">Haptic Feedback</span>
+          <span style="color: #22c55e; font-weight: 900;">ON</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #151421; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-dark);">
+          <span style="font-weight: 800;">Telegram User ID</span>
+          <span style="color: var(--text-muted); font-family: monospace;">8805966134</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #151421; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-dark);">
+          <span style="font-weight: 800;">TON Wallet</span>
+          <span style="color: #3b82f6; font-weight: 900; font-family: monospace;">UQAV...8FEL</span>
+        </div>
+      </div>
+
+      <button class="btn-feed-action" style="width: 100%; font-size: 13px; margin-top: 6px;" onclick="closeModal('modalSettings')">
+        DONE
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL: PACK -->
   <div class="modal-overlay" id="modalPack">
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalPack')">✕</div>
-      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b; margin-bottom: 4px;">📦 DAILY DUCK PACK</h3>
-      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 10px;">Open your daily supply chest for corn, hearts & relic eggs!</p>
+      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b; margin-bottom: 4px;">📦 DAILY PACK</h3>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 10px;">Open your daily supply chest for meat, hearts & relic eggs!</p>
       
       <div style="width: 130px; height: 130px; margin: 6px 0;">
         <img src="assets/pack_chest.png" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 16px rgba(245, 158, 11, 0.5));" alt="Chest">
       </div>
 
       <div id="packRewardDisplay" style="display: none; text-align: center; margin: 6px 0;">
-        <div style="font-size: 16px; font-weight: 900; color: #22c55e;">+10,000 🌽 CORN</div>
+        <div style="font-size: 16px; font-weight: 900; color: #22c55e;">+10,000 🍖 MEAT</div>
         <div style="font-size: 14px; font-weight: 900; color: #ec4899;">+5 ❤️ LOVE HEARTS</div>
-        <div style="font-size: 12px; color: #a855f7; font-weight: 800;">+1 Amethyst Relic Egg</div>
+        <div style="font-size: 12px; color: #a855f7; font-weight: 800;">+1 Dragon Relic Egg</div>
       </div>
 
       <button class="btn-feed-action" id="btnOpenPack" style="width: 100%; font-size: 14px;" onclick="claimDailyPack()">
-        OPEN DUCK PACK
+        OPEN GOBLIN PACK
       </button>
     </div>
   </div>
@@ -728,17 +792,17 @@
   <div class="modal-overlay" id="modalBreeding">
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalBreeding')">✕</div>
-      <h3 style="font-size: 16px; font-weight: 900; color: #ec4899; margin-bottom: 4px;">💖 DUCK BREEDING NEST</h3>
-      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Pair your champions to hatch a higher-tier Duck!</p>
+      <h3 style="font-size: 16px; font-weight: 900; color: #ec4899; margin-bottom: 4px;">💖 BREEDING NEST</h3>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Pair your champions to hatch a higher-tier Goblin!</p>
       
       <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
         <img src="assets/breeding_nest.png" style="position: absolute; width: 100%; height: 100%; object-fit: contain;" alt="Nest">
-        <img src="assets/duck_egg_lvl11.png" id="breedingEggSprite" style="position: relative; width: 65px; height: 65px; object-fit: contain; z-index: 5;" alt="Egg">
+        <img src="assets/egg_lvl11.png" id="breedingEggSprite" style="position: relative; width: 65px; height: 65px; object-fit: contain; z-index: 5;" alt="Egg">
       </div>
 
       <div id="breedingResultBox" style="display: none; text-align: center; margin-bottom: 10px;">
         <div style="font-size: 12px; font-weight: 900; color: #22c55e;" id="breedResultRarity">~ RARE HATCH!</div>
-        <div style="font-size: 18px; font-weight: 900;" id="breedResultName">SAILOR DUCK #9102</div>
+        <div style="font-size: 18px; font-weight: 900;" id="breedResultName">GOBLIN SHAMAN #9102</div>
       </div>
 
       <button class="btn-feed-action" id="btnHatchAction" style="width: 100%; font-size: 14px; background: linear-gradient(180deg, #ec4899, #be185d); border-bottom-color: #9d174d;" onclick="startHatchRitual()">
@@ -752,17 +816,17 @@
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalVip')">✕</div>
       <img src="assets/vip_crown_3d.png" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 4px;" alt="VIP">
-      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b;">VIP DUCKER PASS (14-DAY)</h3>
+      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b;">VIP GOBLIN PASS (14-DAY)</h3>
       
       <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; margin: 10px 0; font-size: 11px;">
         <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> 🤖 Smart Auto-Trader Bot on Market</div>
         <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> ⚡ 2x Daily Stamina Regeneration</div>
         <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> 💖 2x Breeding Luck Rarity Multiplier</div>
-        <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> ⭐ Exclusive Gold Ducker Badge</div>
+        <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> ⭐ Exclusive Gold Goblin Badge</div>
       </div>
 
       <button class="btn-feed-action" style="width: 100%; font-size: 14px; background: linear-gradient(180deg, #a855f7, #7e22ce); border-bottom-color: #6b21a8;" onclick="activateVipStars()">
-        ACTIVATE FOR 50 ⭐ STARS
+        ACTIVATE FOR 45 ⭐ STARS
       </button>
     </div>
   </div>
@@ -773,7 +837,6 @@
 
   <!-- JAVASCRIPT ENGINE -->
   <script>
-    // SYNTHESIZER WITH QUACK FORMANT SYNTHESIS
     let audioCtx = null;
     let soundEnabled = true;
 
@@ -792,35 +855,18 @@
 
       const now = audioCtx.currentTime;
 
-      if (type === 'quack') {
+      if (type === 'tap') {
         const osc = audioCtx.createOscillator();
-        const bpf1 = audioCtx.createBiquadFilter();
-        const bpf2 = audioCtx.createBiquadFilter();
         const gain = audioCtx.createGain();
-
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(280, now);
-        osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
-
-        bpf1.type = 'bandpass';
-        bpf1.frequency.setValueAtTime(450, now);
-        bpf1.Q.setValueAtTime(4.0, now);
-
-        bpf2.type = 'bandpass';
-        bpf2.frequency.setValueAtTime(850, now);
-        bpf2.Q.setValueAtTime(3.5, now);
-
-        gain.gain.setValueAtTime(0.35, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
-
-        osc.connect(bpf1);
-        osc.connect(bpf2);
-        bpf1.connect(gain);
-        bpf2.connect(gain);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.exponentialRampToValueAtTime(160, now + 0.1);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+        osc.connect(gain);
         gain.connect(audioCtx.destination);
-
         osc.start(now);
-        osc.stop(now + 0.12);
+        osc.stop(now + 0.1);
       } else if (type === 'fanfare') {
         [440, 554, 659, 880].forEach((freq, i) => {
           const o = audioCtx.createOscillator();
@@ -851,23 +897,55 @@
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
-      document.getElementById('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
-      showToast(soundEnabled ? 'Quack SFX Enabled' : 'Sound Muted');
+      const btn = document.getElementById('settingSoundToggle');
+      if (btn) {
+        btn.innerText = soundEnabled ? 'ENABLED' : 'MUTED';
+        btn.style.background = soundEnabled ? '#22c55e' : '#6b7280';
+      }
+      showToast(soundEnabled ? 'Audio SFX Enabled' : 'Sound Muted');
     }
 
-    // GAME STATE (MATCHES SCREENSHOT)
+    // 12 CONSISTENT GOBLIN ROSTER
+    const goblinRosterData = [
+      { lvl: 1, name: 'BABY PEON', rarity: 'COMMON', file: 'goblin_lvl1.png', rate: '20.1K' },
+      { lvl: 2, name: 'SCOUT', rarity: 'COMMON', file: 'goblin_lvl2.png', rate: '35.4K' },
+      { lvl: 3, name: 'WARRIOR', rarity: 'UNCOMMON', file: 'goblin_lvl3.png', rate: '48.2K' },
+      { lvl: 4, name: 'BERSERKER', rarity: 'UNCOMMON', file: 'goblin_lvl4.png', rate: '60.3K' },
+      { lvl: 5, name: 'SUIT HERO', rarity: 'COMMON', file: 'goblin_lvl5.png', rate: '60.9K' },
+      { lvl: 6, name: 'SHINOBI', rarity: 'RARE', file: 'goblin_lvl6.png', rate: '75.0K' },
+      { lvl: 7, name: 'SHAMAN', rarity: 'RARE', file: 'goblin_lvl7.png', rate: '92.5K' },
+      { lvl: 8, name: 'WARLORD', rarity: 'EPIC', file: 'goblin_lvl8.png', rate: '120.0K' },
+      { lvl: 9, name: 'ROYAL KING', rarity: 'EPIC', file: 'goblin_lvl9.png', rate: '165.0K' },
+      { lvl: 10, name: 'DRAGON SLAYER', rarity: 'LEGENDARY', file: 'goblin_lvl10.png', rate: '250.0K' },
+      { lvl: 11, name: 'CELESTIAL', rarity: 'MYTHIC', file: 'goblin_lvl11.png', rate: '400.0K' },
+      { lvl: 12, name: 'SUPREME GOD', rarity: 'GODLIKE', file: 'goblin_lvl12.png', rate: '1.0M' }
+    ];
+
+    let currentGoblinIndex = 4; // LVL 5 (Suit Hero)
+
     let gameState = {
-      tokens: 183.49,
-      corn: 92935,
-      stars: 50,
+      tokens: 183.35,
+      meat: 91339,
+      stars: 45,
       hearts: 45,
-      duckLvl: 4,
       isBreeding: true,
       countdownSeconds: 5 * 3600 + 39 * 60 + 46, // 05:39:46
+      staminaResetSeconds: 6 * 3600 + 2 * 60 + 39, // 06:02:39
       isStaked: false
     };
 
-    // COUNTDOWN TICKER
+    function cycleGoblinLevel() {
+      currentGoblinIndex = (currentGoblinIndex + 1) % goblinRosterData.length;
+      const g = goblinRosterData[currentGoblinIndex];
+      document.getElementById('goblinLvlText').innerText = `LVL ${g.lvl}`;
+      document.getElementById('goblinRarityText').innerText = `~ ${g.rarity}`;
+      document.getElementById('heroGoblinSprite').src = `assets/${g.file}`;
+      document.getElementById('miningRateText').innerText = g.rate;
+      playSound('coin');
+      haptic('light');
+      showToast(`Switched to LVL ${g.lvl} ${g.name}`);
+    }
+
     function startCountdownTicker() {
       setInterval(() => {
         if (gameState.countdownSeconds > 0) {
@@ -875,32 +953,50 @@
           const h = Math.floor(gameState.countdownSeconds / 3600);
           const m = Math.floor((gameState.countdownSeconds % 3600) / 60);
           const s = gameState.countdownSeconds % 60;
-          const formatted = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-          document.getElementById('breedingCountdown').innerText = formatted;
+          document.getElementById('breedingCountdown').innerText = 
+            `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+        if (gameState.staminaResetSeconds > 0) {
+          gameState.staminaResetSeconds--;
+          const h = Math.floor(gameState.staminaResetSeconds / 3600);
+          const m = Math.floor((gameState.staminaResetSeconds % 3600) / 60);
+          const s = gameState.staminaResetSeconds % 60;
+          document.getElementById('feedResetText').innerText = 
+            `RESET IN ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
       }, 1000);
     }
 
-    // TAP DUCK IN SUIT
-    function tapHeroDuck(e) {
-      if (gameState.corn < 25) {
-        showToast('❌ Need 25 🌽 to feed duck!');
+    function tapHeroGoblin(e) {
+      if (gameState.meat < 80) {
+        showToast('❌ Need 80 🍖 to feed goblin!');
         return;
       }
-      gameState.corn -= 25;
-      gameState.tokens = Math.round((gameState.tokens + 0.05) * 100) / 100;
-      playSound('quack');
+      gameState.meat -= 80;
+      gameState.tokens = Math.round((gameState.tokens + 0.02) * 100) / 100;
+      playSound('tap');
       haptic('light');
       updateUI();
 
-      // Spawn pop number
-      const pop = document.createElement('div');
-      pop.className = 'pop-number';
-      pop.innerText = 'QUACK! +0.05 🪙 (-25 🌽)';
-      pop.style.left = (e.clientX || (window.innerWidth / 2)) + 'px';
-      pop.style.top = (e.clientY || (window.innerHeight / 2)) + 'px';
-      document.body.appendChild(pop);
-      setTimeout(() => pop.remove(), 700);
+      // DUAL FLOATING NUMBERS (+0.02 🪙 and -80 🍖)
+      const posX = e.clientX || (window.innerWidth / 2);
+      const posY = e.clientY || (window.innerHeight / 2);
+
+      const popGain = document.createElement('div');
+      popGain.className = 'pop-number-gain';
+      popGain.innerText = '+0.02 🪙';
+      popGain.style.left = posX + 'px';
+      popGain.style.top = posY + 'px';
+      document.body.appendChild(popGain);
+
+      const popCost = document.createElement('div');
+      popCost.className = 'pop-number-cost';
+      popCost.innerText = '-80 🍖';
+      popCost.style.left = posX + 'px';
+      popCost.style.top = posY + 'px';
+      document.body.appendChild(popCost);
+
+      setTimeout(() => { popGain.remove(); popCost.remove(); }, 750);
     }
 
     function toggleBreedingState() {
@@ -914,7 +1010,7 @@
       } else {
         banner.style.display = 'none';
         pill.style.display = 'none';
-        showToast('Duck ready for battles & feeding!');
+        showToast('Goblin ready for battles & feeding!');
       }
       playSound('coin');
     }
@@ -925,33 +1021,32 @@
       if (gameState.isStaked) {
         btn.innerText = '⚡ STAKED (+25 QDD)';
         btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-        showToast('✅ Duck Staked into Ducky Totem!');
+        showToast('✅ Goblin Staked into Totem!');
       } else {
         btn.innerText = '⚡ STAKE';
         btn.style.background = 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
-        showToast('Duck Unstaked.');
+        showToast('Goblin Unstaked.');
       }
       playSound('coin');
       haptic('medium');
     }
 
-    // MODAL OPENERS
     function openPackModal() {
       openModal('modalPack');
       document.getElementById('packRewardDisplay').style.display = 'none';
       document.getElementById('btnOpenPack').style.display = 'block';
-      playSound('quack');
+      playSound('tap');
     }
 
     function claimDailyPack() {
-      gameState.corn += 10000;
+      gameState.meat += 10000;
       gameState.hearts += 5;
       updateUI();
       playSound('fanfare');
       haptic('heavy');
       document.getElementById('packRewardDisplay').style.display = 'block';
       document.getElementById('btnOpenPack').style.display = 'none';
-      showToast('🎁 Daily Duck Pack Rewards Claimed!');
+      showToast('🎁 Daily Pack Rewards Claimed!');
     }
 
     function openBreedingModal() {
@@ -959,7 +1054,7 @@
       document.getElementById('breedingResultBox').style.display = 'none';
       document.getElementById('btnHatchAction').style.display = 'block';
       document.getElementById('breedingEggSprite').className = '';
-      playSound('quack');
+      playSound('tap');
     }
 
     function startHatchRitual() {
@@ -984,24 +1079,25 @@
 
         setTimeout(() => {
           document.getElementById('breedingResultBox').style.display = 'block';
-          showToast('🎉 Hatched Sailor Duck!');
+          showToast('🎉 Hatched Goblin Shaman!');
         }, 300);
       }, 1500);
     }
 
-    function openVipModal() { openModal('modalVip'); playSound('quack'); }
+    function openVipModal() { openModal('modalVip'); playSound('tap'); }
+    function openSettingsModal() { openModal('modalSettings'); playSound('tap'); }
 
     function activateVipStars() {
-      if (gameState.stars < 50) {
-        showToast('❌ Need 50 ⭐ Stars!');
+      if (gameState.stars < 45) {
+        showToast('❌ Need 45 ⭐ Stars!');
         return;
       }
-      gameState.stars -= 50;
+      gameState.stars -= 45;
       updateUI();
       closeModal('modalVip');
       playSound('fanfare');
       haptic('heavy');
-      showToast('👑 VIP Ducker Pass Activated for 14 Days!');
+      showToast('👑 VIP Goblin Pass Activated for 14 Days!');
     }
 
     function switchTab(tabId, btn) {
@@ -1012,7 +1108,7 @@
       if (target) target.classList.add('active');
       if (btn) btn.classList.add('active');
       
-      playSound('quack');
+      playSound('tap');
       haptic('light');
     }
 
@@ -1024,7 +1120,7 @@
     function closeModal(id) {
       const el = document.getElementById(id);
       if (el) el.classList.remove('open');
-      playSound('quack');
+      playSound('tap');
     }
 
     function showToast(msg) {
@@ -1037,7 +1133,7 @@
 
     function updateUI() {
       document.getElementById('mainTokenBalance').innerText = gameState.tokens.toFixed(2);
-      document.getElementById('headerCorn').innerText = gameState.corn.toLocaleString();
+      document.getElementById('headerMeat').innerText = gameState.meat.toLocaleString();
       document.getElementById('headerStars').innerText = gameState.stars;
     }
 
@@ -1047,7 +1143,6 @@
       }
     }
 
-    // AMBIENT PARTICLES
     function initAmbientParticles() {
       const canvas = document.getElementById('ambientCanvas');
       const ctx = canvas.getContext('2d');
@@ -1079,7 +1174,7 @@
 
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`;
+          ctx.fillStyle = `rgba(34, 197, 94, ${p.alpha})`;
           ctx.fill();
         });
         requestAnimationFrame(render);
