@@ -1,0 +1,58 @@
+{
+  "collections": [
+    {
+      "id": "reef_explorers",
+      "name": "Reef Explorers",
+      "size": 24,
+      "reward_fish": 125000,
+      "reward_stars": 500,
+      "claimed_total": 991,
+      "claimed_max": 1000
+    },
+    {
+      "id": "abyssal_mystics",
+      "name": "Abyssal Mystics",
+      "size": 24,
+      "reward_fish": 250000,
+      "reward_stars": 1000,
+      "claimed_total": 450,
+      "claimed_max": 1000
+    },
+    {
+      "id": "cyber_currents",
+      "name": "Cyber Currents",
+      "size": 24,
+      "reward_fish": 500000,
+      "reward_stars": 2500,
+      "claimed_total": 120,
+      "claimed_max": 500
+    },
+    {
+      "id": "golden_overlords",
+      "name": "Golden Overlords",
+      "size": 24,
+      "reward_fish": 1000000,
+      "reward_stars": 5000,
+      "claimed_total": 35,
+      "claimed_max": 100
+    },
+    {
+      "id": "leviathan_riders",
+      "name": "Leviathan Riders",
+      "size": 24,
+      "reward_fish": 2500000,
+      "reward_stars": 7500,
+      "claimed_total": 12,
+      "claimed_max": 50
+    },
+    {
+      "id": "ocean_gods_clans",
+      "name": "Ocean Gods Clan",
+      "size": 24,
+      "reward_fish": 5000000,
+      "reward_stars": 12500,
+      "claimed_total": 2,
+      "claimed_max": 20
+    }
+  ]
+}

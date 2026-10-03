@@ -1,0 +1,87 @@
+{
+  "tiers": [
+    {
+      "tier": 1,
+      "name": "Pearl Tier 1",
+      "asset": "pearl_egg_lvl1.png",
+      "shell_yield": 10
+    },
+    {
+      "tier": 2,
+      "name": "Pearl Tier 2",
+      "asset": "pearl_egg_lvl2.png",
+      "shell_yield": 20
+    },
+    {
+      "tier": 3,
+      "name": "Pearl Tier 3",
+      "asset": "pearl_egg_lvl3.png",
+      "shell_yield": 30
+    },
+    {
+      "tier": 4,
+      "name": "Pearl Tier 4",
+      "asset": "pearl_egg_lvl4.png",
+      "shell_yield": 40
+    },
+    {
+      "tier": 5,
+      "name": "Pearl Tier 5",
+      "asset": "pearl_egg_lvl5.png",
+      "shell_yield": 50
+    },
+    {
+      "tier": 6,
+      "name": "Pearl Tier 6",
+      "asset": "pearl_egg_lvl6.png",
+      "shell_yield": 60
+    },
+    {
+      "tier": 7,
+      "name": "Pearl Tier 7",
+      "asset": "pearl_egg_lvl7.png",
+      "shell_yield": 70
+    },
+    {
+      "tier": 8,
+      "name": "Pearl Tier 8",
+      "asset": "pearl_egg_lvl8.png",
+      "shell_yield": 80
+    },
+    {
+      "tier": 9,
+      "name": "Pearl Tier 9",
+      "asset": "pearl_egg_lvl9.png",
+      "shell_yield": 90
+    },
+    {
+      "tier": 10,
+      "name": "Pearl Tier 10",
+      "asset": "pearl_egg_lvl10.png",
+      "shell_yield": 100
+    }
+  ],
+  "hatch_odds": {
+    "tier_7_8": {
+      "common": 80,
+      "uncommon": 18,
+      "rare": 2,
+      "epic": 0,
+      "legendary": 0
+    },
+    "tier_9": {
+      "common": 0,
+      "uncommon": 60,
+      "rare": 30,
+      "epic": 9,
+      "legendary": 1
+    },
+    "tier_10": {
+      "common": 0,
+      "uncommon": 0,
+      "rare": 55,
+      "epic": 35,
+      "legendary": 10
+    }
+  }
+}
