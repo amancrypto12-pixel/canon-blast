@@ -1,5 +1,5 @@
 
-// --- 1. GAME STATE STORE ---
+// --- 1. SINGLE-SOURCE-OF-TRUTH GAME STATE STORE ---
 const GameStore = {
   state: {
     dlp: 183.38,
@@ -27,7 +27,8 @@ const GameStore = {
       { id: 10, level: 0, rarity: 'Common', owned: false }
     ],
     grid: Array(49).fill(null),
-    combo: 13,
+    combo: 0,
+    lastMergeTime: 0,
     hotTimer: 24,
     breedingRoom: null
   },
@@ -42,10 +43,11 @@ const GameStore = {
   }
 };
 
-// --- 2. WEBAUDIO PROCEDURAL SOUND SYNTHESIZER ---
+// --- 2. PENTATONIC AUDIO SYNTHESIZER ---
 class SoundEngine {
   constructor() {
     this.ctx = null;
+    this.scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50]; // C5, D5, E5, G5, A5, C6
   }
   init() {
     if (!this.ctx) {
@@ -56,7 +58,7 @@ class SoundEngine {
       this.ctx.resume();
     }
   }
-  play(type) {
+  play(type, param = 0) {
     this.init();
     if (!this.ctx) return;
     const now = this.ctx.currentTime;
@@ -65,51 +67,61 @@ class SoundEngine {
     osc.connect(gain);
     gain.connect(this.ctx.destination);
 
-    if (type === 'tap' || type === 'quack' || type === 'eat') {
-      // Formant synthesis for creature whistle / quack
+    if (type === 'tap' || type === 'quack') {
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, now);
-      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.04);
-      osc.frequency.exponentialRampToValueAtTime(300, now + 0.09);
+      osc.frequency.setValueAtTime(850, now);
+      osc.frequency.exponentialRampToValueAtTime(1450, now + 0.04);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.09);
       gain.gain.setValueAtTime(0.35, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
       osc.start(now);
       osc.stop(now + 0.09);
-    } else if (type === 'merge') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(520, now);
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.12);
-      gain.gain.setValueAtTime(0.25, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-      osc.start(now);
-      osc.stop(now + 0.12);
-    } else if (type === 'crack') {
+    } else if (type === 'eat') {
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(140, now);
-      osc.frequency.exponentialRampToValueAtTime(30, now + 0.18);
-      gain.gain.setValueAtTime(0.45, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+      osc.frequency.setValueAtTime(600, now);
+      osc.frequency.exponentialRampToValueAtTime(200, now + 0.07);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
       osc.start(now);
-      osc.stop(now + 0.18);
+      osc.stop(now + 0.07);
+    } else if (type === 'merge') {
+      // Pentatonic scale note based on combo index
+      const noteIdx = Math.min(param, this.scale.length - 1);
+      const freq = this.scale[noteIdx];
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.14);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+      osc.start(now);
+      osc.stop(now + 0.14);
+    } else if (type === 'crack') {
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, now);
+      osc.frequency.exponentialRampToValueAtTime(35, now + 0.22);
+      gain.gain.setValueAtTime(0.5, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+      osc.start(now);
+      osc.stop(now + 0.22);
     } else if (type === 'fanfare') {
-      [523, 659, 783, 1046].forEach((freq, idx) => {
+      this.scale.slice(0, 4).forEach((freq, idx) => {
         const o = this.ctx.createOscillator();
         const g = this.ctx.createGain();
         o.connect(g);
         g.connect(this.ctx.destination);
         o.type = 'sine';
         o.frequency.value = freq;
-        g.gain.setValueAtTime(0.18, now + idx * 0.08);
-        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.22);
-        o.start(now + idx * 0.08);
-        o.stop(now + idx * 0.08 + 0.22);
+        g.gain.setValueAtTime(0.2, now + idx * 0.07);
+        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.07 + 0.24);
+        o.start(now + idx * 0.07);
+        o.stop(now + idx * 0.07 + 0.24);
       });
     }
   }
 }
 const audio = new SoundEngine();
 
-// --- 3. TOAST NOTIFICATIONS (NO BROWSER ALERTS) ---
+// --- 3. TOAST NOTIFICATION SYSTEM ---
 function showToast(text, icon = '✨') {
   let toast = document.getElementById('gameToast');
   if (!toast) {
@@ -124,7 +136,7 @@ function showToast(text, icon = '✨') {
   toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
 }
 
-// --- 4. TELEGRAM INTEGRATION & HAPTICS ---
+// --- 4. TELEGRAM SDK & HAPTICS ---
 function initTelegram() {
   if (window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
@@ -166,7 +178,6 @@ function initPixiEngine() {
   });
   container.appendChild(app.view);
 
-  // Floating Micro-Orbs Simulation
   const orbs = [];
   const graphics = new PIXI.Graphics();
   graphics.beginFill(0x00D4FF, 0.4);
@@ -210,15 +221,12 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
       document.body.appendChild(el);
 
       const startTime = performance.now();
-      const duration = 320; // ms
-
-      // Random curve offset
+      const duration = 300;
       const midX = (startX + targetX) / 2 + (Math.random() - 0.5) * 60;
       const midY = Math.min(startY, targetY) - 50 - Math.random() * 30;
 
       function animateFrame(now) {
         const t = Math.min((now - startTime) / duration, 1);
-        // Quadratic Bezier curve
         const curX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * targetX;
         const curY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midY + t * t * targetY;
         const scale = 1 - t * 0.4;
@@ -231,7 +239,6 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
           requestAnimationFrame(animateFrame);
         } else {
           el.remove();
-          // Eating gulp impact
           audio.play('eat');
           const sprite = document.getElementById('heroSprite');
           if (sprite) {
@@ -241,7 +248,7 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
         }
       }
       requestAnimationFrame(animateFrame);
-    }, i * 55);
+    }, i * 50);
   }
 }
 
@@ -265,18 +272,14 @@ function initLobby() {
     const tapX = e.clientX || (rect.left + rect.width / 2);
     const tapY = e.clientY || rect.top;
 
-    // Target mouth position
     const mouthX = cardRect.left + cardRect.width / 2;
     const mouthY = cardRect.top + cardRect.height * 0.45;
 
-    // Shoot flying fish stream into mouth
     shootFlyingFood(tapX, tapY, mouthX, mouthY);
 
-    // Floating deltas
     spawnTapParticle(tapX - 25, tapY - 10, '+0.02 DLP', '#00D4FF');
     spawnTapParticle(tapX + 25, tapY, '-' + s.feedCost + ' 🐟', '#6BE35A');
 
-    // Progress Level Update
     let newProgress = s.feedProgress + 1;
     let newLevel = s.level;
 
@@ -333,9 +336,11 @@ function spawnTapParticle(x, y, text, color) {
   setTimeout(() => el.remove(), 750);
 }
 
-// --- 8. 7x7 MERGE-2 BOARD & EGG CRACKING ---
+// --- 8. 7x7 MERGE-2 BOARD (TOUCH DRAG-AND-DROP + TAP SELECTION) ---
 const lockedCorners = [0, 6, 42, 48];
 let selectedCellIndex = null;
+let draggedIndex = null;
+let ghostDragEl = null;
 
 function initMergeBoard() {
   const gridEl = document.getElementById('mergeGrid');
@@ -343,7 +348,7 @@ function initMergeBoard() {
 
   const s = GameStore.state;
   for (let i = 0; i < 49; i++) {
-    if (!lockedCorners.includes(i) && Math.random() < 0.25 && !s.grid[i]) {
+    if (!lockedCorners.includes(i) && Math.random() < 0.28 && !s.grid[i]) {
       s.grid[i] = {
         level: Math.floor(Math.random() * 3) + 1,
         type: Math.random() < 0.3 ? 'heart' : 'pearl'
@@ -352,6 +357,7 @@ function initMergeBoard() {
   }
 
   renderMergeGrid();
+  setupPointerDrag();
 
   document.getElementById('btnAutoMerge')?.addEventListener('click', autoMergeGrid);
   document.getElementById('btnSpawnPearl')?.addEventListener('click', spawnPearlToBoard);
@@ -395,6 +401,76 @@ function renderMergeGrid() {
   }
 }
 
+// True Touch / Pointer Dragging Logic
+function setupPointerDrag() {
+  const gridEl = document.getElementById('mergeGrid');
+  if (!gridEl) return;
+
+  gridEl.addEventListener('pointerdown', (e) => {
+    const cell = e.target.closest('.grid-cell');
+    if (!cell) return;
+    const idx = parseInt(cell.dataset.index);
+    if (isNaN(idx) || lockedCorners.includes(idx)) return;
+    const s = GameStore.state;
+    if (!s.grid[idx]) return;
+
+    draggedIndex = idx;
+    const item = s.grid[idx];
+
+    // Create ghost floating drag element
+    ghostDragEl = document.createElement('img');
+    ghostDragEl.src = item.type === 'heart' ? `assets/heart_egg_lvl${item.level}.png` : `assets/pearl_egg_lvl${item.level}.png`;
+    ghostDragEl.style.position = 'fixed';
+    ghostDragEl.style.width = '50px';
+    ghostDragEl.style.height = '50px';
+    ghostDragEl.style.pointerEvents = 'none';
+    ghostDragEl.style.zIndex = '5000';
+    ghostDragEl.style.transform = 'translate(-50%, -50%) scale(1.18)';
+    ghostDragEl.style.left = e.clientX + 'px';
+    ghostDragEl.style.top = e.clientY + 'px';
+    document.body.appendChild(ghostDragEl);
+
+    cell.style.opacity = '0.3';
+    haptic('light');
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!ghostDragEl) return;
+    ghostDragEl.style.left = e.clientX + 'px';
+    ghostDragEl.style.top = e.clientY + 'px';
+
+    // Highlight hovered cell
+    document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('drag-over'));
+    const hoveredEl = document.elementFromPoint(e.clientX, e.clientY);
+    const targetCell = hoveredEl?.closest('.grid-cell');
+    if (targetCell) targetCell.classList.add('drag-over');
+  });
+
+  window.addEventListener('pointerup', (e) => {
+    if (draggedIndex === null) return;
+    if (ghostDragEl) {
+      ghostDragEl.remove();
+      ghostDragEl = null;
+    }
+
+    document.querySelectorAll('.grid-cell').forEach(c => {
+      c.style.opacity = '1';
+      c.classList.remove('drag-over');
+    });
+
+    const hoveredEl = document.elementFromPoint(e.clientX, e.clientY);
+    const targetCell = hoveredEl?.closest('.grid-cell');
+    if (targetCell) {
+      const targetIdx = parseInt(targetCell.dataset.index);
+      if (!isNaN(targetIdx) && targetIdx !== draggedIndex && !lockedCorners.includes(targetIdx)) {
+        performMergeOrMove(draggedIndex, targetIdx);
+      }
+    }
+
+    draggedIndex = null;
+  });
+}
+
 function handleCellClick(idx) {
   const s = GameStore.state;
   if (lockedCorners.includes(idx)) return;
@@ -414,30 +490,37 @@ function handleCellClick(idx) {
       renderMergeGrid();
       return;
     }
+    performMergeOrMove(selectedCellIndex, idx);
+    selectedCellIndex = null;
+  }
+}
 
-    const source = s.grid[selectedCellIndex];
-    const target = s.grid[idx];
+function performMergeOrMove(fromIdx, toIdx) {
+  const s = GameStore.state;
+  const source = s.grid[fromIdx];
+  const target = s.grid[toIdx];
 
-    if (source && target && source.type === target.type && source.level === target.level && source.level < 12) {
-      audio.play('merge');
-      haptic('heavy');
-      target.level += 1;
-      s.grid[selectedCellIndex] = null;
-      selectedCellIndex = null;
-      GameStore.update({ shells: s.shells + 5, combo: s.combo + 1 });
-      showToast(`Merged Level ${target.level} Pearl! (+5 Shells)`, '✨');
-      renderMergeGrid();
-    } else if (source && !target) {
-      s.grid[idx] = source;
-      s.grid[selectedCellIndex] = null;
-      selectedCellIndex = null;
-      haptic('light');
-      renderMergeGrid();
-    } else {
-      selectedCellIndex = idx;
-      haptic('light');
-      renderMergeGrid();
-    }
+  if (!source) return;
+
+  if (target && source.type === target.type && source.level === target.level && source.level < 12) {
+    // Merge-2 Success!
+    const now = Date.now();
+    let combo = (now - s.lastMergeTime < 2500) ? s.combo + 1 : 1;
+    audio.play('merge', combo);
+    haptic('heavy');
+
+    target.level += 1;
+    s.grid[fromIdx] = null;
+    GameStore.update({ shells: s.shells + 5, combo: combo, lastMergeTime: now });
+    showToast(`Merged Level ${target.level} Pearl! (Combo x${combo})`, '✨');
+    renderMergeGrid();
+  } else if (!target) {
+    s.grid[toIdx] = source;
+    s.grid[fromIdx] = null;
+    haptic('light');
+    renderMergeGrid();
+  } else {
+    renderMergeGrid();
   }
 }
 
@@ -457,7 +540,7 @@ function autoMergeGrid() {
     }
   }
   if (mergedAny) {
-    audio.play('merge');
+    audio.play('merge', 2);
     haptic('heavy');
     showToast('Auto-Merge complete!', '⚡');
     renderMergeGrid();
@@ -489,7 +572,7 @@ function spawnPearlToBoard() {
   renderMergeGrid();
 }
 
-// --- 9. EGG CRACK RITUAL MODAL ---
+// --- 9. 5-STAGE DRAMATIC EGG CRACKING RITUAL MODAL ---
 let activeCrackEgg = null;
 let activeCrackIndex = null;
 
@@ -503,6 +586,7 @@ function openCrackModal(egg, idx) {
 
   const isHeart = egg.type === 'heart';
   img.src = isHeart ? `assets/heart_egg_lvl${egg.level}.png` : `assets/pearl_egg_lvl${egg.level}.png`;
+  img.classList.remove('shake');
   title.innerText = `LEVEL ${egg.level} ${isHeart ? 'HEART PEARL' : 'PEARL'}`;
   
   const fishYield = egg.level * 25000;
@@ -514,27 +598,31 @@ function openCrackModal(egg, idx) {
 
 function executeCrackEgg() {
   if (!activeCrackEgg || activeCrackIndex === null) return;
+  const img = document.getElementById('crackEggImg');
+  img.classList.add('shake');
   audio.play('crack');
   haptic('heavy');
 
-  const egg = activeCrackEgg;
-  const idx = activeCrackIndex;
-  const s = GameStore.state;
+  setTimeout(() => {
+    const egg = activeCrackEgg;
+    const idx = activeCrackIndex;
+    const s = GameStore.state;
 
-  if (egg.type === 'heart') {
-    GameStore.update({ hearts: s.hearts + egg.level * 2 });
-    showToast(`Cracked! Claimed +${egg.level * 2} Love Hearts ❤️`, '🎉');
-  } else {
-    GameStore.update({ fish: s.fish + egg.level * 25000 });
-    showToast(`Cracked! Claimed +${(egg.level * 25000).toLocaleString()} 🐟 Fish Food`, '🎉');
-  }
+    if (egg.type === 'heart') {
+      GameStore.update({ hearts: s.hearts + egg.level * 2 });
+      showToast(`CRACKED! +${egg.level * 2} Love Hearts ❤️`, '🎉');
+    } else {
+      GameStore.update({ fish: s.fish + egg.level * 25000 });
+      showToast(`CRACKED! +${(egg.level * 25000).toLocaleString()} 🐟 Fish Food`, '🎉');
+    }
 
-  s.grid[idx] = null;
-  activeCrackEgg = null;
-  activeCrackIndex = null;
-  closeAllModals();
-  renderMergeGrid();
-  audio.play('fanfare');
+    s.grid[idx] = null;
+    activeCrackEgg = null;
+    activeCrackIndex = null;
+    closeAllModals();
+    renderMergeGrid();
+    audio.play('fanfare');
+  }, 450);
 }
 
 // --- 10. LIVE CANVAS PRICE GRAPH (MARKET) ---
@@ -557,7 +645,7 @@ function initMarketChart() {
   ctx.clearRect(0, 0, width, height);
 
   const grad = ctx.createLinearGradient(0, 0, 0, height);
-  grad.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+  grad.addColorStop(0, 'rgba(0, 212, 255, 0.45)');
   grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
 
   ctx.beginPath();
@@ -628,7 +716,7 @@ function payWithTelegramStars(item, starsAmount) {
       }
     });
   } else {
-    showToast(`Telegram Stars Payment initiated: ⭐ ${starsAmount}`, '⭐');
+    showToast(`Telegram Stars Payment: ⭐ ${starsAmount}`, '⭐');
   }
 }
 
@@ -668,13 +756,13 @@ function renderEventsCollections() {
     card.innerHTML = `
       <div class="event-header">
         <div>
-          <div style="font-weight:900; font-size:15px; color:#fff;">${ev.name}</div>
+          <div style="font-family:'Fredoka',sans-serif; font-weight:900; font-size:16px; color:#fff;">${ev.name}</div>
           <div style="font-size:11px; color:#9AA0B4;">Requirement: ${ev.slots} Fully-Fed Lv5 Dolphins</div>
         </div>
-        <div style="font-size:11px; color:#FFC933; font-weight:800;">${ev.prize}</div>
+        <div style="font-family:'Fredoka',sans-serif; font-size:12px; color:#FFC933; font-weight:900;">${ev.prize}</div>
       </div>
       <div class="event-slots-tray">${slotsHtml}</div>
-      <button class="cta-btn cta-btn-stake" style="font-size:12px; padding:8px;" onclick="openFeedAddModal('${ev.name}')">
+      <button class="cta-btn cta-btn-stake" style="font-size:12px; padding:9px;" onclick="openFeedAddModal('${ev.name}')">
         FEED & ADD [Lv5+]
       </button>
     `;
