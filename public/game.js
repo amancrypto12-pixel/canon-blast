@@ -10,7 +10,7 @@ const GameStore = {
     level: 5,
     rarity: 'Common',
     feedCost: 150,
-    feedProgress: 5,
+    feedProgress: 3,
     feedMax: 5,
     activeSlot: 0,
     slots: [
@@ -65,14 +65,16 @@ class SoundEngine {
     osc.connect(gain);
     gain.connect(this.ctx.destination);
 
-    if (type === 'tap' || type === 'quack') {
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(450, now);
-      osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+    if (type === 'tap' || type === 'quack' || type === 'eat') {
+      // Formant synthesis for creature whistle / quack
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, now);
+      osc.frequency.exponentialRampToValueAtTime(1400, now + 0.04);
+      osc.frequency.exponentialRampToValueAtTime(300, now + 0.09);
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
       osc.start(now);
-      osc.stop(now + 0.08);
+      osc.stop(now + 0.09);
     } else if (type === 'merge') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(520, now);
@@ -83,9 +85,9 @@ class SoundEngine {
       osc.stop(now + 0.12);
     } else if (type === 'crack') {
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(120, now);
-      osc.frequency.exponentialRampToValueAtTime(40, now + 0.18);
-      gain.gain.setValueAtTime(0.4, now);
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(30, now + 0.18);
+      gain.gain.setValueAtTime(0.45, now);
       gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
       osc.start(now);
       osc.stop(now + 0.18);
@@ -97,17 +99,32 @@ class SoundEngine {
         g.connect(this.ctx.destination);
         o.type = 'sine';
         o.frequency.value = freq;
-        g.gain.setValueAtTime(0.15, now + idx * 0.08);
-        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
+        g.gain.setValueAtTime(0.18, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.22);
         o.start(now + idx * 0.08);
-        o.stop(now + idx * 0.08 + 0.2);
+        o.stop(now + idx * 0.08 + 0.22);
       });
     }
   }
 }
 const audio = new SoundEngine();
 
-// --- 3. TELEGRAM INTEGRATION & HAPTICS ---
+// --- 3. TOAST NOTIFICATIONS (NO BROWSER ALERTS) ---
+function showToast(text, icon = '✨') {
+  let toast = document.getElementById('gameToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'gameToast';
+    toast.className = 'game-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+// --- 4. TELEGRAM INTEGRATION & HAPTICS ---
 function initTelegram() {
   if (window.Telegram?.WebApp) {
     const tg = window.Telegram.WebApp;
@@ -134,7 +151,7 @@ function haptic(type = 'light') {
   } catch (e) {}
 }
 
-// --- 4. PIXIJS BACKGROUND PARTICLES ENGINE ---
+// --- 5. PIXIJS BACKGROUND PARTICLES ENGINE ---
 function initPixiEngine() {
   const container = document.getElementById('pixi-canvas-container');
   if (!container || typeof PIXI === 'undefined') return;
@@ -181,7 +198,54 @@ function initPixiEngine() {
   });
 }
 
-// --- 5. LOBBY HERO & TAP FEED LOGIC ---
+// --- 6. FLYING FOOD PARTICLES STREAM (FISH -> MOUTH) ---
+function shootFlyingFood(startX, startY, targetX, targetY) {
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      const el = document.createElement('img');
+      el.className = 'flying-food';
+      el.src = 'assets/icon_user_fish.png';
+      el.style.left = startX + 'px';
+      el.style.top = startY + 'px';
+      document.body.appendChild(el);
+
+      const startTime = performance.now();
+      const duration = 320; // ms
+
+      // Random curve offset
+      const midX = (startX + targetX) / 2 + (Math.random() - 0.5) * 60;
+      const midY = Math.min(startY, targetY) - 50 - Math.random() * 30;
+
+      function animateFrame(now) {
+        const t = Math.min((now - startTime) / duration, 1);
+        // Quadratic Bezier curve
+        const curX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * targetX;
+        const curY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midY + t * t * targetY;
+        const scale = 1 - t * 0.4;
+
+        el.style.left = curX + 'px';
+        el.style.top = curY + 'px';
+        el.style.transform = `scale(${scale}) rotate(${t * 360}deg)`;
+
+        if (t < 1) {
+          requestAnimationFrame(animateFrame);
+        } else {
+          el.remove();
+          // Eating gulp impact
+          audio.play('eat');
+          const sprite = document.getElementById('heroSprite');
+          if (sprite) {
+            sprite.classList.add('eating');
+            setTimeout(() => sprite.classList.remove('eating'), 100);
+          }
+        }
+      }
+      requestAnimationFrame(animateFrame);
+    }, i * 55);
+  }
+}
+
+// --- 7. LOBBY HERO & TAP FEED LOGIC ---
 function initLobby() {
   const heroCard = document.getElementById('heroCard');
   const feedBtn = document.getElementById('feedBtn');
@@ -190,35 +254,72 @@ function initLobby() {
   function handleFeed(e) {
     const s = GameStore.state;
     if (s.fish < s.feedCost) {
-      alert('Not enough Fish! Merge pearls or crack eggs to get more.');
+      showToast('Need 150 Fish! Merge pearls or crack eggs to get more.', '🐟');
       return;
     }
     audio.play('tap');
     haptic('medium');
 
-    // Spring Squish Deformation
-    if (sprite) {
-      sprite.classList.add('squash');
-      setTimeout(() => sprite.classList.remove('squash'), 120);
-    }
+    const rect = feedBtn.getBoundingClientRect();
+    const cardRect = heroCard.getBoundingClientRect();
+    const tapX = e.clientX || (rect.left + rect.width / 2);
+    const tapY = e.clientY || rect.top;
+
+    // Target mouth position
+    const mouthX = cardRect.left + cardRect.width / 2;
+    const mouthY = cardRect.top + cardRect.height * 0.45;
+
+    // Shoot flying fish stream into mouth
+    shootFlyingFood(tapX, tapY, mouthX, mouthY);
 
     // Floating deltas
-    const rect = feedBtn.getBoundingClientRect();
-    const x = e.clientX || (rect.left + rect.width / 2);
-    const y = e.clientY || rect.top;
-    spawnTapParticle(x - 20, y, '+0.02 DLP', '#00D4FF');
-    spawnTapParticle(x + 20, y + 10, '-' + s.feedCost + ' 🐟', '#6BE35A');
+    spawnTapParticle(tapX - 25, tapY - 10, '+0.02 DLP', '#00D4FF');
+    spawnTapParticle(tapX + 25, tapY, '-' + s.feedCost + ' 🐟', '#6BE35A');
+
+    // Progress Level Update
+    let newProgress = s.feedProgress + 1;
+    let newLevel = s.level;
+
+    if (newProgress >= s.feedMax) {
+      newProgress = s.feedMax;
+      audio.play('fanfare');
+      showToast('MAX LEVEL REACHED! READY TO BREED OR STAKE 👑', '🎉');
+    }
 
     GameStore.update({
       dlp: +(s.dlp + 0.02).toFixed(2),
-      fish: s.fish - s.feedCost
+      fish: s.fish - s.feedCost,
+      feedProgress: newProgress,
+      level: newLevel
     });
+
+    updateLevelBar();
   }
 
   if (feedBtn) feedBtn.addEventListener('click', handleFeed);
   if (heroCard) heroCard.addEventListener('click', (e) => {
     if (e.target !== feedBtn && !feedBtn.contains(e.target)) handleFeed(e);
   });
+
+  updateLevelBar();
+}
+
+function updateLevelBar() {
+  const s = GameStore.state;
+  const fill = document.getElementById('levelProgressFill');
+  const label = document.getElementById('levelProgressText');
+  const percent = Math.min((s.feedProgress / s.feedMax) * 100, 100);
+
+  if (fill) fill.style.width = percent + '%';
+  if (label) {
+    if (s.feedProgress >= s.feedMax) {
+      label.innerText = 'MAX (5/5 FEEDS) - READY TO BREED';
+      label.style.color = 'var(--accent-gold)';
+    } else {
+      label.innerText = `LEVEL PROGRESS: ${s.feedProgress}/${s.feedMax} FEEDS`;
+      label.style.color = '#fff';
+    }
+  }
 }
 
 function spawnTapParticle(x, y, text, color) {
@@ -232,16 +333,14 @@ function spawnTapParticle(x, y, text, color) {
   setTimeout(() => el.remove(), 750);
 }
 
-// --- 6. 7x7 MERGE-2 BOARD & EGG CRACKING ---
+// --- 8. 7x7 MERGE-2 BOARD & EGG CRACKING ---
 const lockedCorners = [0, 6, 42, 48];
 let selectedCellIndex = null;
-let draggedCellIndex = null;
 
 function initMergeBoard() {
   const gridEl = document.getElementById('mergeGrid');
   if (!gridEl) return;
 
-  // Initialize initial pearls
   const s = GameStore.state;
   for (let i = 0; i < 49; i++) {
     if (!lockedCorners.includes(i) && Math.random() < 0.25 && !s.grid[i]) {
@@ -254,15 +353,8 @@ function initMergeBoard() {
 
   renderMergeGrid();
 
-  // Auto Merge Tool
-  document.getElementById('btnAutoMerge')?.addEventListener('click', () => {
-    autoMergeGrid();
-  });
-
-  // Spawn Pearl Tool
-  document.getElementById('btnSpawnPearl')?.addEventListener('click', () => {
-    spawnPearlToBoard();
-  });
+  document.getElementById('btnAutoMerge')?.addEventListener('click', autoMergeGrid);
+  document.getElementById('btnSpawnPearl')?.addEventListener('click', spawnPearlToBoard);
 }
 
 function renderMergeGrid() {
@@ -297,7 +389,6 @@ function renderMergeGrid() {
         if (selectedCellIndex === i) cell.classList.add('selected');
       }
 
-      // Merge-2 Click Selection / Tap Mechanism
       cell.addEventListener('click', () => handleCellClick(i));
     }
     gridEl.appendChild(cell);
@@ -316,7 +407,6 @@ function handleCellClick(idx) {
     }
   } else {
     if (selectedCellIndex === idx) {
-      // Tap again on high tier pearl opens Egg Crack Modal
       if (s.grid[idx] && s.grid[idx].level >= 4) {
         openCrackModal(s.grid[idx], idx);
       }
@@ -329,16 +419,15 @@ function handleCellClick(idx) {
     const target = s.grid[idx];
 
     if (source && target && source.type === target.type && source.level === target.level && source.level < 12) {
-      // Merge-2 Success!
       audio.play('merge');
       haptic('heavy');
       target.level += 1;
       s.grid[selectedCellIndex] = null;
       selectedCellIndex = null;
       GameStore.update({ shells: s.shells + 5, combo: s.combo + 1 });
+      showToast(`Merged Level ${target.level} Pearl! (+5 Shells)`, '✨');
       renderMergeGrid();
     } else if (source && !target) {
-      // Move to empty slot
       s.grid[idx] = source;
       s.grid[selectedCellIndex] = null;
       selectedCellIndex = null;
@@ -370,6 +459,7 @@ function autoMergeGrid() {
   if (mergedAny) {
     audio.play('merge');
     haptic('heavy');
+    showToast('Auto-Merge complete!', '⚡');
     renderMergeGrid();
   }
 }
@@ -377,7 +467,7 @@ function autoMergeGrid() {
 function spawnPearlToBoard() {
   const s = GameStore.state;
   if (s.fish < 150) {
-    alert('Need 150 Fish to spawn pearl!');
+    showToast('Need 150 Fish to spawn pearl!', '🐟');
     return;
   }
   const emptyIndices = [];
@@ -385,7 +475,7 @@ function spawnPearlToBoard() {
     if (!lockedCorners.includes(i) && !s.grid[i]) emptyIndices.push(i);
   }
   if (emptyIndices.length === 0) {
-    alert('Board is full! Merge or crack pearls.');
+    showToast('Board is full! Merge or crack pearls.', '⚠️');
     return;
   }
   const targetIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
@@ -399,7 +489,7 @@ function spawnPearlToBoard() {
   renderMergeGrid();
 }
 
-// --- 7. EGG CRACK RITUAL MODAL ---
+// --- 9. EGG CRACK RITUAL MODAL ---
 let activeCrackEgg = null;
 let activeCrackIndex = null;
 
@@ -433,8 +523,10 @@ function executeCrackEgg() {
 
   if (egg.type === 'heart') {
     GameStore.update({ hearts: s.hearts + egg.level * 2 });
+    showToast(`Cracked! Claimed +${egg.level * 2} Love Hearts ❤️`, '🎉');
   } else {
     GameStore.update({ fish: s.fish + egg.level * 25000 });
+    showToast(`Cracked! Claimed +${(egg.level * 25000).toLocaleString()} 🐟 Fish Food`, '🎉');
   }
 
   s.grid[idx] = null;
@@ -445,7 +537,7 @@ function executeCrackEgg() {
   audio.play('fanfare');
 }
 
-// --- 8. LIVE CANVAS PRICE GRAPH (MARKET) ---
+// --- 10. LIVE CANVAS PRICE GRAPH (MARKET) ---
 function initMarketChart() {
   const canvas = document.getElementById('priceChartCanvas');
   if (!canvas) return;
@@ -453,7 +545,6 @@ function initMarketChart() {
   const width = canvas.width = canvas.parentElement.clientWidth || 360;
   const height = canvas.height = 120;
 
-  // Draw smooth bezier price curve
   const points = [
     { x: 0, y: 80 },
     { x: width * 0.2, y: 65 },
@@ -465,7 +556,6 @@ function initMarketChart() {
 
   ctx.clearRect(0, 0, width, height);
 
-  // Gradient fill under curve
   const grad = ctx.createLinearGradient(0, 0, 0, height);
   grad.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
   grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
@@ -484,7 +574,6 @@ function initMarketChart() {
   ctx.fillStyle = grad;
   ctx.fill();
 
-  // Stroke line
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
   for (let i = 1; i < points.length; i++) {
@@ -498,12 +587,13 @@ function initMarketChart() {
   ctx.stroke();
 }
 
-// --- 9. REAL PLAYER SHARED BREEDING ROOM ---
+// --- 11. REAL PLAYER SHARED BREEDING ROOM ---
 function initBreeding() {
   document.getElementById('btnCreateRoom')?.addEventListener('click', () => {
     const roomId = 'REEF-' + Math.floor(1000 + Math.random() * 9000);
     GameStore.update({ breedingRoom: roomId });
     document.getElementById('roomStatusText').innerText = 'Room Created: ' + roomId + ' (Waiting for partner)';
+    showToast('Breeding Room Created: ' + roomId, '💖');
     haptic('medium');
   });
 
@@ -520,12 +610,12 @@ function initBreeding() {
   document.getElementById('btnStartIncubation')?.addEventListener('click', () => {
     audio.play('fanfare');
     haptic('heavy');
-    alert('Breeding Incubation started with partner! Cooldown: 6 Hours.');
+    showToast('Incubation started with partner! Cooldown: 6h', '🐣');
     closeAllModals();
   });
 }
 
-// --- 10. TELEGRAM STARS PAYMENT FLOW ---
+// --- 12. TELEGRAM STARS PAYMENT FLOW ---
 function payWithTelegramStars(item, starsAmount) {
   haptic('medium');
   const invoiceUrl = `https://t.me/$invoice?item=${encodeURIComponent(item)}&stars=${starsAmount}`;
@@ -533,17 +623,16 @@ function payWithTelegramStars(item, starsAmount) {
     window.Telegram.WebApp.openInvoice(invoiceUrl, (status) => {
       if (status === 'paid') {
         audio.play('fanfare');
-        alert(`Payment successful for ${item}!`);
+        showToast(`Payment successful for ${item}!`, '⭐');
         GameStore.update({ stars: GameStore.state.stars + starsAmount });
       }
     });
   } else {
-    // Fallback in testing
-    alert(`Telegram Stars Payment initiated for ${item} (⭐ ${starsAmount}).`);
+    showToast(`Telegram Stars Payment initiated: ⭐ ${starsAmount}`, '⭐');
   }
 }
 
-// --- 11. 32 EVENT COLLECTIONS RENDERER ---
+// --- 13. 32 EVENT COLLECTIONS RENDERER ---
 const eventsList = [
   { code: 'spring_cruise', name: 'Spring Cruise', slots: 8, prize: '125,000 🐟 + ⭐ 250' },
   { code: 'jolly_roger', name: 'Jolly Roger Pirate', slots: 6, prize: '350,000 🐟 + ⭐ 500' },
@@ -599,7 +688,7 @@ function openFeedAddModal(eventName) {
   haptic('medium');
 }
 
-// --- 12. TAB ROUTER & NAVIGATION ---
+// --- 14. TAB ROUTER & NAVIGATION ---
 function initRouter() {
   const tabs = document.querySelectorAll('.nav-tab');
   const pages = document.querySelectorAll('.tab-content');
@@ -620,7 +709,7 @@ function initRouter() {
   });
 }
 
-// --- 13. MODAL CONTROLS ---
+// --- 15. MODAL CONTROLS ---
 function closeAllModals() {
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
 }
@@ -633,14 +722,12 @@ window.addEventListener('DOMContentLoaded', () => {
   initBreeding();
   initRouter();
 
-  // Sync Store to DOM
   GameStore.subscribe((s) => {
     document.getElementById('top-fish').innerText = s.fish.toLocaleString();
     document.getElementById('top-stars').innerText = s.stars.toLocaleString();
     document.getElementById('hero-dlp-val').innerText = s.dlp.toFixed(2);
   });
 
-  // Modal open buttons
   document.getElementById('btnOpenPackModal')?.addEventListener('click', () => {
     document.getElementById('modalPack').classList.add('active');
     haptic('medium');
@@ -661,7 +748,6 @@ window.addEventListener('DOMContentLoaded', () => {
     haptic('medium');
   });
 
-  // Close modals
   document.querySelectorAll('.modal-close-btn').forEach(btn => {
     btn.addEventListener('click', closeAllModals);
   });

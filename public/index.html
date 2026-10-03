@@ -65,6 +65,17 @@
           </div>
         </div>
 
+        <!-- LIQUID LEVEL PROGRESS BAR -->
+        <div class="level-progress-container">
+          <div class="level-progress-labels">
+            <span id="levelProgressText" style="color:#fff; font-size:10px; font-weight:800;">LEVEL PROGRESS: 3/5 FEEDS</span>
+            <span style="color:var(--accent-gold); font-size:10px; font-weight:800;">LVL 5 REWARD +0.10 DLP/HR</span>
+          </div>
+          <div class="level-progress-track">
+            <div class="level-progress-fill" id="levelProgressFill" style="width: 60%;"></div>
+          </div>
+        </div>
+
         <!-- 540x760 HERO STAGE CARD -->
         <div class="hero-stage-card" id="heroCard">
           <div class="card-top-row">
@@ -186,7 +197,7 @@
             <button class="cta-btn cta-btn-stake" style="font-size:12px; padding:10px;" onclick="payWithTelegramStars('Epic Dolphin', 250)">
               BUY ⭐ 250
             </button>
-            <button class="cta-btn cta-btn-breed" style="font-size:12px; padding:10px;" onclick="alert('Purchased with 100,000 Fish!')">
+            <button class="cta-btn cta-btn-breed" style="font-size:12px; padding:10px;" onclick="showToast('Purchased with 100,000 Fish!', '🐟')">
               BUY 100K 🐟
             </button>
           </div>
@@ -209,21 +220,21 @@
               <div style="font-weight:800; font-size:13px; color:#fff;">Feed Dolphin 70 Times</div>
               <div style="font-size:11px; color:var(--accent-gold);">Reward: +50,000 🐟 Fish</div>
             </div>
-            <button class="task-btn" onclick="alert('Claimed +50,000 Fish!')">CLAIM</button>
+            <button class="task-btn" onclick="showToast('Claimed +50,000 Fish!', '🐟')">CLAIM</button>
           </div>
           <div class="task-item">
             <div>
               <div style="font-weight:800; font-size:13px; color:#fff;">Merge 70 Pearls on Board</div>
               <div style="font-size:11px; color:var(--accent-gold);">Reward: ⭐ 25 Stars</div>
             </div>
-            <button class="task-btn" onclick="alert('Claimed ⭐ 25 Stars!')">CLAIM</button>
+            <button class="task-btn" onclick="showToast('Claimed ⭐ 25 Stars!', '⭐')">CLAIM</button>
           </div>
           <div class="task-item">
             <div>
               <div style="font-weight:800; font-size:13px; color:#fff;">Crack 10 Love Heart Eggs</div>
               <div style="font-size:11px; color:var(--accent-gold);">Reward: +10 ❤️ Hearts & Tier 7 Pearl</div>
             </div>
-            <button class="task-btn" onclick="alert('Claimed +10 Hearts!')">CLAIM</button>
+            <button class="task-btn" onclick="showToast('Claimed +10 Hearts!', '❤️')">CLAIM</button>
           </div>
         </div>
       </section>
@@ -263,7 +274,7 @@
           <div style="font-size:11px; color:var(--accent-gold); font-weight:800;">DAILY CLAN HARVEST READY</div>
           <div style="font-size:16px; font-weight:900; color:#fff; margin-top:2px;">+50,000 🐟 Fish Food</div>
         </div>
-        <button class="cta-btn cta-btn-stake" onclick="alert('Claimed +50,000 Clan Harvest!'); closeAllModals();">
+        <button class="cta-btn cta-btn-stake" onclick="showToast('Claimed +50,000 Clan Harvest!', '🐟'); closeAllModals();">
           CLAIM DAILY HARVEST
         </button>
       </div>
@@ -321,7 +332,7 @@
         <div style="font-weight:900; font-size:18px; color:var(--accent-gold);">🎡 TIDE WHEEL OF FORTUNE</div>
         <div style="font-size:12px; color:var(--text-muted);">Spin for Gold, Wheel Tokens & Ocean God Shards</div>
         <div style="font-size:48px; margin:16px 0;">🎯</div>
-        <button class="cta-btn cta-btn-stake" style="width:100%;" onclick="alert('Won 1,500 Gold + Tier 4 Pearl!'); closeAllModals();">
+        <button class="cta-btn cta-btn-stake" style="width:100%;" onclick="showToast('Won 1,500 Gold + Tier 4 Pearl!', '🏆'); closeAllModals();">
           SPIN NOW (1 TOKEN)
         </button>
       </div>
@@ -340,7 +351,7 @@
             <div style="font-size:11px; color:var(--fish-green);">Status: Fully-Fed (5/5)</div>
           </div>
         </div>
-        <button class="cta-btn cta-btn-stake" onclick="alert('Dolphin added to collection! Claimed +125,000 Fish & ⭐ 250 Stars!'); closeAllModals();">
+        <button class="cta-btn cta-btn-stake" onclick="showToast('Added to collection! Claimed +125K Fish & ⭐ 250 Stars!', '🎉'); closeAllModals();">
           DEPOSIT & CLAIM REWARD
         </button>
       </div>
