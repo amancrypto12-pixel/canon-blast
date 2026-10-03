@@ -653,7 +653,10 @@
           </div>
 
           <button class="btn-feed-action" id="btnFeedGoblin" onclick="tapHeroGoblin(event)">
-            <div>TAP TO FEED (-80 🍖)</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span>TAP TO FEED</span>
+              <span style="font-size: 13px; color: #fef08a;">(-144 🍖)</span>
+            </div>
             <div class="btn-feed-action-sub" id="feedResetText">RESET IN 06:02:39</div>
           </button>
 
@@ -968,17 +971,18 @@
     }
 
     function tapHeroGoblin(e) {
-      if (gameState.meat < 80) {
-        showToast('❌ Need 80 🍖 to feed goblin!');
+      const feedCost = currentGoblinIndex === 4 ? 144 : 80;
+      if (gameState.meat < feedCost) {
+        showToast(`❌ Need ${feedCost} 🍖 to feed goblin!`);
         return;
       }
-      gameState.meat -= 80;
+      gameState.meat -= feedCost;
       gameState.tokens = Math.round((gameState.tokens + 0.02) * 100) / 100;
       playSound('tap');
       haptic('light');
       updateUI();
 
-      // DUAL FLOATING NUMBERS (+0.02 🪙 and -80 🍖)
+      // DUAL FLOATING NUMBERS (+0.02 🪙 and -144 🍖)
       const posX = e.clientX || (window.innerWidth / 2);
       const posY = e.clientY || (window.innerHeight / 2);
 
@@ -991,7 +995,7 @@
 
       const popCost = document.createElement('div');
       popCost.className = 'pop-number-cost';
-      popCost.innerText = '-80 🍖';
+      popCost.innerText = `-${feedCost} 🍖`;
       popCost.style.left = posX + 'px';
       popCost.style.top = posY + 'px';
       document.body.appendChild(popCost);
