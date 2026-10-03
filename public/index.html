@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Goblin Clan — 100% Duck My Duck Replica</title>
+  <title>Duck My Duck — Official Telegram Mini App Game</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,7 @@
       --bg-card-sub: #12131b;
       --accent-green: #22c55e;
       --accent-gold: #f59e0b;
+      --accent-yellow: #fbbf24;
       --accent-red: #ef4444;
       --accent-purple: #a855f7;
       --accent-pink: #ec4899;
@@ -60,7 +61,7 @@
       opacity: 0.5;
     }
 
-    /* TOP APP HEADER */
+    /* TOP HEADER */
     .app-header {
       display: flex;
       justify-content: space-between;
@@ -133,7 +134,7 @@
       color: var(--text-muted);
     }
 
-    /* VIEWPORT CONTAINER */
+    /* VIEWPORT TABS */
     .tab-viewport {
       flex: 1;
       overflow-y: auto;
@@ -337,7 +338,7 @@
       color: #f87171;
     }
 
-    .btn-sell-goblin {
+    .btn-sell-duck {
       width: 100%;
       background: linear-gradient(180deg, #22c55e, #16a34a);
       border: none;
@@ -352,7 +353,7 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .btn-sell-goblin:active { transform: scale(0.98); }
+    .btn-sell-duck:active { transform: scale(0.98); }
 
     .market-explanation-box {
       background: rgba(59, 130, 246, 0.08);
@@ -365,7 +366,7 @@
       margin-top: 8px;
     }
 
-    /* VIP CHIEFTAIN PASS */
+    /* VIP DUCKER PASS */
     .vip-promo-card {
       background: linear-gradient(135deg, #2c1b4d, #1a1733);
       border: 1px solid #a855f7;
@@ -379,7 +380,7 @@
     }
 
     /* =========================================
-       TAB 2: EGGS (7x7 GRID & 12 EGG LEVELS)
+       TAB 2: EGGS (7x7 GRID & 12 DUCK EGG LEVELS)
        ========================================= */
     .incubator-bar {
       display: grid;
@@ -482,7 +483,7 @@
     }
 
     /* =========================================
-       TAB 3: GOBLINS (HERO STAGE & 12 RANKS)
+       TAB 3: DUCKS (HERO STAGE & 12 DUCK RANKS)
        ========================================= */
     .hero-view-container {
       display: flex;
@@ -539,7 +540,7 @@
       bottom: 8px;
       width: 140px;
       height: 28px;
-      background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.4) 0%, rgba(34, 197, 94, 0) 70%);
+      background: radial-gradient(ellipse at center, rgba(251, 191, 36, 0.4) 0%, rgba(251, 191, 36, 0) 70%);
       border-radius: 50%;
       pointer-events: none;
     }
@@ -636,7 +637,7 @@
     .btn-side-action:active { transform: scale(0.96); }
 
     /* =========================================
-       TAB 4: GODS (TOTEMS & TON WALLET)
+       TAB 4: GODS (DUCKY GODS & TON WALLET)
        ========================================= */
     .god-card {
       background: linear-gradient(180deg, #231633, #151624);
@@ -708,7 +709,6 @@
       color: #000;
     }
 
-    /* SLOTTED COLLECTION TRAY (EXACT TO VIDEO OCR) */
     .collection-set-card {
       background: var(--bg-card);
       border: 1px solid var(--border-dark);
@@ -859,7 +859,7 @@
       filter: drop-shadow(0 2px 8px rgba(34, 197, 94, 0.6));
     }
 
-    /* TAP POPUP NUMBER */
+    /* POP NUMBER */
     .pop-number {
       position: absolute;
       font-weight: 900;
@@ -962,8 +962,8 @@
     </div>
     <div class="header-resources">
       <div class="resource-pill">
-        <img src="assets/icon_meat_hd.png" alt="Meat">
-        <span id="headerMeat">92,935</span>
+        <img src="assets/icon_corn_hd.png" alt="Corn">
+        <span id="headerCorn">92,935</span>
       </div>
       <div class="resource-pill">
         <img src="assets/icon_heart_gem_hd.png" alt="Hearts">
@@ -984,12 +984,12 @@
          ========================================= -->
     <div id="tab-market" class="tab-page active">
       <div class="market-subnav-toggle">
-        <div class="market-toggle-btn active" id="mktToggleGoblins" onclick="setMarketSub('goblins')">GOBLINS</div>
+        <div class="market-toggle-btn active" id="mktToggleDucks" onclick="setMarketSub('ducks')">DUCKS</div>
         <div class="market-toggle-btn" id="mktToggleGods" onclick="setMarketSub('gods')">GODS</div>
       </div>
 
-      <!-- GOBLIN MARKET VIEW -->
-      <div id="market-view-goblins">
+      <!-- DUCKS MARKET VIEW -->
+      <div id="market-view-ducks">
         <div class="market-filters-strip">
           <div class="market-filter-pill active" onclick="setFilter('uncommon', this)">UNCOMMON</div>
           <div class="market-filter-pill" onclick="setFilter('rare', this)">RARE</div>
@@ -1005,7 +1005,7 @@
           </div>
 
           <div class="market-sprite-box">
-            <img src="assets/goblin_lvl2.png" id="marketHeroSprite" alt="Market Goblin">
+            <img src="assets/duck_lvl2.png" id="marketHeroSprite" alt="Market Duck">
           </div>
 
           <div class="card-owner-handle" id="mktOwnerHandle">@BATARD_MONTRACHET</div>
@@ -1013,25 +1013,25 @@
 
           <div class="card-price-display">
             <span id="mktPriceVal">400.0K</span>
-            <img src="assets/icon_meat_hd.png" style="width: 22px; height: 22px;" alt="Meat">
+            <img src="assets/icon_corn_hd.png" style="width: 22px; height: 22px;" alt="Corn">
           </div>
 
           <div class="market-queue-ladder" id="mktQueueList">
             <div class="queue-ladder-item">
-              <span>#1 Goblin #4892 (Lvl 5)</span>
-              <span>160.9K 🍖 <span class="ladder-gain">+7%</span></span>
+              <span>#1 Duck #4892 (Lvl 5)</span>
+              <span>160.9K 🌽 <span class="ladder-gain">+7%</span></span>
             </div>
             <div class="queue-ladder-item">
-              <span>#2 Goblin #5120 (Lvl 5)</span>
-              <span>240.0K 🍖 <span class="ladder-gain">+33%</span></span>
+              <span>#2 Duck #5120 (Lvl 5)</span>
+              <span>240.0K 🌽 <span class="ladder-gain">+33%</span></span>
             </div>
             <div class="queue-ladder-item">
-              <span>#3 Goblin #7891 (Lvl 6)</span>
-              <span>400.0K 🍖 <span class="ladder-gain">+33%</span></span>
+              <span>#3 Duck #7891 (Lvl 6)</span>
+              <span>400.0K 🌽 <span class="ladder-gain">+33%</span></span>
             </div>
             <div class="queue-ladder-item">
-              <span>#4 Goblin #8902 (Lvl 7)</span>
-              <span>432.7K 🍖 <span class="ladder-gain">+15%</span></span>
+              <span>#4 Duck #8902 (Lvl 7)</span>
+              <span>432.7K 🌽 <span class="ladder-gain">+15%</span></span>
             </div>
           </div>
 
@@ -1041,21 +1041,21 @@
           </div>
 
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 8px;">
-            <button class="btn-sell-goblin" style="background: linear-gradient(180deg, #3b82f6, #2563eb); border-bottom-color: #1d4ed8;" onclick="buyQueueHead()">BUY QUEUE #1</button>
-            <button class="btn-sell-goblin" onclick="openSellModal()">SELL YOURS</button>
+            <button class="btn-sell-duck" style="background: linear-gradient(180deg, #3b82f6, #2563eb); border-bottom-color: #1d4ed8;" onclick="buyQueueHead()">BUY QUEUE #1</button>
+            <button class="btn-sell-duck" onclick="openSellModal()">SELL YOURS</button>
           </div>
         </div>
 
         <div class="market-explanation-box">
           <strong>PILOT VERSION (FIFO QUEUE)</strong><br>
-          Goblins of each quality are sold on market in a single queue. First in, first out. Prices increase when goblin is purchased or there are no goblins in the queue.
+          Ducks of each quality are sold on market in a single queue. First in, first out. Prices increase when duck is purchased or there are no ducks in the queue.
         </div>
 
         <div class="vip-promo-card" onclick="openVipModal()">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="assets/vip_crown_3d.png" style="width: 38px; height: 38px; object-fit: contain;" alt="VIP">
             <div>
-              <div style="font-weight: 900; font-size: 13px; color: #f59e0b;">VIP CHIEFTAIN PASS</div>
+              <div style="font-weight: 900; font-size: 13px; color: #f59e0b;">VIP DUCKER PASS</div>
               <div style="font-size: 11px; color: var(--text-muted);">Auto-Trader Bot + 2x Daily Bonus</div>
             </div>
           </div>
@@ -1067,9 +1067,9 @@
       <div id="market-view-gods" style="display: none;">
         <div class="god-card" style="margin-top: 6px;">
           <div style="font-size: 11px; color: #a855f7; font-weight: 900; text-transform: uppercase;">LIMITED GOD NFT AUCTION</div>
-          <img src="assets/totem_greed.png" alt="Totem Greed">
-          <div style="font-size: 18px; font-weight: 900; color: #f59e0b;">GOD OF GREED #014</div>
-          <div style="font-size: 12px; color: #22c55e; font-weight: 800; margin: 4px 0;">+100% MEAT MINING</div>
+          <img src="assets/duck_god_statue.png" alt="Duck God">
+          <div style="font-size: 18px; font-weight: 900; color: #f59e0b;">DUCKY GOD OF LOVE #014</div>
+          <div style="font-size: 12px; color: #22c55e; font-weight: 800; margin: 4px 0;">+100% CORN MINING</div>
           <div class="card-price-display" style="justify-content: center; margin: 8px 0;">
             <span>500</span>
             <img src="assets/icon_stars_hd.png" style="width: 22px; height: 22px;" alt="Stars">
@@ -1080,7 +1080,7 @@
     </div>
 
     <!-- =========================================
-         TAB 2: EGGS (7x7 GRID & 12 EGG LEVELS)
+         TAB 2: EGGS (7x7 GRID & 12 DUCK EGG LEVELS)
          ========================================= -->
     <div id="tab-eggs" class="tab-page">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -1090,21 +1090,21 @@
 
       <div class="incubator-bar">
         <div class="incubator-slot ready" onclick="collectIncubator(0)">
-          <img src="assets/egg_lvl1.png" alt="Incubator Egg">
+          <img src="assets/duck_egg_lvl1.png" alt="Incubator Egg">
           <span class="incubator-tag" id="incTag0">READY!</span>
         </div>
         <div class="incubator-slot" onclick="collectIncubator(1)">
-          <img src="assets/egg_lvl3.png" alt="Incubator Egg">
+          <img src="assets/duck_egg_lvl3.png" alt="Incubator Egg">
           <span class="incubator-tag" style="color: #f59e0b;" id="incTag1">03:45</span>
         </div>
         <div class="incubator-slot" onclick="collectIncubator(2)">
-          <img src="assets/egg_lvl7.png" alt="Incubator Egg">
+          <img src="assets/duck_egg_lvl7.png" alt="Incubator Egg">
           <span class="incubator-tag" style="color: var(--text-muted);" id="incTag2">LOCKED</span>
         </div>
       </div>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin: 4px 0;">
-        <span style="font-weight: 900; color: #22c55e; font-size: 13px;">7×7 RELIC MATRIX (12 EGG TIERS)</span>
+        <span style="font-weight: 900; color: #22c55e; font-size: 13px;">7×7 DUCK MATRIX (12 EGG TIERS)</span>
         <span style="font-size: 11px; color: var(--text-muted);" id="matrixCount">28 / 49 SLOTS</span>
       </div>
 
@@ -1112,28 +1112,28 @@
       <div class="grid-7x7" id="mergeGrid49"></div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 6px;">
-        <button class="btn-side-action" onclick="spawnEgg()">🥚 SPAWN (-50 🍖)</button>
+        <button class="btn-side-action" onclick="spawnEgg()">🥚 SPAWN (-50 🌽)</button>
         <button class="btn-side-action" style="background: #22c55e; color: #000; border: none; font-weight: 900;" onclick="autoMerge()">⚡ AUTO-MERGE</button>
         <button class="btn-side-action" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none; font-weight: 900;" onclick="crackRandomEgg()">🔨 CRACK</button>
       </div>
     </div>
 
     <!-- =========================================
-         TAB 3: GOBLINS (HERO STAGE & 12 RANKS)
+         TAB 3: DUCKS (HERO STAGE & 12 DUCK RANKS)
          ========================================= -->
     <div id="tab-goblins" class="tab-page">
       <div class="hero-view-container">
         <div class="hero-stat-card">
-          <div class="hero-nav-arrow left" onclick="prevGoblin()">◀</div>
+          <div class="hero-nav-arrow left" onclick="prevDuck()">◀</div>
           <div style="color: #22c55e; font-weight: 800; font-size: 11px; text-transform: uppercase;" id="heroRarity">~ UNCOMMON</div>
-          <div style="font-size: 20px; font-weight: 900;" id="heroName">GOBLIN SCOUT</div>
+          <div style="font-size: 20px; font-weight: 900;" id="heroName">PIRATE DUCK</div>
           <div style="font-size: 11px; color: var(--text-muted);" id="heroStats">LVL 4 XL • 12 QDD MINING</div>
-          <div class="hero-nav-arrow right" onclick="nextGoblin()">▶</div>
+          <div class="hero-nav-arrow right" onclick="nextDuck()">▶</div>
         </div>
 
-        <div class="hero-avatar-box" onclick="tapHero(event)">
+        <div class="hero-avatar-box" onclick="tapDuck(event)">
           <div class="hero-pedestal-glow"></div>
-          <img src="assets/goblin_lvl2.png" id="heroSprite" alt="Goblin Hero">
+          <img src="assets/duck_lvl2.png" id="heroSprite" alt="Duck Hero">
         </div>
 
         <div class="energy-bar-wrap">
@@ -1147,8 +1147,8 @@
         </div>
 
         <div class="hero-controls">
-          <button class="btn-feed-action" onclick="tapHero(event)">
-            TAP TO FEED (-25 🍖)
+          <button class="btn-feed-action" onclick="tapDuck(event)">
+            TAP TO FEED (-25 🌽)
           </button>
           <div class="hero-dual-actions">
             <button class="btn-side-action" style="background: linear-gradient(135deg, #ec4899, #db2777); border: none; font-weight: 900;" onclick="openBreedingModal()">💖 BREED (<span id="breedCount">4/5</span>)</button>
@@ -1159,7 +1159,7 @@
     </div>
 
     <!-- =========================================
-         TAB 4: GODS (TOTEMS & TON WALLET)
+         TAB 4: GODS (DUCKY GODS & TON WALLET)
          ========================================= -->
     <div id="tab-gods" class="tab-page">
       <div class="gods-carousel-tabs">
@@ -1170,8 +1170,8 @@
 
       <div class="god-card" id="godMainCard">
         <div style="font-size: 11px; color: #a855f7; font-weight: 900; text-transform: uppercase;" id="godTitle">LOVE GOD (NFT LVL 7-97)</div>
-        <img src="assets/totem_fertility.png" id="godTotemImg" alt="God Totem">
-        <div style="font-size: 16px; font-weight: 900; color: #f59e0b;" id="godBonus">FIRST BREEDINGS YIELD UP TO: 8,760 ❤️</div>
+        <img src="assets/duck_god_statue.png" id="godTotemImg" alt="Duck God">
+        <div style="font-size: 16px; font-weight: 900; color: #f59e0b;" id="godBonus">FIRST DUCK BREEDINGS YIELD UP TO: 8,760 ❤️</div>
         <div style="font-size: 11px; color: var(--text-muted); margin: 6px 0;" id="godDesc">Sacrifice Love Hearts to increase permanent breeding rarity luck and energy regen.</div>
         
         <button class="btn-feed-action" style="width: 100%; margin-top: 8px; font-size: 14px;" onclick="upgradeTotem()">
@@ -1202,14 +1202,14 @@
         <div class="task-sub-btn" onclick="setTaskTab('duels', this)">DUELS</div>
       </div>
 
-      <!-- 1. SLOTTED COLLECTIONS TRAYS (EXACT TO VIDEO OCR) -->
+      <!-- 1. SLOTTED COLLECTIONS TRAYS -->
       <div id="sub-collections">
         <!-- COMMON 5+ LVL SET -->
         <div class="collection-set-card">
           <div class="collection-set-header">
             <div>
               <strong style="color: #22c55e; font-size: 13px;">COMMON [5+ LVL] COLLECTION</strong>
-              <div style="font-size: 10px; color: var(--text-muted);">Feed & slot Level 5+ Goblins for instant payout!</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Feed & slot Level 5+ Ducks for instant payout!</div>
             </div>
             <span style="font-size: 11px; font-weight: 900; color: #f59e0b;" id="commonColProgress">3 / 9</span>
           </div>
@@ -1222,7 +1222,7 @@
           <div class="collection-set-header">
             <div>
               <strong style="color: #3b82f6; font-size: 13px;">UNCOMMON [5+ LVL] COLLECTION</strong>
-              <div style="font-size: 10px; color: var(--text-muted);">Slot Level 5+ Uncommon Champions</div>
+              <div style="font-size: 10px; color: var(--text-muted);">Slot Level 5+ Uncommon Ducks</div>
             </div>
             <span style="font-size: 11px; font-weight: 900; color: #f59e0b;" id="uncommonColProgress">1 / 9</span>
           </div>
@@ -1235,7 +1235,7 @@
           <div class="collection-set-header">
             <div>
               <strong style="color: #a855f7; font-size: 13px;">🏆 SEA FELLOWSHIP & FOUR CHALLENGES</strong>
-              <div style="font-size: 10px; color: var(--text-muted);">0 of 51 Collected • Grand Prize: 125.0K 🍖 + God NFT</div>
+              <div style="font-size: 10px; color: var(--text-muted);">0 of 51 Collected • Grand Prize: 125.0K 🌽 + God NFT</div>
             </div>
             <span style="background: rgba(239, 68, 68, 0.2); color: #ef4444; padding: 2px 6px; border-radius: 6px; font-size: 9px; font-weight: 900;">FOURTH PRIZE</span>
           </div>
@@ -1246,7 +1246,7 @@
       <!-- 2. FORTUNE WHEEL -->
       <div id="sub-wheel" style="display: none; text-align: center;">
         <h3 style="font-size: 16px; font-weight: 900;">DUELS FORTUNE WHEEL</h3>
-        <p style="font-size: 11px; color: var(--text-muted); margin: 2px 0 6px;">Spin the wheel to win Goblins, Stars, Meat & Love Gems!</p>
+        <p style="font-size: 11px; color: var(--text-muted); margin: 2px 0 6px;">Spin the wheel to win Ducks, Stars, Corn & Love Gems!</p>
         
         <div class="wheel-container">
           <div class="wheel-needle"></div>
@@ -1259,12 +1259,12 @@
         </button>
       </div>
 
-      <!-- 3. TASKS & ACHIEVEMENTS -->
+      <!-- 3. TASKS -->
       <div id="sub-achieve" style="display: none;">
         <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-size: 12px; font-weight: 800;">Merge Eggs 50 Times [50/50]</div>
-            <div style="font-size: 11px; color: #22c55e; font-weight: 900;">+30,000 🍖</div>
+            <div style="font-size: 11px; color: #22c55e; font-weight: 900;">+30,000 🌽</div>
           </div>
           <button class="btn-side-action" style="background: #22c55e; color: #000; font-weight: 900; padding: 5px 12px;" onclick="claimTaskReward(30000, this)">CLAIM</button>
         </div>
@@ -1272,7 +1272,7 @@
         <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-size: 12px; font-weight: 800;">Reach Tier 12 Celestial Egg</div>
-            <div style="font-size: 11px; color: #a855f7; font-weight: 900;">+25 ❤️ & +500,000 🍖</div>
+            <div style="font-size: 11px; color: #a855f7; font-weight: 900;">+25 ❤️ & +500,000 🌽</div>
           </div>
           <button class="btn-side-action" style="background: #22c55e; color: #000; font-weight: 900; padding: 5px 12px;" onclick="claimTaskReward(500000, this)">CLAIM</button>
         </div>
@@ -1280,7 +1280,7 @@
         <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-size: 12px; font-weight: 800;">Watch Ads & Earn Rewards</div>
-            <div style="font-size: 11px; color: #f59e0b; font-weight: 900;">+5,000 🍖 / Ad</div>
+            <div style="font-size: 11px; color: #f59e0b; font-weight: 900;">+5,000 🌽 / Ad</div>
           </div>
           <button class="btn-side-action" style="background: #3b82f6; color: #fff; font-weight: 900; padding: 5px 12px;" onclick="watchAd()">WATCH</button>
         </div>
@@ -1290,14 +1290,14 @@
       <div id="sub-duels" style="display: none;">
         <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 14px; padding: 12px;">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-            <img src="assets/orc_boss.png" style="width: 44px; height: 44px; object-fit: contain;" alt="Orc Boss">
+            <img src="assets/duck_lvl10.png" style="width: 44px; height: 44px; object-fit: contain;" alt="Dragon Duck">
             <div>
-              <div style="font-weight: 900; font-size: 13px; color: #ef4444;">CLAN RAID DUEL: BLOOD MOON</div>
+              <div style="font-weight: 900; font-size: 13px; color: #ef4444;">TOURNAMENT DUEL: SHADOW FLOCK</div>
               <div style="font-size: 10px; color: var(--text-muted);">Opponent Health: 42,000 / 100,000 HP</div>
             </div>
           </div>
           <button class="btn-feed-action" style="background: linear-gradient(180deg, #ef4444, #b91c1c); border-bottom-color: #991b1b; font-size: 13px; padding: 10px;" onclick="launchRaidAttack()">
-            ⚔️ RAID ATTACK (-100 STAMINA)
+            ⚔️ DUEL ATTACK (-100 STAMINA)
           </button>
         </div>
       </div>
@@ -1316,8 +1316,8 @@
       <span>EGGS</span>
     </div>
     <div class="dock-tab" onclick="switchTab('goblins', this)">
-      <img src="assets/dock_goblin.png" alt="Goblins">
-      <span>GOBLINS</span>
+      <img src="assets/dock_duck.png" alt="Ducks">
+      <span>DUCKS</span>
     </div>
     <div class="dock-tab" onclick="switchTab('gods', this)">
       <img src="assets/dock_gods.png" alt="Gods">
@@ -1329,23 +1329,21 @@
     </div>
   </div>
 
-  <!-- =======================================================
-       MODALS: BREEDING, PACK, SELL, VIP, WALLET & TOAST
-       ======================================================= -->
+  <!-- MODALS -->
   <div class="modal-overlay" id="modalBreeding">
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalBreeding')">✕</div>
-      <h3 style="font-size: 16px; font-weight: 900; color: #ec4899; margin-bottom: 4px;">💖 BREEDING NEST</h3>
-      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Pair your champions to hatch a higher-tier Goblin!</p>
+      <h3 style="font-size: 16px; font-weight: 900; color: #ec4899; margin-bottom: 4px;">💖 DUCK BREEDING NEST</h3>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 12px;">Pair your champions to hatch a higher-tier Duck!</p>
       
       <div style="position: relative; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
         <img src="assets/breeding_nest.png" style="position: absolute; width: 100%; height: 100%; object-fit: contain;" alt="Nest">
-        <img src="assets/egg_lvl11.png" id="breedingEggSprite" style="position: relative; width: 65px; height: 65px; object-fit: contain; z-index: 5;" alt="Egg">
+        <img src="assets/duck_egg_lvl11.png" id="breedingEggSprite" style="position: relative; width: 65px; height: 65px; object-fit: contain; z-index: 5;" alt="Egg">
       </div>
 
       <div id="breedingResultBox" style="display: none; text-align: center; margin-bottom: 10px;">
         <div style="font-size: 12px; font-weight: 900; color: #22c55e;" id="breedResultRarity">~ RARE HATCH!</div>
-        <div style="font-size: 18px; font-weight: 900;" id="breedResultName">ARMORED WARRIOR #9102</div>
+        <div style="font-size: 18px; font-weight: 900;" id="breedResultName">SAILOR DUCK #9102</div>
       </div>
 
       <button class="btn-feed-action" id="btnHatchAction" style="width: 100%; font-size: 14px; background: linear-gradient(180deg, #ec4899, #be185d); border-bottom-color: #9d174d;" onclick="startHatchRitual()">
@@ -1357,21 +1355,21 @@
   <div class="modal-overlay" id="modalPack">
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalPack')">✕</div>
-      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b; margin-bottom: 4px;">📦 DAILY CLAN PACK</h3>
-      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 10px;">Open your daily supply chest for meat, hearts & relic eggs!</p>
+      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b; margin-bottom: 4px;">📦 DAILY DUCK PACK</h3>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 10px;">Open your daily supply chest for corn, hearts & relic eggs!</p>
       
       <div style="width: 130px; height: 130px; margin: 6px 0;">
         <img src="assets/pack_chest.png" style="width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 16px rgba(245, 158, 11, 0.5));" alt="Chest">
       </div>
 
       <div id="packRewardDisplay" style="display: none; text-align: center; margin: 6px 0;">
-        <div style="font-size: 16px; font-weight: 900; color: #22c55e;">+10,000 🍖 MEAT</div>
+        <div style="font-size: 16px; font-weight: 900; color: #22c55e;">+10,000 🌽 CORN</div>
         <div style="font-size: 14px; font-weight: 900; color: #ec4899;">+5 ❤️ LOVE HEARTS</div>
         <div style="font-size: 12px; color: #a855f7; font-weight: 800;">+1 Amethyst Relic Egg</div>
       </div>
 
       <button class="btn-feed-action" id="btnOpenPack" style="width: 100%; font-size: 14px;" onclick="claimDailyPack()">
-        OPEN CLAN PACK
+        OPEN DUCK PACK
       </button>
     </div>
   </div>
@@ -1380,19 +1378,19 @@
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalSell')">✕</div>
       <h3 style="font-size: 16px; font-weight: 900; color: #22c55e; margin-bottom: 4px;">🏷️ LIST IN MARKET QUEUE</h3>
-      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 10px;">Your Goblin joins the FIFO order book at the market clearing price.</p>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin-bottom: 10px;">Your Duck joins the FIFO order book at the market clearing price.</p>
       
       <div style="width: 100px; height: 100px; margin: 4px 0;">
-        <img src="assets/goblin_lvl2.png" id="sellModalSprite" style="width: 100%; height: 100%; object-fit: contain;" alt="Goblin">
+        <img src="assets/duck_lvl2.png" id="sellModalSprite" style="width: 100%; height: 100%; object-fit: contain;" alt="Duck">
       </div>
 
       <div style="background: var(--bg-card-sub); border: 1px solid var(--border-dark); border-radius: 12px; padding: 10px; width: 100%; margin: 8px 0; text-align: center;">
         <div style="font-size: 11px; color: var(--text-muted);">ESTIMATED CLEARING PRICE</div>
-        <div style="font-size: 20px; font-weight: 900; color: #22c55e;">160,900 🍖</div>
+        <div style="font-size: 20px; font-weight: 900; color: #22c55e;">160,900 🌽</div>
         <div style="font-size: 10px; color: #f59e0b;">Est. Queue Position: #5</div>
       </div>
 
-      <button class="btn-feed-action" style="width: 100%; font-size: 14px;" onclick="confirmSellGoblin()">
+      <button class="btn-feed-action" style="width: 100%; font-size: 14px;" onclick="confirmSellDuck()">
         CONFIRM & JOIN QUEUE
       </button>
     </div>
@@ -1402,13 +1400,13 @@
     <div class="modal-card">
       <div class="modal-close-btn" onclick="closeModal('modalVip')">✕</div>
       <img src="assets/vip_crown_3d.png" style="width: 60px; height: 60px; object-fit: contain; margin-bottom: 4px;" alt="VIP">
-      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b;">VIP CHIEFTAIN PASS (14-DAY)</h3>
+      <h3 style="font-size: 16px; font-weight: 900; color: #f59e0b;">VIP DUCKER PASS (14-DAY)</h3>
       
       <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; margin: 10px 0; font-size: 11px;">
         <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> 🤖 Smart Auto-Trader Bot on Market</div>
         <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> ⚡ 2x Daily Stamina Regeneration</div>
         <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> 💖 2x Breeding Luck Rarity Multiplier</div>
-        <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> ⭐ Exclusive Gold Clan Badge</div>
+        <div style="display: flex; align-items: center; gap: 6px;"><span style="color: #22c55e;">✔</span> ⭐ Exclusive Gold Ducker Badge</div>
       </div>
 
       <button class="btn-feed-action" style="width: 100%; font-size: 14px; background: linear-gradient(180deg, #a855f7, #7e22ce); border-bottom-color: #6b21a8;" onclick="activateVipStars()">
@@ -1422,7 +1420,7 @@
       <div class="modal-close-btn" onclick="closeModal('modalWallet')">✕</div>
       <img src="assets/icon_ton.png" style="width: 50px; height: 50px; object-fit: contain; margin-bottom: 4px;" alt="TON">
       <h3 style="font-size: 16px; font-weight: 900; color: #3b82f6;">TON CONNECT WALLET</h3>
-      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 10px;">Bridge your on-chain Goblin NFTs and stake for TON rewards.</p>
+      <p style="font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 10px;">Bridge your on-chain Ducky NFTs and stake for TON rewards.</p>
       
       <div style="background: var(--bg-card-sub); border: 1px solid var(--border-dark); border-radius: 12px; padding: 10px; width: 100%; margin-bottom: 10px;">
         <div style="font-size: 10px; color: var(--text-muted);">ACTIVE ADDRESS</div>
@@ -1438,11 +1436,9 @@
     Notification
   </div>
 
-  <!-- =======================================================
-       JAVASCRIPT GAME ENGINE (24 ASSETS & 100% PARITY)
-       ======================================================= -->
+  <!-- JAVASCRIPT GAME ENGINE -->
   <script>
-    // AUDIO ENGINE
+    // SYNTHESIZER WITH REAL QUACK FORMANT SYNTHESIS
     let audioCtx = null;
     let soundEnabled = true;
 
@@ -1460,33 +1456,59 @@
       if (!audioCtx) return;
 
       const now = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
 
-      if (type === 'tap') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(320, now);
-        osc.frequency.exponentialRampToValueAtTime(150, now + 0.08);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+      if (type === 'quack' || type === 'tap') {
+        // Procedural Quack Formant Synthesis
+        const osc = audioCtx.createOscillator();
+        const bpf1 = audioCtx.createBiquadFilter();
+        const bpf2 = audioCtx.createBiquadFilter();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(280, now);
+        osc.frequency.exponentialRampToValueAtTime(140, now + 0.12);
+
+        bpf1.type = 'bandpass';
+        bpf1.frequency.setValueAtTime(450, now);
+        bpf1.Q.setValueAtTime(4.0, now);
+
+        bpf2.type = 'bandpass';
+        bpf2.frequency.setValueAtTime(850, now);
+        bpf2.Q.setValueAtTime(3.5, now);
+
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+
+        osc.connect(bpf1);
+        osc.connect(bpf2);
+        bpf1.connect(gain);
+        bpf2.connect(gain);
+        gain.connect(audioCtx.destination);
+
         osc.start(now);
-        osc.stop(now + 0.08);
+        osc.stop(now + 0.12);
       } else if (type === 'merge') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(260, now);
-        osc.frequency.exponentialRampToValueAtTime(600, now + 0.18);
+        osc.frequency.exponentialRampToValueAtTime(650, now + 0.18);
         gain.gain.setValueAtTime(0.4, now);
         gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
         osc.start(now);
         osc.stop(now + 0.18);
       } else if (type === 'coin') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(800, now);
         osc.frequency.setValueAtTime(1200, now + 0.08);
         gain.gain.setValueAtTime(0.3, now);
         gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
         osc.start(now);
         osc.stop(now + 0.2);
       } else if (type === 'fanfare') {
@@ -1503,10 +1525,14 @@
           o.stop(now + 0.45);
         });
       } else if (type === 'tick') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(500, now);
         gain.gain.setValueAtTime(0.15, now);
         gain.gain.linearRampToValueAtTime(0.01, now + 0.03);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
         osc.start(now);
         osc.stop(now + 0.03);
       }
@@ -1515,17 +1541,17 @@
     function toggleSound() {
       soundEnabled = !soundEnabled;
       document.getElementById('soundToggle').innerText = soundEnabled ? '🔊' : '🔇';
-      showToast(soundEnabled ? 'Sound FX Enabled' : 'Sound Muted');
+      showToast(soundEnabled ? 'Quack SFX Enabled' : 'Sound Muted');
     }
 
     // GAME STATE
     let gameState = {
-      meat: 92935,
+      corn: 92935,
       hearts: 45,
       stars: 50,
       energy: 1850,
       maxEnergy: 2000,
-      activeGoblinIdx: 1, // 0 to 11
+      activeDuckIdx: 1, // 0 to 11
       isStaked: false,
       grid: [
         1, 1, 2, 2, 3, 1, 0,
@@ -1538,40 +1564,40 @@
       ]
     };
 
-    // 12 EGG TIERS
-    const eggAssets12 = [
+    // 12 DUCK EGG TIERS
+    const duckEggAssets12 = [
       '',
-      'assets/egg_lvl1.png',  // Lvl 1 Wood
-      'assets/egg_lvl2.png',  // Lvl 2 Stone
-      'assets/egg_lvl3.png',  // Lvl 3 Bronze
-      'assets/egg_lvl4.png',  // Lvl 4 Iron
-      'assets/egg_lvl5.png',  // Lvl 5 Silver
-      'assets/egg_lvl6.png',  // Lvl 6 Gold
-      'assets/egg_lvl7.png',  // Lvl 7 Amethyst
-      'assets/egg_lvl8.png',  // Lvl 8 Emerald
-      'assets/egg_lvl9.png',  // Lvl 9 Ruby
-      'assets/egg_lvl10.png', // Lvl 10 Obsidian
-      'assets/egg_lvl11.png', // Lvl 11 Dragon
-      'assets/egg_lvl12.png'  // Lvl 12 Celestial Phoenix
+      'assets/duck_egg_lvl1.png',  // Lvl 1 Speckled
+      'assets/duck_egg_lvl2.png',  // Lvl 2 Wood Grain
+      'assets/duck_egg_lvl3.png',  // Lvl 3 Ancient Stone
+      'assets/duck_egg_lvl4.png',  // Lvl 4 Antique Bronze
+      'assets/duck_egg_lvl5.png',  // Lvl 5 Silver Frost
+      'assets/duck_egg_lvl6.png',  // Lvl 6 Solid Gold
+      'assets/duck_egg_lvl7.png',  // Lvl 7 Amethyst Gem
+      'assets/duck_egg_lvl8.png',  // Lvl 8 Emerald Gem
+      'assets/duck_egg_lvl9.png',  // Lvl 9 Crimson Ruby
+      'assets/duck_egg_lvl10.png', // Lvl 10 Obsidian Lava
+      'assets/duck_egg_lvl11.png', // Lvl 11 Horned Dragon
+      'assets/duck_egg_lvl12.png'  // Lvl 12 Celestial Phoenix
     ];
 
-    // 12 GOBLIN RANKS (NFT ROSTER)
-    const goblinRoster12 = [
-      { name: 'BABY PEON', rarity: '~ COMMON', stats: 'LVL 1 • 2 QDD MINING', img: 'assets/goblin_lvl1.png', color: '#9ca3af' },
-      { name: 'GOBLIN SCOUT', rarity: '~ UNCOMMON', stats: 'LVL 4 XL • 12 QDD MINING', img: 'assets/goblin_lvl2.png', color: '#22c55e' },
-      { name: 'ARMORED WARRIOR', rarity: '~ RARE', stats: 'LVL 6 XXL • 35 QDD MINING', img: 'assets/goblin_lvl3.png', color: '#3b82f6' },
-      { name: 'BERSERKER RAIDER', rarity: '~ RARE', stats: 'LVL 7 XXL • 60 QDD MINING', img: 'assets/goblin_lvl4.png', color: '#ef4444' },
-      { name: 'ARCANE SHAMAN', rarity: '~ EPIC', stats: 'LVL 8 MASTER • 110 QDD MINING', img: 'assets/goblin_lvl5.png', color: '#a855f7' },
-      { name: 'POISON ROGUE', rarity: '~ EPIC', stats: 'LVL 9 MASTER • 180 QDD MINING', img: 'assets/goblin_lvl6.png', color: '#10b981' },
-      { name: 'TRIBAL CHIEFTAIN', rarity: '~ LEGENDARY', stats: 'LVL 10 LORD • 300 QDD MINING', img: 'assets/goblin_lvl7.png', color: '#f59e0b' },
-      { name: 'WITCH DOCTOR', rarity: '~ LEGENDARY', stats: 'LVL 11 LORD • 480 QDD MINING', img: 'assets/goblin_lvl8.png', color: '#ec4899' },
-      { name: 'IRON WARLORD', rarity: '~ MYTHIC', stats: 'LVL 12 TITAN • 750 QDD MINING', img: 'assets/goblin_lvl9.png', color: '#6366f1' },
-      { name: 'SHADOW ASSASSIN', rarity: '~ MYTHIC', stats: 'LVL 13 TITAN • 1,200 QDD MINING', img: 'assets/goblin_lvl10.png', color: '#8b5cf6' },
-      { name: 'DRAGON SLAYER OVERLORD', rarity: '~ GODLIKE', stats: 'LVL 14 GOD • 2,500 QDD MINING', img: 'assets/goblin_lvl11.png', color: '#f97316' },
-      { name: 'ANCIENT GOBLIN GOD', rarity: '~ GODLIKE', stats: 'LVL 15 GOD • 6,000 QDD MINING', img: 'assets/goblin_lvl12.png', color: '#fbbf24' }
+    // 12 DUCK RANKS
+    const duckRoster12 = [
+      { name: 'YELLOW RUBBER DUCK', rarity: '~ COMMON', stats: 'LVL 1 • 2 QDD MINING', img: 'assets/duck_lvl1.png', color: '#9ca3af' },
+      { name: 'PIRATE DUCK', rarity: '~ UNCOMMON', stats: 'LVL 4 XL • 12 QDD MINING', img: 'assets/duck_lvl2.png', color: '#22c55e' },
+      { name: 'SAILOR DUCK', rarity: '~ RARE', stats: 'LVL 6 XXL • 35 QDD MINING', img: 'assets/duck_lvl3.png', color: '#3b82f6' },
+      { name: 'GENTLEMAN DUCK', rarity: '~ RARE', stats: 'LVL 7 XXL • 60 QDD MINING', img: 'assets/duck_lvl4.png', color: '#ef4444' },
+      { name: 'MAGE WIZARD DUCK', rarity: '~ EPIC', stats: 'LVL 8 MASTER • 110 QDD MINING', img: 'assets/duck_lvl5.png', color: '#a855f7' },
+      { name: 'NINJA SHINOBI DUCK', rarity: '~ EPIC', stats: 'LVL 9 MASTER • 180 QDD MINING', img: 'assets/duck_lvl6.png', color: '#10b981' },
+      { name: 'TRIBAL DUCK CHIEF', rarity: '~ LEGENDARY', stats: 'LVL 10 LORD • 300 QDD MINING', img: 'assets/duck_lvl7.png', color: '#f59e0b' },
+      { name: 'CYBER NEON DUCK', rarity: '~ LEGENDARY', stats: 'LVL 11 LORD • 480 QDD MINING', img: 'assets/duck_lvl8.png', color: '#ec4899' },
+      { name: 'ROYAL KING DUCK', rarity: '~ MYTHIC', stats: 'LVL 12 TITAN • 750 QDD MINING', img: 'assets/duck_lvl9.png', color: '#6366f1' },
+      { name: 'DRAGON DUCK', rarity: '~ MYTHIC', stats: 'LVL 13 TITAN • 1,200 QDD MINING', img: 'assets/duck_lvl10.png', color: '#8b5cf6' },
+      { name: 'CELESTIAL ANGEL DUCK', rarity: '~ GODLIKE', stats: 'LVL 14 GOD • 2,500 QDD MINING', img: 'assets/duck_lvl11.png', color: '#f97316' },
+      { name: 'SUPREME DUCKY GOD', rarity: '~ GODLIKE', stats: 'LVL 15 GOD • 6,000 QDD MINING', img: 'assets/duck_lvl12.png', color: '#fbbf24' }
     ];
 
-    // INITIALIZATION OF 7X7 MATRIX
+    // 7X7 GRID INITIALIZATION
     function initMergeGrid() {
       const container = document.getElementById('mergeGrid49');
       container.innerHTML = '';
@@ -1585,7 +1611,7 @@
         if (lvl > 0) {
           occupied++;
           const img = document.createElement('img');
-          img.src = eggAssets12[lvl] || eggAssets12[1];
+          img.src = duckEggAssets12[lvl] || duckEggAssets12[1];
           cell.appendChild(img);
 
           const badge = document.createElement('span');
@@ -1613,18 +1639,17 @@
           selectedCell = null;
           highlightCells();
         } else if (gameState.grid[selectedCell] === gameState.grid[idx] && gameState.grid[idx] < 12) {
-          // Merge up to 12 tiers
           gameState.grid[idx] += 1;
           gameState.grid[selectedCell] = 0;
           const tier = gameState.grid[idx];
           selectedCell = null;
-          gameState.meat += (tier * 800);
+          gameState.corn += (tier * 800);
           gameState.hearts += Math.floor(tier / 2) + 1;
           playSound('merge');
           haptic('medium');
           updateUI();
           initMergeGrid();
-          showToast(`✨ Merged to Level ${tier} Egg! (+${tier * 800} 🍖 & Hearts)`);
+          showToast(`✨ Merged to Level ${tier} Duck Egg! (+${tier * 800} 🌽 & Hearts)`);
         } else {
           selectedCell = idx;
           highlightCells();
@@ -1654,7 +1679,7 @@
           if (gameState.grid[i] === gameState.grid[j] && gameState.grid[i] < 12) {
             gameState.grid[i] += 1;
             gameState.grid[j] = 0;
-            gameState.meat += 800;
+            gameState.corn += 800;
             gameState.hearts += 1;
             merged++;
             break;
@@ -1668,20 +1693,20 @@
         initMergeGrid();
         showToast(`⚡ Auto-merged ${merged} pairs!`);
       } else {
-        showToast('No matching egg pairs to merge.');
+        showToast('No matching duck egg pairs to merge.');
       }
     }
 
     function spawnEgg() {
-      if (gameState.meat < 50) {
-        showToast('❌ Not enough meat!');
+      if (gameState.corn < 50) {
+        showToast('❌ Not enough corn!');
         return;
       }
       const empties = gameState.grid.map((v, i) => v === 0 ? i : -1).filter(v => v !== -1);
       if (empties.length > 0) {
         const rand = empties[Math.floor(Math.random() * empties.length)];
         gameState.grid[rand] = 1;
-        gameState.meat -= 50;
+        gameState.corn -= 50;
         playSound('tap');
         haptic('light');
         updateUI();
@@ -1700,73 +1725,73 @@
       const target = occupied[Math.floor(Math.random() * occupied.length)];
       const tier = gameState.grid[target];
       gameState.grid[target] = 0;
-      const gainMeat = tier * 2500;
+      const gainCorn = tier * 2500;
       const gainHearts = tier;
-      gameState.meat += gainMeat;
+      gameState.corn += gainCorn;
       gameState.hearts += gainHearts;
       playSound('fanfare');
       haptic('heavy');
       updateUI();
       initMergeGrid();
-      showToast(`🔨 Cracked L${tier} Egg: +${gainMeat.toLocaleString()} 🍖 & +${gainHearts} ❤️!`);
+      showToast(`🔨 Cracked L${tier} Duck Egg: +${gainCorn.toLocaleString()} 🌽 & +${gainHearts} ❤️!`);
     }
 
     function collectIncubator(idx) {
       if (idx === 0) {
-        gameState.meat += 5000;
+        gameState.corn += 5000;
         gameState.hearts += 3;
         playSound('coin');
         haptic('medium');
         document.getElementById('incTag0').innerText = '05:00';
         document.getElementById('incTag0').parentElement.classList.remove('ready');
         updateUI();
-        showToast('🥚 Incubator Harvested: +5,000 🍖 & +3 ❤️!');
+        showToast('🥚 Incubator Harvested: +5,000 🌽 & +3 ❤️!');
       } else {
         showToast('⏳ Egg is still incubating...');
       }
     }
 
-    // HERO STAGE INTERACTIONS
-    function tapHero(e) {
-      if (gameState.meat < 25) {
-        showToast('❌ Need 25 🍖 to feed goblin!');
+    // HERO DUCK INTERACTIONS
+    function tapDuck(e) {
+      if (gameState.corn < 25) {
+        showToast('❌ Need 25 🌽 to feed duck!');
         return;
       }
-      gameState.meat -= 25;
+      gameState.corn -= 25;
       gameState.energy = Math.max(0, gameState.energy - 10);
-      playSound('tap');
+      playSound('quack');
       haptic('light');
       updateUI();
 
       const pop = document.createElement('div');
       pop.className = 'pop-number';
-      pop.innerText = '+50 XP (-25 🍖)';
+      pop.innerText = 'QUACK! +50 XP (-25 🌽)';
       pop.style.left = (e.clientX || (window.innerWidth / 2)) + 'px';
       pop.style.top = (e.clientY || (window.innerHeight / 2)) + 'px';
       document.body.appendChild(pop);
       setTimeout(() => pop.remove(), 700);
     }
 
-    function nextGoblin() {
-      gameState.activeGoblinIdx = (gameState.activeGoblinIdx + 1) % goblinRoster12.length;
+    function nextDuck() {
+      gameState.activeDuckIdx = (gameState.activeDuckIdx + 1) % duckRoster12.length;
       updateHeroCard();
-      playSound('tap');
+      playSound('quack');
     }
 
-    function prevGoblin() {
-      gameState.activeGoblinIdx = (gameState.activeGoblinIdx - 1 + goblinRoster12.length) % goblinRoster12.length;
+    function prevDuck() {
+      gameState.activeDuckIdx = (gameState.activeDuckIdx - 1 + duckRoster12.length) % duckRoster12.length;
       updateHeroCard();
-      playSound('tap');
+      playSound('quack');
     }
 
     function updateHeroCard() {
-      const g = goblinRoster12[gameState.activeGoblinIdx];
-      document.getElementById('heroName').innerText = g.name;
-      document.getElementById('heroRarity').innerText = g.rarity;
-      document.getElementById('heroRarity').style.color = g.color;
-      document.getElementById('heroStats').innerText = g.stats;
-      document.getElementById('heroSprite').src = g.img;
-      document.getElementById('sellModalSprite').src = g.img;
+      const d = duckRoster12[gameState.activeDuckIdx];
+      document.getElementById('heroName').innerText = d.name;
+      document.getElementById('heroRarity').innerText = d.rarity;
+      document.getElementById('heroRarity').style.color = d.color;
+      document.getElementById('heroStats').innerText = d.stats;
+      document.getElementById('heroSprite').src = d.img;
+      document.getElementById('sellModalSprite').src = d.img;
     }
 
     function toggleStake() {
@@ -1775,11 +1800,11 @@
       if (gameState.isStaked) {
         btn.innerText = '⚡ STAKED (+25 QDD)';
         btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
-        showToast('✅ Goblin Staked into Clan Totem!');
+        showToast('✅ Duck Staked into Ducky Totem!');
       } else {
         btn.innerText = '⚡ STAKE (IDLE)';
         btn.style.background = 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
-        showToast('Goblin Unstaked.');
+        showToast('Duck Unstaked.');
       }
       playSound('coin');
       haptic('medium');
@@ -1791,8 +1816,8 @@
       document.getElementById('breedingResultBox').style.display = 'none';
       document.getElementById('btnHatchAction').style.display = 'block';
       document.getElementById('breedingEggSprite').className = '';
-      document.getElementById('breedingEggSprite').src = 'assets/egg_lvl11.png';
-      playSound('tap');
+      document.getElementById('breedingEggSprite').src = 'assets/duck_egg_lvl11.png';
+      playSound('quack');
     }
 
     function startHatchRitual() {
@@ -1817,7 +1842,7 @@
 
         setTimeout(() => {
           document.getElementById('breedingResultBox').style.display = 'block';
-          const rolled = goblinRoster12[Math.floor(Math.random() * (goblinRoster12.length - 2)) + 2];
+          const rolled = duckRoster12[Math.floor(Math.random() * (duckRoster12.length - 2)) + 2];
           document.getElementById('breedResultRarity').innerText = rolled.rarity;
           document.getElementById('breedResultRarity').style.color = rolled.color;
           document.getElementById('breedResultName').innerText = rolled.name + ' #' + Math.floor(Math.random() * 8999 + 1000);
@@ -1829,31 +1854,30 @@
     // SLOTTED COLLECTION TRAYS ENGINE (EXACT DUCK MY DUCK LOOP)
     let collectionData = {
       common: [
-        { id: 1, filled: true, reward: '+10,000 🍖', req: 'COMMON [5+ LVL]', img: 'assets/goblin_lvl1.png' },
-        { id: 2, filled: true, reward: '+10,000 🍖', req: 'COMMON [5+ LVL]', img: 'assets/goblin_lvl1.png' },
-        { id: 3, filled: true, reward: '+10,000 🍖', req: 'COMMON [5+ LVL]', img: 'assets/goblin_lvl1.png' },
-        { id: 4, filled: false, reward: '+10,000 🍖', req: 'Feed & Add' },
-        { id: 5, filled: false, reward: '+10,000 🍖', req: 'Feed & Add' },
-        { id: 6, filled: false, reward: '+10,000 🍖', req: 'Feed & Add' },
-        { id: 7, filled: false, reward: '+10,000 🍖', req: 'Feed & Add' },
-        { id: 8, filled: false, reward: '+10,000 🍖', req: 'Feed & Add' },
-        { id: 9, filled: false, reward: '+10,000 🍖', req: 'Feed & Add' }
+        { id: 1, filled: true, reward: '+10,000 🌽', req: 'COMMON [5+ LVL]', img: 'assets/duck_lvl1.png' },
+        { id: 2, filled: true, reward: '+10,000 🌽', req: 'COMMON [5+ LVL]', img: 'assets/duck_lvl1.png' },
+        { id: 3, filled: true, reward: '+10,000 🌽', req: 'COMMON [5+ LVL]', img: 'assets/duck_lvl1.png' },
+        { id: 4, filled: false, reward: '+10,000 🌽', req: 'Feed & Add' },
+        { id: 5, filled: false, reward: '+10,000 🌽', req: 'Feed & Add' },
+        { id: 6, filled: false, reward: '+10,000 🌽', req: 'Feed & Add' },
+        { id: 7, filled: false, reward: '+10,000 🌽', req: 'Feed & Add' },
+        { id: 8, filled: false, reward: '+10,000 🌽', req: 'Feed & Add' },
+        { id: 9, filled: false, reward: '+10,000 🌽', req: 'Feed & Add' }
       ],
       uncommon: [
-        { id: 1, filled: true, reward: '+130,000 🍖', req: 'UNCOMMON [5+ LVL]', img: 'assets/goblin_lvl2.png' },
-        { id: 2, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 3, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 4, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 5, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 6, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 7, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 8, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' },
-        { id: 9, filled: false, reward: '+130,000 🍖', req: 'Feed & Add' }
+        { id: 1, filled: true, reward: '+130,000 🌽', req: 'UNCOMMON [5+ LVL]', img: 'assets/duck_lvl2.png' },
+        { id: 2, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 3, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 4, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 5, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 6, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 7, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 8, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' },
+        { id: 9, filled: false, reward: '+130,000 🌽', req: 'Feed & Add' }
       ]
     };
 
     function renderCollections() {
-      // Common tray
       const cBox = document.getElementById('commonSlotsMatrix');
       cBox.innerHTML = '';
       let cCount = 0;
@@ -1861,7 +1885,7 @@
         if (slot.filled) cCount++;
         const div = document.createElement('div');
         div.className = `collection-slot-box ${slot.filled ? 'filled' : ''}`;
-        div.onclick = () => slotGoblinToCollection('common', i);
+        div.onclick = () => slotDuckToCollection('common', i);
 
         if (slot.filled) {
           div.innerHTML = `
@@ -1880,7 +1904,6 @@
       });
       document.getElementById('commonColProgress').innerText = `${cCount} / 9`;
 
-      // Uncommon tray
       const uBox = document.getElementById('uncommonSlotsMatrix');
       uBox.innerHTML = '';
       let uCount = 0;
@@ -1888,7 +1911,7 @@
         if (slot.filled) uCount++;
         const div = document.createElement('div');
         div.className = `collection-slot-box ${slot.filled ? 'filled' : ''}`;
-        div.onclick = () => slotGoblinToCollection('uncommon', i);
+        div.onclick = () => slotDuckToCollection('uncommon', i);
 
         if (slot.filled) {
           div.innerHTML = `
@@ -1908,7 +1931,7 @@
       document.getElementById('uncommonColProgress').innerText = `${uCount} / 9`;
     }
 
-    function slotGoblinToCollection(type, idx) {
+    function slotDuckToCollection(type, idx) {
       const slot = collectionData[type][idx];
       if (slot.filled) {
         showToast('Slot already completed and claimed!');
@@ -1916,22 +1939,22 @@
       }
       const rewardVal = type === 'common' ? 10000 : 130000;
       slot.filled = true;
-      slot.img = type === 'common' ? 'assets/goblin_lvl1.png' : 'assets/goblin_lvl2.png';
-      gameState.meat += rewardVal;
+      slot.img = type === 'common' ? 'assets/duck_lvl1.png' : 'assets/duck_lvl2.png';
+      gameState.corn += rewardVal;
       playSound('fanfare');
       haptic('heavy');
       updateUI();
       renderCollections();
-      showToast(`🎉 Slotted LVL 5+ Champion! Awarded +${rewardVal.toLocaleString()} 🍖!`);
+      showToast(`🎉 Slotted LVL 5+ Duck! Awarded +${rewardVal.toLocaleString()} 🌽!`);
     }
 
     function claimSetGrandPrize() {
-      gameState.meat += 125000;
+      gameState.corn += 125000;
       gameState.stars += 20;
       updateUI();
       playSound('fanfare');
       haptic('heavy');
-      showToast('🏆 Claimed Sea Fellowship Grand Prize: +125.0K 🍖 & +20 ⭐!');
+      showToast('🏆 Claimed Sea Fellowship Grand Prize: +125.0K 🌽 & +20 ⭐!');
     }
 
     // CLAN PACK MODAL
@@ -1943,14 +1966,14 @@
     }
 
     function claimDailyPack() {
-      gameState.meat += 10000;
+      gameState.corn += 10000;
       gameState.hearts += 5;
       updateUI();
       playSound('fanfare');
       haptic('heavy');
       document.getElementById('packRewardDisplay').style.display = 'block';
       document.getElementById('btnOpenPack').style.display = 'none';
-      showToast('🎁 Daily Clan Pack Rewards Claimed!');
+      showToast('🎁 Daily Duck Pack Rewards Claimed!');
     }
 
     // MARKET BUY & SELL
@@ -1959,25 +1982,25 @@
       playSound('tap');
     }
 
-    function confirmSellGoblin() {
+    function confirmSellDuck() {
       closeModal('modalSell');
-      gameState.meat += 160900;
+      gameState.corn += 160900;
       updateUI();
       playSound('coin');
       haptic('heavy');
-      showToast('✅ Goblin listed and sold on FIFO Market for 160.9K 🍖!');
+      showToast('✅ Duck listed and sold on FIFO Market for 160.9K 🌽!');
     }
 
     function buyQueueHead() {
-      if (gameState.meat < 160900) {
-        showToast('❌ Need 160.9K 🍖 to buy Queue #1!');
+      if (gameState.corn < 160900) {
+        showToast('❌ Need 160.9K 🌽 to buy Queue #1!');
         return;
       }
-      gameState.meat -= 160900;
+      gameState.corn -= 160900;
       updateUI();
       playSound('fanfare');
       haptic('heavy');
-      showToast('🎉 Purchased Queue #1 Goblin! Added to your NFT Roster.');
+      showToast('🎉 Purchased Queue #1 Duck! Added to your NFT Roster.');
     }
 
     function buyGodNft() {
@@ -1988,7 +2011,7 @@
       gameState.stars -= 500;
       updateUI();
       playSound('fanfare');
-      showToast('👑 God of Greed NFT imported to collection!');
+      showToast('👑 Ducky God NFT imported to collection!');
     }
 
     function activateVipStars() {
@@ -2001,7 +2024,7 @@
       closeModal('modalVip');
       playSound('fanfare');
       haptic('heavy');
-      showToast('👑 VIP Chieftain Pass Activated for 14 Days!');
+      showToast('👑 VIP Ducker Pass Activated for 14 Days!');
     }
 
     function openVipModal() { openModal('modalVip'); playSound('tap'); }
@@ -2014,25 +2037,25 @@
       showToast('Wallet disconnected.');
     }
 
-    // GODS / TOTEMS
+    // GODS
     const totems = {
       fertility: {
         title: 'LOVE GOD (NFT LVL 7-97)',
-        img: 'assets/totem_fertility.png',
-        bonus: 'FIRST BREEDINGS YIELD UP TO: 8,760 ❤️',
+        img: 'assets/duck_god_statue.png',
+        bonus: 'FIRST DUCK BREEDINGS YIELD UP TO: 8,760 ❤️',
         desc: 'Sacrifice Love Hearts to increase permanent breeding rarity luck and energy regen.'
       },
       greed: {
-        title: 'GOD OF GREED (TOTEM LVL 3)',
-        img: 'assets/totem_greed.png',
-        bonus: '+100% MEAT MINING YIELD',
-        desc: 'Grants continuous passive meat yield from all clan raid contributions.'
+        title: 'GREED GOD (NFT LVL 3)',
+        img: 'assets/duck_god_statue.png',
+        bonus: '+100% CORN MINING YIELD',
+        desc: 'Grants continuous passive corn yield from all flock tournament contributions.'
       },
       war: {
-        title: 'WAR GOD OF THE HORDE (TOTEM LVL 1)',
-        img: 'assets/totem_war.png',
-        bonus: '+75% SABOTAGE RAID ATTACK POWER',
-        desc: 'Unlocks devastating clan sabotage daggers to raid enemy vaults.'
+        title: 'WAR GOD OF THE FLOCK (NFT LVL 1)',
+        img: 'assets/duck_god_statue.png',
+        bonus: '+75% DUEL ATTACK POWER',
+        desc: 'Unlocks devastating duel attacks to raid enemy corn vaults.'
       }
     };
 
@@ -2049,7 +2072,7 @@
 
     function upgradeTotem() {
       if (gameState.hearts < 10) {
-        showToast('❌ Need 10 ❤️ to upgrade Totem!');
+        showToast('❌ Need 10 ❤️ to upgrade Ducky God!');
         return;
       }
       gameState.hearts -= 10;
@@ -2061,12 +2084,12 @@
 
     // FORTUNE WHEEL
     const wheelPrizes = [
-      { text: '+5,000 🍖', color: '#22c55e', reward: () => { gameState.meat += 5000; } },
+      { text: '+5,000 🌽', color: '#22c55e', reward: () => { gameState.corn += 5000; } },
       { text: '+5 ❤️', color: '#ec4899', reward: () => { gameState.hearts += 5; } },
       { text: '+10 ⭐', color: '#f59e0b', reward: () => { gameState.stars += 10; } },
-      { text: 'L6 Gold Egg', color: '#a855f7', reward: () => { gameState.meat += 25000; } },
-      { text: '+25,000 🍖', color: '#10b981', reward: () => { gameState.meat += 25000; } },
-      { text: 'Goblin Scout', color: '#3b82f6', reward: () => { gameState.meat += 50000; } }
+      { text: 'L6 Gold Egg', color: '#a855f7', reward: () => { gameState.corn += 25000; } },
+      { text: '+25,000 🌽', color: '#10b981', reward: () => { gameState.corn += 25000; } },
+      { text: 'Pirate Duck', color: '#3b82f6', reward: () => { gameState.corn += 50000; } }
     ];
 
     let currentAngle = 0;
@@ -2148,15 +2171,15 @@
       }
       gameState.energy -= 100;
       const loot = Math.floor(Math.random() * 20000 + 10000);
-      gameState.meat += loot;
+      gameState.corn += loot;
       playSound('fanfare');
       haptic('heavy');
       updateUI();
-      showToast(`⚔️ Raid Hit! Looted +${loot.toLocaleString()} 🍖 from Blood Moon!`);
+      showToast(`⚔️ Duel Hit! Looted +${loot.toLocaleString()} 🌽 from Shadow Flock!`);
     }
 
     function claimTaskReward(val, btn) {
-      gameState.meat += val;
+      gameState.corn += val;
       updateUI();
       playSound('coin');
       haptic('heavy');
@@ -2164,16 +2187,16 @@
       btn.style.background = '#36344d';
       btn.style.color = '#8b92a5';
       btn.disabled = true;
-      showToast(`🎉 Claimed +${val.toLocaleString()} 🍖!`);
+      showToast(`🎉 Claimed +${val.toLocaleString()} 🌽!`);
     }
 
     function watchAd() {
       showToast('📺 Watching Sponsor Video...');
       setTimeout(() => {
-        gameState.meat += 5000;
+        gameState.corn += 5000;
         updateUI();
         playSound('fanfare');
-        showToast('🎉 +5,000 🍖 earned from video reward!');
+        showToast('🎉 +5,000 🌽 earned from video reward!');
       }, 1200);
     }
 
@@ -2188,7 +2211,7 @@
       
       if (tabId === 'eggs') initMergeGrid();
       if (tabId === 'tasks') { renderCollections(); drawWheel(); }
-      playSound('tap');
+      playSound('quack');
       haptic('light');
     }
 
@@ -2201,28 +2224,28 @@
       const badge = document.getElementById('mktCardLvl');
       const handle = document.getElementById('mktOwnerHandle');
       if (filter === 'rare') {
-        sprite.src = 'assets/goblin_lvl3.png';
+        sprite.src = 'assets/duck_lvl3.png';
         badge.innerText = 'LVL 6';
-        handle.innerText = '@ORK_CHIEFTAIN';
+        handle.innerText = '@SAILOR_CAPTAIN';
       } else if (filter === 'epic') {
-        sprite.src = 'assets/goblin_lvl5.png';
+        sprite.src = 'assets/duck_lvl5.png';
         badge.innerText = 'LVL 8';
-        handle.innerText = '@ARCANE_SHADOW';
+        handle.innerText = '@MAGE_DUCK';
       } else if (filter === 'legendary') {
-        sprite.src = 'assets/goblin_lvl7.png';
+        sprite.src = 'assets/duck_lvl7.png';
         badge.innerText = 'LVL 10';
-        handle.innerText = '@KING_GOBLIN';
+        handle.innerText = '@CHIEF_DUCK';
       } else {
-        sprite.src = 'assets/goblin_lvl2.png';
+        sprite.src = 'assets/duck_lvl2.png';
         badge.innerText = 'LVL 5';
         handle.innerText = '@BATARD_MONTRACHET';
       }
     }
 
     function setMarketSub(sub) {
-      document.getElementById('mktToggleGoblins').classList.toggle('active', sub === 'goblins');
+      document.getElementById('mktToggleDucks').classList.toggle('active', sub === 'ducks');
       document.getElementById('mktToggleGods').classList.toggle('active', sub === 'gods');
-      document.getElementById('market-view-goblins').style.display = sub === 'goblins' ? 'block' : 'none';
+      document.getElementById('market-view-ducks').style.display = sub === 'ducks' ? 'block' : 'none';
       document.getElementById('market-view-gods').style.display = sub === 'gods' ? 'block' : 'none';
       playSound('tap');
     }
@@ -2260,7 +2283,7 @@
     }
 
     function updateUI() {
-      document.getElementById('headerMeat').innerText = gameState.meat.toLocaleString();
+      document.getElementById('headerCorn').innerText = gameState.corn.toLocaleString();
       document.getElementById('headerHearts').innerText = gameState.hearts;
       document.getElementById('headerStars').innerText = gameState.stars;
       document.getElementById('energyText').innerText = `${gameState.energy.toLocaleString()} / ${gameState.maxEnergy.toLocaleString()}`;
@@ -2305,7 +2328,7 @@
 
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(34, 197, 94, ${p.alpha})`;
+          ctx.fillStyle = `rgba(251, 191, 36, ${p.alpha})`;
           ctx.fill();
         });
         requestAnimationFrame(render);

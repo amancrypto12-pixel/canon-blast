@@ -74,7 +74,7 @@ class Database:
         except Exception as e:
             print(f"Error saving DB: {e}")
 
-    def get_or_create_user(self, user_id: str, username: str = "Goblin Warrior", referrer_id: Optional[str] = None):
+    def get_or_create_user(self, user_id: str, username: str = "Duck Master", referrer_id: Optional[str] = None):
         if user_id not in self.data["users"]:
             # Handle referral attribution
             ref_tier1 = referrer_id if (referrer_id and referrer_id in self.data["users"] and referrer_id != user_id) else None
@@ -83,16 +83,16 @@ class Database:
             self.data["users"][user_id] = {
                 "user_id": user_id,
                 "username": username,
-                "meat": 92935,
-                "gob_tokens": 100.0,
+                "corn": 92935,
+                "duck_tokens": 100.0,
                 "hearts": 45,
                 "stars": 50,
                 "energy": 2000,
                 "max_energy": 2000,
                 "last_energy_update": time.time(),
-                "goblins": [
+                "ducks": [
                     {
-                        "id": "g_1",
+                        "id": "d_1",
                         "tier": 2,
                         "rarity": "Uncommon",
                         "level": 4,
@@ -102,7 +102,7 @@ class Database:
                         "max_breed": 5
                     }
                 ],
-                "active_goblin_id": "g_1",
+                "active_duck_id": "d_1",
                 "grid": [1, 1, 2, 2, 3, 1, 0, 2, 3, 4, 5, 1, 2, 0] + [0] * 35, # 49 slots, 12 levels
                 "gods": {
                     "greed": 1,
@@ -113,7 +113,7 @@ class Database:
                 "referrer_id": ref_tier1,
                 "referrer_tier2_id": ref_tier2,
                 "referral_count": 0,
-                "referral_earnings_meat": 0,
+                "referral_earnings_corn": 0,
                 "clan_id": "clan_1",
                 "sabotage_cards": 3,
                 "last_sabotage_time": time.time(),
@@ -122,8 +122,8 @@ class Database:
 
             if ref_tier1:
                 self.data["users"][ref_tier1]["referral_count"] += 1
-                self.data["users"][ref_tier1]["meat"] += 5000
-                self.data["users"][ref_tier1]["referral_earnings_meat"] += 5000
+                self.data["users"][ref_tier1]["corn"] += 5000
+                self.data["users"][ref_tier1]["referral_earnings_corn"] += 5000
 
             self.save()
         return self.data["users"][user_id]
