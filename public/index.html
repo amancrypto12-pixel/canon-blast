@@ -63,51 +63,56 @@
     }
 
     /* =========================================
-       TOP HEADER (100% MATCH TO REFERENCE)
+       TOP HEADER (CLEAN & BOX-FREE AS REQUESTED)
        ========================================= */
     .app-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 12px;
-      background: rgba(19, 18, 29, 0.98);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      padding: 10px 14px;
+      background: transparent;
       z-index: 100;
       position: relative;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .header-left-cluster {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
 
     .header-user-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: #1a1928;
-      border: 1px solid var(--border-dark);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 13px;
       font-weight: 800;
       color: #fff;
     }
 
     .header-user-avatar {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: linear-gradient(135deg, #22d3ee, #0891b2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 11px;
       color: #fff;
       font-weight: 900;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
     }
 
     .btn-pack {
@@ -131,26 +136,23 @@
     .header-right-cluster {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 12px;
     }
 
-    .resource-pill {
-      background: #181726;
-      border: 1px solid var(--border-dark);
-      border-radius: 10px;
-      padding: 4px 9px;
+    /* CLEAN CURRENCY (NO BOX BACKGROUND, BIGGER SIZE) */
+    .resource-clean {
       display: flex;
       align-items: center;
       gap: 5px;
-      font-size: 11px;
+      font-size: 14px;
       font-weight: 900;
       color: #fff;
       cursor: pointer;
     }
 
-    .resource-pill img {
-      width: 15px;
-      height: 15px;
+    .resource-clean img {
+      width: 18px;
+      height: 18px;
       object-fit: contain;
     }
 
@@ -177,7 +179,7 @@
     }
 
     /* =========================================
-       MAIN LOBBY (100% MATCH TO SCREENSHOT)
+       MAIN LOBBY
        ========================================= */
     .lobby-container {
       display: flex;
@@ -188,27 +190,27 @@
       padding: 2px 0;
     }
 
-    /* 1. BIG TOKEN BALANCE (WITH USER'S BLUE TOKEN COIN) */
+    /* 1. BIG TOKEN BALANCE (CLEAN STANDALONE COIN, LARGER FONT) */
     .lobby-balance-header {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin: 4px 0 6px;
+      gap: 10px;
+      margin: 4px 0 8px;
     }
 
     .lobby-balance-coin {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
-      border: 1.5px solid rgba(34, 211, 238, 0.6);
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      background: transparent;
+      border: none;
+      filter: drop-shadow(0 4px 8px rgba(14, 165, 233, 0.4));
     }
 
     .lobby-balance-text {
       font-family: 'Fredoka', 'Nunito', sans-serif;
-      font-size: 34px;
+      font-size: 40px;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: 0.5px;
@@ -257,7 +259,7 @@
       align-items: flex-end;
     }
 
-    /* 3. CENTER HERO STAGE & DOLPHIN */
+    /* 3. CENTER HERO STAGE & CHARACTER */
     .lobby-hero-stage {
       position: relative;
       width: 250px;
@@ -510,13 +512,15 @@
   <canvas id="ambientCanvas"></canvas>
 
   <!-- =========================================
-       TOP HEADER (EXACT REFERENCE PARITY)
+       TOP HEADER (CLEAN NO-BOX LAYOUT)
        ========================================= -->
   <div class="app-header">
     <div class="header-left-cluster">
       <div class="header-user-badge">
-        <div class="header-user-avatar">W</div>
-        <span>Wild_airdrop</span>
+        <div class="header-user-avatar" id="userAvatarBox">
+          <span id="userAvatarLetter">W</span>
+        </div>
+        <span id="userNameText">Wild_airdrop</span>
       </div>
       <div class="btn-pack" onclick="openPackModal()">
         📦 PACK
@@ -524,11 +528,11 @@
     </div>
 
     <div class="header-right-cluster">
-      <div class="resource-pill">
+      <div class="resource-clean">
         <img src="assets/icon_user_fish.png" alt="Fish">
         <span id="headerFish">91,339</span>
       </div>
-      <div class="resource-pill" onclick="openVipModal()">
+      <div class="resource-clean" onclick="openVipModal()">
         <img src="assets/icon_user_star.png" alt="Stars">
         <span id="headerStars">45</span>
       </div>
@@ -544,9 +548,9 @@
     <div id="tab-dolphins" class="tab-page active">
       <div class="lobby-container">
         
-        <!-- 1. BIG BLUE TOKEN BALANCE (MATCHES USER'S TOKEN) -->
+        <!-- 1. BIG BLUE TOKEN BALANCE (CLEAN NO BACKGROUND BOX) -->
         <div class="lobby-balance-header">
-          <img src="assets/blue_token_coin.png" class="lobby-balance-coin" alt="Blue Token">
+          <img src="assets/blue_token_coin.png" class="lobby-balance-coin" alt="Token">
           <div class="lobby-balance-text" id="mainTokenBalance">183.35</div>
         </div>
 
@@ -803,6 +807,25 @@
       isStaked: false
     };
 
+    function syncTelegramUser() {
+      if (window.Telegram && window.Telegram.WebApp) {
+        const user = window.Telegram.WebApp.initDataUnsafe?.user;
+        if (user) {
+          const displayName = user.username ? `@${user.username}` : (user.first_name || 'Player');
+          const nameEl = document.getElementById('userNameText');
+          if (nameEl) nameEl.innerText = displayName;
+
+          const avatarBox = document.getElementById('userAvatarBox');
+          if (user.photo_url && avatarBox) {
+            avatarBox.innerHTML = `<img src="${user.photo_url}" alt="Avatar">`;
+          } else if (avatarBox) {
+            const letter = (user.first_name || user.username || 'W').charAt(0).toUpperCase();
+            avatarBox.innerHTML = `<span id="userAvatarLetter">${letter}</span>`;
+          }
+        }
+      }
+    }
+
     function startCountdownTicker() {
       setInterval(() => {
         if (gameState.staminaResetSeconds > 0) {
@@ -827,7 +850,7 @@
       haptic('light');
       updateUI();
 
-      // DUAL FLOATING NUMBERS (+0.02 Blue Token and -144 Fish)
+      // DUAL FLOATING NUMBERS (+0.02 and -144 Fish)
       const posX = e.clientX || (window.innerWidth / 2);
       const posY = e.clientY || (window.innerHeight / 2);
 
@@ -912,7 +935,7 @@
 
         setTimeout(() => {
           document.getElementById('breedingResultBox').style.display = 'block';
-          showToast('🎉 Hatched Sailor Champion!');
+          showToast('🎉 Hatched Sailor Hero!');
         }, 300);
       }, 1500);
     }
@@ -1015,6 +1038,7 @@
     }
 
     window.onload = () => {
+      syncTelegramUser();
       updateUI();
       startCountdownTicker();
       initAmbientParticles();
