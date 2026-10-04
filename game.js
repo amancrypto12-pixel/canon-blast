@@ -843,6 +843,18 @@ function initRouter() {
 }
 
 // --- 14. MODAL CONTROLS ---
+function claimDailyBonus() {
+  const s = GameStore.state;
+  GameStore.update({
+    fish: s.fish + 25000,
+    stars: s.stars + 10
+  });
+  audio.play('fanfare');
+  haptic('heavy');
+  showToast('Claimed Daily Streak: +25,000 Fish & 10 Blue Stars! 🎁', '🎉');
+  closeAllModals();
+}
+
 function closeAllModals() {
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
 }

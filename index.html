@@ -59,7 +59,7 @@
               <span class="side-chip-icon">👑</span>
               <span class="side-chip-text">REEF PASS</span>
             </div>
-            <div class="side-chip" id="btnDailyPass" onclick="showToast('Daily Streak Day 5 Claimed! +15,000 Fish', '📅')">
+            <div class="side-chip" id="btnDailyPass" onclick="document.getElementById('modalDailyStreak').classList.add('active'); haptic('medium');">
               <span class="side-chip-icon">📅</span>
               <span class="side-chip-text">DAILY PASS</span>
               <span class="side-chip-sub">+1</span>
@@ -74,11 +74,11 @@
 
           <!-- Right Side Panel -->
           <div class="side-panel-right">
-            <div class="side-chip" onclick="showToast('Energy Capacity: 59.2K / 2,000', '⚡')">
+            <div class="side-chip" id="btnEnergyChip" onclick="document.getElementById('modalEnergy').classList.add('active'); haptic('medium');">
               <span class="side-chip-icon">⚡</span>
               <span class="side-chip-text">59.2K / 2 000</span>
             </div>
-            <div class="side-chip" onclick="showToast('2X Multiplier Booster Active for 5 Days!', '🚀')">
+            <div class="side-chip" id="btnBoosterChip" onclick="document.getElementById('modalBooster').classList.add('active'); haptic('medium');">
               <span class="side-chip-icon">🚀</span>
               <span class="side-chip-text">5 DAYS</span>
               <span class="side-chip-sub">+2</span>
@@ -359,6 +359,97 @@
         <button class="modal-action-btn" style="background:linear-gradient(135deg,#FFD700,#FF9F1C); color:#000;" onclick="payWithTelegramStars('Sea King Pass (30 Days)', 1200)">
           👑 <img class="inline-star-icon" src="assets/icon_user_star.png" alt="Star" /> BUY 30-DAY PASS (1200 STARS)
         </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Modal 7: Daily Login Streak -->
+  <div class="modal-overlay" id="modalDailyStreak">
+    <div class="modal-card">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-title">📅 DAILY LOGIN STREAK</div>
+      <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Check in daily to claim escalating Fish, Love Eggs & Blue Stars!</div>
+      
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:12px;">
+        <div style="background:#0E121E; border:1px solid #3DDC68; border-radius:10px; padding:8px 4px; text-align:center;">
+          <div style="font-size:9px; color:#8E98B0;">DAY 1</div>
+          <div style="font-size:14px; margin:2px 0;">🐟</div>
+          <div style="font-size:9px; color:#3DDC68; font-weight:900;">CLAIMED</div>
+        </div>
+        <div style="background:#0E121E; border:1px solid #3DDC68; border-radius:10px; padding:8px 4px; text-align:center;">
+          <div style="font-size:9px; color:#8E98B0;">DAY 2</div>
+          <div style="font-size:14px; margin:2px 0;">🐟</div>
+          <div style="font-size:9px; color:#3DDC68; font-weight:900;">CLAIMED</div>
+        </div>
+        <div style="background:#0E121E; border:1px solid #3DDC68; border-radius:10px; padding:8px 4px; text-align:center;">
+          <div style="font-size:9px; color:#8E98B0;">DAY 3</div>
+          <div style="font-size:14px; margin:2px 0;">❤️</div>
+          <div style="font-size:9px; color:#3DDC68; font-weight:900;">CLAIMED</div>
+        </div>
+        <div style="background:rgba(0,212,255,0.15); border:1.5px solid var(--accent-cyan); border-radius:10px; padding:8px 4px; text-align:center;">
+          <div style="font-size:9px; color:var(--accent-cyan); font-weight:900;">DAY 4</div>
+          <div style="font-size:14px; margin:2px 0;"><img class="inline-star-icon" src="assets/icon_user_star.png" style="width:18px;height:18px;" /></div>
+          <div style="font-size:9px; color:#fff; font-weight:900;">TODAY</div>
+        </div>
+      </div>
+
+      <button class="modal-action-btn btn-crack" onclick="claimDailyBonus()">
+        🎁 CLAIM TODAY: +25,000 🐟 & 10 <img class="inline-star-icon" src="assets/icon_user_star.png" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal 8: Energy Refill & Capacity Upgrade -->
+  <div class="modal-overlay" id="modalEnergy">
+    <div class="modal-card">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-title">⚡ ENERGY TANK</div>
+      <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Energy allows you to tap feed and earn DLP tokens!</div>
+
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--stroke); border-radius:12px; padding:10px; margin-bottom:12px; text-align:left;">
+        <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:900; color:#fff;">
+          <span>Current Tank:</span>
+          <span style="color:var(--accent-cyan);">59.2K / 2,000 Capacity</span>
+        </div>
+        <div style="width:100%; height:8px; background:rgba(255,255,255,0.1); border-radius:4px; margin-top:6px; overflow:hidden;">
+          <div style="width:100%; height:100%; background:linear-gradient(90deg, #00D4FF, #0066FF);"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="modal-action-btn btn-crack" onclick="showToast('Energy instantly refilled to 100%!', '⚡'); closeAllModals();">
+          ⚡ INSTANT FULL REFILL (5,000 🐟)
+        </button>
+        <button class="modal-action-btn" style="background:linear-gradient(135deg, #00D4FF, #0066FF); color:#fff;" onclick="payWithTelegramStars('Energy Capacity +1,000', 50)">
+          🔋 UPGRADE +1,000 MAX CAP (<img class="inline-star-icon" src="assets/icon_user_star.png" /> 50)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 9: Active Multipliers & Boosters -->
+  <div class="modal-overlay" id="modalBooster">
+    <div class="modal-card">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-title">🚀 ACTIVE MULTIPLIERS</div>
+      <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Supercharge your mining and breeding speed!</div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+        <div style="background:#0E121E; border:1px solid var(--stroke); border-radius:10px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="text-align:left;">
+            <div style="font-weight:900; color:#fff; font-size:11px;">2X Tap Yield Multiplier</div>
+            <div style="font-size:9px; color:#3DDC68;">ACTIVE • 5 Days Remaining</div>
+          </div>
+          <span style="font-size:16px;">🔥</span>
+        </div>
+        <div style="background:#0E121E; border:1px solid var(--stroke); border-radius:10px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="text-align:left;">
+            <div style="font-weight:900; color:#fff; font-size:11px;">Turbo Hatching Speed (50%)</div>
+            <div style="font-size:9px; color:#8E98B0;">Inactive</div>
+          </div>
+          <button class="cta-btn cta-btn-stake" style="padding:4px 8px; font-size:9px;" onclick="payWithTelegramStars('Turbo Hatching Booster', 80)">ACTIVATE (<img class="inline-star-icon" src="assets/icon_user_star.png" /> 80)</button>
+        </div>
       </div>
     </div>
   </div>
