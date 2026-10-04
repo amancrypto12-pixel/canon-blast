@@ -72,14 +72,23 @@
           </div>
         </div>
 
-        <!-- Liquid Level Progress Bar -->
-        <div class="level-progress-container">
-          <div class="level-progress-labels">
-            <span id="levelProgressText" style="color:#fff; font-size:10px; font-weight:800;">LEVEL 1 PROGRESS: 0/5 FEEDS</span>
-            <span style="color:var(--accent-gold); font-size:10px; font-weight:800;">LVL 5 UNLOCKS BREEDING 👑</span>
+        <!-- AUTHENTIC DUCK MY DUCK PROGRESS & ACTION WIDGET -->
+        <div class="dmd-progress-widget">
+          <div class="dmd-progress-left">
+            <div class="dmd-level-badge" id="dmdLevelBadge">1</div>
+            <div class="dmd-track-wrapper">
+              <div class="dmd-track">
+                <div class="dmd-fill" id="dmdProgressFill" style="width: 0%;"></div>
+              </div>
+              <img class="dmd-milestone-egg" src="assets/pearl_egg_lvl5.png" alt="Milestone Egg" />
+            </div>
           </div>
-          <div class="level-progress-track">
-            <div class="level-progress-fill" id="levelProgressFill" style="width: 0%;"></div>
+          <div class="dmd-actions-right">
+            <button class="dmd-pill-btn" id="dmdBreedPill">BREED 0/5</button>
+            <button class="dmd-pill-btn" id="dmdStakePill">
+              <span style="font-size:10px;">👑</span> STAKE
+            </button>
+            <button class="dmd-info-btn" id="dmdInfoBtn" onclick="showToast('Reach 5/5 Feeds to Breed or Stake your Dolphin!', 'ℹ️')">i</button>
           </div>
         </div>
 

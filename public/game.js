@@ -353,17 +353,25 @@ function renderActiveDolphin() {
   if (slotPill) slotPill.innerText = `SLOT ${GameStore.state.activeSlot + 1} / 11`;
   if (statusChipVal) statusChipVal.innerText = `LVL ${dolphin.level} ~ ${dolphin.rarity.toUpperCase()}`;
 
+  // Update Authentic Duck My Duck Widget
+  const dmdLevelBadge = document.getElementById('dmdLevelBadge');
+  const dmdProgressFill = document.getElementById('dmdProgressFill');
+  const dmdBreedPill = document.getElementById('dmdBreedPill');
+
+  if (dmdLevelBadge) dmdLevelBadge.innerText = dolphin.level;
   const percent = (dolphin.feedProgress / dolphin.feedMax) * 100;
-  if (levelProgressFill) levelProgressFill.style.width = percent + '%';
-  if (levelProgressText) {
+  if (dmdProgressFill) dmdProgressFill.style.width = percent + '%';
+
+  if (dmdBreedPill) {
     if (dolphin.level >= 5 && dolphin.feedProgress >= 5) {
-      levelProgressText.innerText = 'MAX (5/5 FEEDS) - READY TO BREED';
-      levelProgressText.style.color = 'var(--accent-gold)';
+      dmdBreedPill.innerText = 'READY TO BREED';
+      dmdBreedPill.classList.add('ready-glow');
     } else {
-      levelProgressText.innerText = `LEVEL ${dolphin.level} PROGRESS: ${dolphin.feedProgress}/${dolphin.feedMax} FEEDS`;
-      levelProgressText.style.color = '#fff';
+      dmdBreedPill.innerText = `BREED ${dolphin.feedProgress}/${dolphin.feedMax}`;
+      dmdBreedPill.classList.remove('ready-glow');
     }
   }
+
   if (breedProgressText) breedProgressText.innerText = `BREED ${dolphin.feedProgress}/${dolphin.feedMax}`;
 
   // State Banners
@@ -930,6 +938,25 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btnOpenPackModal')?.addEventListener('click', () => {
     document.getElementById('modalPack').classList.add('active');
     haptic('medium');
+  });
+
+  document.getElementById('dmdBreedPill')?.addEventListener('click', () => {
+    const dolphin = GameStore.getActiveDolphin();
+    if (dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
+      showToast(`Reach 5/5 Feeds to breed! Currently: ${dolphin.feedProgress}/${dolphin.feedMax}`, '💖');
+    } else {
+      document.getElementById('modalBreed').classList.add('active');
+      haptic('medium');
+    }
+  });
+
+  document.getElementById('dmdStakePill')?.addEventListener('click', () => {
+    const dolphin = GameStore.getActiveDolphin();
+    if (dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
+      showToast(`Reach Level 5 (5/5 Feeds) to stake! Currently: Level ${dolphin.level}`, '⚡');
+    } else {
+      startStakingActive();
+    }
   });
 
   document.getElementById('btnBreedCTA')?.addEventListener('click', () => {
