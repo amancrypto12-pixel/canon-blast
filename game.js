@@ -2,35 +2,30 @@
 // --- 1. SINGLE-SOURCE-OF-TRUTH GAME STATE STORE ---
 const GameStore = {
   state: {
-    dlp: 183.38,
-    fish: 92935,
+    dlp: 187.74,
+    fish: 85361,
     stars: 50,
     hearts: 14,
     shells: 65,
-    level: 5,
-    rarity: 'Common',
-    feedCost: 150,
-    feedProgress: 3,
-    feedMax: 5,
     activeSlot: 0,
     slots: [
-      { id: 0, level: 5, rarity: 'Common', owned: true, skin: 'assets/dolphin_hero_stage.png' },
-      { id: 1, level: 3, rarity: 'Uncommon', owned: true, skin: 'assets/events/skin_sailor_squad_1.png' },
-      { id: 2, level: 4, rarity: 'Rare', owned: true, skin: 'assets/events/skin_cyber_currents_1.png' },
-      { id: 3, level: 5, rarity: 'Epic', owned: true, skin: 'assets/events/skin_abyssal_mystic_1.png' },
-      { id: 4, level: 1, rarity: 'Common', owned: true, skin: 'assets/dolphin_hero_stage.png' },
-      { id: 5, level: 0, rarity: 'Common', owned: false },
-      { id: 6, level: 0, rarity: 'Common', owned: false },
-      { id: 7, level: 0, rarity: 'Common', owned: false },
-      { id: 8, level: 0, rarity: 'Common', owned: false },
-      { id: 9, level: 0, rarity: 'Common', owned: false },
-      { id: 10, level: 0, rarity: 'Common', owned: false }
+      { id: 0, level: 1, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 1, level: 2, rarity: 'Uncommon', feedProgress: 2, feedMax: 5, state: 'active', skin: 'assets/events/skin_sailor_squad_1.png', breedEnd: 0 },
+      { id: 2, level: 3, rarity: 'Rare', feedProgress: 4, feedMax: 5, state: 'active', skin: 'assets/events/skin_cyber_currents_1.png', breedEnd: 0 },
+      { id: 3, level: 5, rarity: 'Epic', feedProgress: 5, feedMax: 5, state: 'ready_breed', skin: 'assets/events/skin_abyssal_mystic_1.png', breedEnd: 0 },
+      { id: 4, level: 1, rarity: 'Common', feedProgress: 1, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 5, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 6, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 7, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 8, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 9, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 10, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 }
     ],
     grid: Array(49).fill(null),
     combo: 0,
     lastMergeTime: 0,
     hotTimer: 24,
-    breedingRoom: null
+    marketMode: 'dolphins'
   },
 
   listeners: [],
@@ -40,6 +35,10 @@ const GameStore = {
   update(patch) {
     Object.assign(this.state, patch);
     this.notify();
+  },
+
+  getActiveDolphin() {
+    return this.state.slots[this.state.activeSlot];
   }
 };
 
@@ -47,7 +46,7 @@ const GameStore = {
 class SoundEngine {
   constructor() {
     this.ctx = null;
-    this.scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50]; // C5, D5, E5, G5, A5, C6
+    this.scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
   }
   init() {
     if (!this.ctx) {
@@ -85,7 +84,6 @@ class SoundEngine {
       osc.start(now);
       osc.stop(now + 0.07);
     } else if (type === 'merge') {
-      // Pentatonic scale note based on combo index
       const noteIdx = Math.min(param, this.scale.length - 1);
       const freq = this.scale[noteIdx];
       osc.type = 'sine';
@@ -209,7 +207,7 @@ function initPixiEngine() {
   });
 }
 
-// --- 6. FLYING FOOD PARTICLES STREAM (FISH -> MOUTH) ---
+// --- 6. FLYING FOOD PARTICLES STREAM ---
 function shootFlyingFood(startX, startY, targetX, targetY) {
   for (let i = 0; i < 3; i++) {
     setTimeout(() => {
@@ -252,7 +250,13 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
   }
 }
 
-// --- 7. LOBBY HERO & TAP FEED LOGIC ---
+// --- 7. DYNAMIC LEVEL PROGRESSION & FEED ENGINE ---
+function getFeedCost(level, rarity) {
+  const baseCosts = { Common: 75, Uncommon: 150, Rare: 300, Epic: 750, Legendary: 2000 };
+  const base = baseCosts[rarity] || 75;
+  return Math.floor(base * Math.pow(1.35, level - 1));
+}
+
 function initLobby() {
   const heroCard = document.getElementById('heroCard');
   const feedBtn = document.getElementById('feedBtn');
@@ -260,10 +264,20 @@ function initLobby() {
 
   function handleFeed(e) {
     const s = GameStore.state;
-    if (s.fish < s.feedCost) {
-      showToast('Need 150 Fish! Merge pearls or crack eggs to get more.', '🐟');
+    const dolphin = GameStore.getActiveDolphin();
+    if (!dolphin || dolphin.state === 'locked') return;
+
+    if (dolphin.state === 'breeding') {
+      showToast('Breeding in progress! Please do not disturb 💖', '⏳');
       return;
     }
+
+    const cost = getFeedCost(dolphin.level, dolphin.rarity);
+    if (s.fish < cost) {
+      showToast(`Need ${cost} Fish! Merge pearls or crack eggs.`, '🐟');
+      return;
+    }
+
     audio.play('tap');
     haptic('medium');
 
@@ -271,32 +285,39 @@ function initLobby() {
     const cardRect = heroCard.getBoundingClientRect();
     const tapX = e.clientX || (rect.left + rect.width / 2);
     const tapY = e.clientY || rect.top;
-
     const mouthX = cardRect.left + cardRect.width / 2;
     const mouthY = cardRect.top + cardRect.height * 0.45;
 
     shootFlyingFood(tapX, tapY, mouthX, mouthY);
 
-    spawnTapParticle(tapX - 25, tapY - 10, '+0.02 DLP', '#00D4FF');
-    spawnTapParticle(tapX + 25, tapY, '-' + s.feedCost + ' 🐟', '#6BE35A');
+    const yieldAmount = +(0.02 * dolphin.level).toFixed(2);
+    spawnTapParticle(tapX - 25, tapY - 10, `+${yieldAmount} DLP`, '#00D4FF');
+    spawnTapParticle(tapX + 25, tapY, `-${cost} 🐟`, '#6BE35A');
 
-    let newProgress = s.feedProgress + 1;
-    let newLevel = s.level;
-
-    if (newProgress >= s.feedMax) {
-      newProgress = s.feedMax;
-      audio.play('fanfare');
-      showToast('MAX LEVEL REACHED! READY TO BREED OR STAKE 👑', '🎉');
+    // Progress Level Up
+    let nextFeeds = dolphin.feedProgress + 1;
+    if (nextFeeds >= dolphin.feedMax) {
+      if (dolphin.level < 5) {
+        dolphin.level += 1;
+        dolphin.feedProgress = 0;
+        audio.play('fanfare');
+        showToast(`LEVEL UP! Dolphin reached Level ${dolphin.level}! 🎉`, '⭐');
+      } else {
+        dolphin.feedProgress = dolphin.feedMax;
+        dolphin.state = 'ready_breed';
+        audio.play('fanfare');
+        showToast('MAX LEVEL REACHED! READY TO BREED OR STAKE 👑', '🎉');
+      }
+    } else {
+      dolphin.feedProgress = nextFeeds;
     }
 
     GameStore.update({
-      dlp: +(s.dlp + 0.02).toFixed(2),
-      fish: s.fish - s.feedCost,
-      feedProgress: newProgress,
-      level: newLevel
+      dlp: +(s.dlp + yieldAmount).toFixed(2),
+      fish: s.fish - cost
     });
 
-    updateLevelBar();
+    renderActiveDolphin();
   }
 
   if (feedBtn) feedBtn.addEventListener('click', handleFeed);
@@ -304,25 +325,87 @@ function initLobby() {
     if (e.target !== feedBtn && !feedBtn.contains(e.target)) handleFeed(e);
   });
 
-  updateLevelBar();
+  renderActiveDolphin();
+  initSlotSelector();
 }
 
-function updateLevelBar() {
-  const s = GameStore.state;
-  const fill = document.getElementById('levelProgressFill');
-  const label = document.getElementById('levelProgressText');
-  const percent = Math.min((s.feedProgress / s.feedMax) * 100, 100);
+function renderActiveDolphin() {
+  const dolphin = GameStore.getActiveDolphin();
+  if (!dolphin) return;
 
-  if (fill) fill.style.width = percent + '%';
-  if (label) {
-    if (s.feedProgress >= s.feedMax) {
-      label.innerText = 'MAX (5/5 FEEDS) - READY TO BREED';
-      label.style.color = 'var(--accent-gold)';
+  const sprite = document.getElementById('heroSprite');
+  const rarityPill = document.getElementById('heroRarityPill');
+  const slotPill = document.getElementById('heroSlotPill');
+  const feedCostSpan = document.getElementById('feedCostVal');
+  const breedProgressText = document.getElementById('breedProgressText');
+  const levelProgressFill = document.getElementById('levelProgressFill');
+  const levelProgressText = document.getElementById('levelProgressText');
+  const statusChipVal = document.getElementById('statusChipVal');
+
+  // Update card visuals
+  if (sprite) {
+    sprite.src = dolphin.skin;
+    const scale = 0.85 + (dolphin.level * 0.05);
+    sprite.style.transform = `scale(${scale})`;
+  }
+
+  const cost = getFeedCost(dolphin.level, dolphin.rarity);
+  if (feedCostSpan) feedCostSpan.innerText = cost;
+  if (rarityPill) rarityPill.innerText = `LVL ${dolphin.level} • ${dolphin.rarity.toUpperCase()}`;
+  if (slotPill) slotPill.innerText = `SLOT ${GameStore.state.activeSlot + 1} / 11`;
+  if (statusChipVal) statusChipVal.innerText = `LVL ${dolphin.level} ~ ${dolphin.rarity.toUpperCase()}`;
+
+  // Update Progress Bars
+  const percent = (dolphin.feedProgress / dolphin.feedMax) * 100;
+  if (levelProgressFill) levelProgressFill.style.width = percent + '%';
+  if (levelProgressText) {
+    if (dolphin.level >= 5 && dolphin.feedProgress >= 5) {
+      levelProgressText.innerText = 'MAX (5/5 FEEDS) - READY TO BREED';
+      levelProgressText.style.color = 'var(--accent-gold)';
     } else {
-      label.innerText = `LEVEL PROGRESS: ${s.feedProgress}/${s.feedMax} FEEDS`;
-      label.style.color = '#fff';
+      levelProgressText.innerText = `LEVEL ${dolphin.level} PROGRESS: ${dolphin.feedProgress}/${dolphin.feedMax} FEEDS`;
+      levelProgressText.style.color = '#fff';
     }
   }
+  if (breedProgressText) breedProgressText.innerText = `BREED ${dolphin.feedProgress}/${dolphin.feedMax}`;
+
+  // State Banners (Breeding / Ready to Breed)
+  const breedingBanner = document.getElementById('bannerBreeding');
+  const readyBanner = document.getElementById('bannerReady');
+
+  if (dolphin.state === 'breeding') {
+    if (breedingBanner) breedingBanner.classList.add('active');
+    if (readyBanner) readyBanner.classList.remove('active');
+  } else if (dolphin.state === 'ready_breed') {
+    if (readyBanner) readyBanner.classList.add('active');
+    if (breedingBanner) breedingBanner.classList.remove('active');
+  } else {
+    if (breedingBanner) breedingBanner.classList.remove('active');
+    if (readyBanner) readyBanner.classList.remove('active');
+  }
+
+  // Update 11 Slots row
+  document.querySelectorAll('.slot-dot').forEach((dot, idx) => {
+    dot.classList.remove('active', 'owned');
+    const sDolphin = GameStore.state.slots[idx];
+    if (sDolphin && sDolphin.state !== 'locked') dot.classList.add('owned');
+    if (idx === GameStore.state.activeSlot) dot.classList.add('active');
+  });
+}
+
+function initSlotSelector() {
+  document.querySelectorAll('.slot-dot').forEach((dot, idx) => {
+    dot.addEventListener('click', () => {
+      const sDolphin = GameStore.state.slots[idx];
+      if (sDolphin && sDolphin.state !== 'locked') {
+        GameStore.update({ activeSlot: idx });
+        haptic('light');
+        renderActiveDolphin();
+      } else if (sDolphin && sDolphin.state === 'locked') {
+        showToast(`Unlock Slot ${idx + 1} with ⭐ 120 Stars!`, '🔒');
+      }
+    });
+  });
 }
 
 function spawnTapParticle(x, y, text, color) {
@@ -336,7 +419,7 @@ function spawnTapParticle(x, y, text, color) {
   setTimeout(() => el.remove(), 750);
 }
 
-// --- 8. 7x7 MERGE-2 BOARD (TOUCH DRAG-AND-DROP + TAP SELECTION) ---
+// --- 8. 7x7 MERGE-2 BOARD ---
 const lockedCorners = [0, 6, 42, 48];
 let selectedCellIndex = null;
 let draggedIndex = null;
@@ -401,7 +484,6 @@ function renderMergeGrid() {
   }
 }
 
-// True Touch / Pointer Dragging Logic
 function setupPointerDrag() {
   const gridEl = document.getElementById('mergeGrid');
   if (!gridEl) return;
@@ -417,7 +499,6 @@ function setupPointerDrag() {
     draggedIndex = idx;
     const item = s.grid[idx];
 
-    // Create ghost floating drag element
     ghostDragEl = document.createElement('img');
     ghostDragEl.src = item.type === 'heart' ? `assets/heart_egg_lvl${item.level}.png` : `assets/pearl_egg_lvl${item.level}.png`;
     ghostDragEl.style.position = 'fixed';
@@ -439,7 +520,6 @@ function setupPointerDrag() {
     ghostDragEl.style.left = e.clientX + 'px';
     ghostDragEl.style.top = e.clientY + 'px';
 
-    // Highlight hovered cell
     document.querySelectorAll('.grid-cell').forEach(c => c.classList.remove('drag-over'));
     const hoveredEl = document.elementFromPoint(e.clientX, e.clientY);
     const targetCell = hoveredEl?.closest('.grid-cell');
@@ -503,7 +583,6 @@ function performMergeOrMove(fromIdx, toIdx) {
   if (!source) return;
 
   if (target && source.type === target.type && source.level === target.level && source.level < 12) {
-    // Merge-2 Success!
     const now = Date.now();
     let combo = (now - s.lastMergeTime < 2500) ? s.combo + 1 : 1;
     audio.play('merge', combo);
@@ -572,7 +651,7 @@ function spawnPearlToBoard() {
   renderMergeGrid();
 }
 
-// --- 9. 5-STAGE DRAMATIC EGG CRACKING RITUAL MODAL ---
+// --- 9. 5-STAGE EGG CRACKING RITUAL MODAL ---
 let activeCrackEgg = null;
 let activeCrackIndex = null;
 
@@ -675,32 +754,28 @@ function initMarketChart() {
   ctx.stroke();
 }
 
-// --- 11. REAL PLAYER SHARED BREEDING ROOM ---
-function initBreeding() {
-  document.getElementById('btnCreateRoom')?.addEventListener('click', () => {
-    const roomId = 'REEF-' + Math.floor(1000 + Math.random() * 9000);
-    GameStore.update({ breedingRoom: roomId });
-    document.getElementById('roomStatusText').innerText = 'Room Created: ' + roomId + ' (Waiting for partner)';
-    showToast('Breeding Room Created: ' + roomId, '💖');
-    haptic('medium');
-  });
+// --- 11. BREEDING AND STAKING IN-GAME STATE TRANSITIONS ---
+function startBreedingActive() {
+  const dolphin = GameStore.getActiveDolphin();
+  if (!dolphin) return;
+  dolphin.state = 'breeding';
+  dolphin.breedEnd = Date.now() + 6 * 3600 * 1000; // 6 hours
+  audio.play('fanfare');
+  haptic('heavy');
+  showToast('Breeding started! Status: DO NOT DISTURB 💖', '🐣');
+  closeAllModals();
+  renderActiveDolphin();
+}
 
-  document.getElementById('btnShareInvite')?.addEventListener('click', () => {
-    const room = GameStore.state.breedingRoom || 'REEF-8921';
-    const link = `https://t.me/share/url?url=https://t.me/DolphinPearlBot/game?startapp=breed_${room}&text=Join%20my%20Dolphin%20Breeding%20Nest%20Room%20${room}!`;
-    if (window.Telegram?.WebApp?.openTelegramLink) {
-      window.Telegram.WebApp.openTelegramLink(link);
-    } else {
-      window.open(link, '_blank');
-    }
-  });
-
-  document.getElementById('btnStartIncubation')?.addEventListener('click', () => {
-    audio.play('fanfare');
-    haptic('heavy');
-    showToast('Incubation started with partner! Cooldown: 6h', '🐣');
-    closeAllModals();
-  });
+function startStakingActive() {
+  const dolphin = GameStore.getActiveDolphin();
+  if (!dolphin) return;
+  dolphin.state = 'staked';
+  audio.play('fanfare');
+  haptic('heavy');
+  showToast('Dolphin staked in 24/7 automated harvest pool! ⚡', '👑');
+  closeAllModals();
+  renderActiveDolphin();
 }
 
 // --- 12. TELEGRAM STARS PAYMENT FLOW ---
@@ -807,7 +882,6 @@ window.addEventListener('DOMContentLoaded', () => {
   initPixiEngine();
   initLobby();
   initMergeBoard();
-  initBreeding();
   initRouter();
 
   GameStore.subscribe((s) => {
@@ -822,9 +896,26 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('btnBreedCTA')?.addEventListener('click', () => {
-    document.getElementById('modalBreed').classList.add('active');
-    haptic('medium');
+    const dolphin = GameStore.getActiveDolphin();
+    if (dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
+      showToast(`Reach Level 5 (5/5 Feeds) to breed! Currently: Level ${dolphin.level} (${dolphin.feedProgress}/${dolphin.feedMax})`, '💖');
+    } else {
+      document.getElementById('modalBreed').classList.add('active');
+      haptic('medium');
+    }
   });
+
+  document.getElementById('btnStakeCTA')?.addEventListener('click', () => {
+    const dolphin = GameStore.getActiveDolphin();
+    if (dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
+      showToast(`Reach Level 5 (5/5 Feeds) to stake! Currently: Level ${dolphin.level}`, '⚡');
+    } else {
+      startStakingActive();
+    }
+  });
+
+  document.getElementById('btnStartBreedingBanner')?.addEventListener('click', startBreedingActive);
+  document.getElementById('btnStartStakingBanner')?.addEventListener('click', startStakingActive);
 
   document.getElementById('btnOpenWheelModal')?.addEventListener('click', () => {
     document.getElementById('modalWheel').classList.add('active');

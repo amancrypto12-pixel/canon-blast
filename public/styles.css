@@ -48,7 +48,7 @@ body, html {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 15%, #161A2B 0%, #0D0F17 75%);
+  background: radial-gradient(circle at 50% 15%, #181E33 0%, #0D0F17 80%);
 }
 
 #pixi-canvas-container {
@@ -67,7 +67,7 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(13,15,23,0.88);
+  background: rgba(13,15,23,0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--stroke);
   flex-shrink: 0;
@@ -203,10 +203,6 @@ body, html {
   align-items: center;
   justify-content: center;
   text-align: center;
-  transition: transform 0.1s;
-}
-.trio-chip:active {
-  transform: scale(0.96);
 }
 .trio-title {
   font-size: 9px;
@@ -249,7 +245,7 @@ body, html {
 }
 .level-progress-fill {
   height: 100%;
-  width: 60%;
+  width: 0%;
   background: linear-gradient(90deg, #FF9F1C, #FFC933);
   border-radius: 10px;
   transition: width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -303,6 +299,43 @@ body, html {
   border: 1px solid var(--accent-cyan);
   color: var(--accent-cyan);
   text-transform: uppercase;
+}
+
+/* CARD SPECIAL OVERLAYS: BREEDING IN PROGRESS / READY STATES */
+.card-state-banner {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(13,15,23,0.92);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  text-align: center;
+}
+.card-state-banner.active {
+  display: flex;
+}
+.state-badge {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  letter-spacing: 0.5px;
+}
+.state-badge-breeding {
+  background: linear-gradient(135deg, #FF4D8D, #FF80AB);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255,77,141,0.6);
+}
+.state-badge-ready {
+  background: linear-gradient(135deg, #FF9F1C, #FFC933);
+  color: #000;
+  box-shadow: 0 0 16px rgba(255,159,28,0.6);
 }
 
 /* MASCOT BOBBING & SQUASH PHYSICS */
@@ -565,6 +598,30 @@ body, html {
 }
 
 /* MARKET & LIVE PRICE CHART */
+.market-header-toggle {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+.market-toggle-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+}
+.market-toggle-btn.active {
+  background: var(--accent-cyan);
+  color: #000;
+  border-color: var(--accent-cyan);
+}
+
 .market-filter-tabs {
   display: flex;
   gap: 6px;
@@ -631,49 +688,34 @@ body, html {
   border-radius: 8px;
 }
 
-/* 32 EVENT COLLECTIONS TRAY */
-.event-card {
+/* TASKS & REFERRALS SECTION */
+.tasks-section-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  color: var(--accent-gold);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+.task-item {
   background: var(--bg-card);
   border: 1px solid var(--stroke);
-  border-radius: 16px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: transform 0.1s;
-}
-.event-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.event-slots-tray {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding: 4px 0;
-}
-.event-slot-item {
-  width: 54px;
-  height: 54px;
   border-radius: 12px;
-  background: #1E2230;
-  border: 1px dashed var(--stroke);
+  padding: 12px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
+  justify-content: space-between;
 }
-.event-slot-item.filled {
-  border-style: solid;
-  border-color: var(--accent-gold);
-  background: rgba(255,201,51,0.12);
-}
-.event-slot-img {
-  width: 85%;
-  height: 85%;
-  object-fit: contain;
+.task-btn {
+  background: var(--accent-gold);
+  color: #000;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
 }
 
 /* BOTTOM NAVIGATION DOCK (5 TABS) */
