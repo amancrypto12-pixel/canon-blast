@@ -7,6 +7,8 @@ const GameStore = {
     stars: 45,
     hearts: 14,
     shells: 65,
+    energy: 0,
+    maxEnergy: 2000,
     activeSlot: 0,
     slots: [
       { id: 0, level: 5, rarity: 'Uncommon', feedCost: 150, feedProgress: 5, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
@@ -870,6 +872,12 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('top-fish').innerText = s.fish.toLocaleString();
     document.getElementById('top-stars').innerText = s.stars.toLocaleString();
     document.getElementById('hero-dlp-val').innerText = s.dlp.toFixed(2);
+    const energyEl = document.getElementById('energyTankVal');
+    if (energyEl) energyEl.innerText = `${s.energy} / ${s.maxEnergy.toLocaleString()}`;
+    const modalEnergyEl = document.getElementById('modalEnergyVal');
+    if (modalEnergyEl) modalEnergyEl.innerText = `${s.energy} / ${s.maxEnergy.toLocaleString()} Capacity`;
+    const fillEl = document.getElementById('modalEnergyFill');
+    if (fillEl) fillEl.style.width = `${(s.energy / s.maxEnergy) * 100}%`;
   });
 
   document.getElementById('btnOpenPackModal')?.addEventListener('click', () => {

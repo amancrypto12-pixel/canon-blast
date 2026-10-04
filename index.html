@@ -76,7 +76,7 @@
           <div class="side-panel-right">
             <div class="side-chip" id="btnEnergyChip" onclick="document.getElementById('modalEnergy').classList.add('active'); haptic('medium');">
               <span class="side-chip-icon">⚡</span>
-              <span class="side-chip-text">59.2K / 2 000</span>
+              <span class="side-chip-text" id="energyTankVal">0 / 2 000</span>
             </div>
             <div class="side-chip" id="btnBoosterChip" onclick="document.getElementById('modalBooster').classList.add('active'); haptic('medium');">
               <span class="side-chip-icon">🚀</span>
@@ -410,10 +410,10 @@
       <div style="background:rgba(255,255,255,0.04); border:1px solid var(--stroke); border-radius:12px; padding:10px; margin-bottom:12px; text-align:left;">
         <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:900; color:#fff;">
           <span>Current Tank:</span>
-          <span style="color:var(--accent-cyan);">59.2K / 2,000 Capacity</span>
+          <span style="color:var(--accent-cyan);" id="modalEnergyVal">0 / 2,000 Capacity</span>
         </div>
         <div style="width:100%; height:8px; background:rgba(255,255,255,0.1); border-radius:4px; margin-top:6px; overflow:hidden;">
-          <div style="width:100%; height:100%; background:linear-gradient(90deg, #00D4FF, #0066FF);"></div>
+          <div style="width:0%; height:100%; background:linear-gradient(90deg, #00D4FF, #0066FF);" id="modalEnergyFill"></div>
         </div>
       </div>
 
