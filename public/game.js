@@ -288,7 +288,7 @@ function initLobby() {
         dolphin.level += 1;
         dolphin.feedProgress = 0;
         audio.play('fanfare');
-        showToast(`LEVEL UP! Dolphin reached Level ${dolphin.level}! 🎉`, '⭐');
+        showToast(`LEVEL UP! Dolphin reached Level ${dolphin.level}! 🎉`, '✨');
       } else {
         dolphin.feedProgress = dolphin.feedMax;
         dolphin.state = 'ready_breed';
@@ -413,7 +413,7 @@ function renderSlotsTracker() {
       GameStore.update({ activeSlot: lockedIdx });
       renderActiveDolphin();
     } else {
-      showToast('All slots currently unlocked! 👑', '⭐');
+      showToast('All slots currently unlocked! 👑', '<img class="inline-star-icon" src="assets/icon_user_star.png" />');
     }
   });
   container.appendChild(plusBtn);
@@ -813,12 +813,12 @@ function payWithTelegramStars(item, starsAmount) {
     window.Telegram.WebApp.openInvoice(invoiceUrl, (status) => {
       if (status === 'paid') {
         audio.play('fanfare');
-        showToast(`Payment successful for ${item}!`, '⭐');
+        showToast(`Payment successful for ${item}!`, '<img class="inline-star-icon" src="assets/icon_user_star.png" />');
         GameStore.update({ stars: GameStore.state.stars + starsAmount });
       }
     });
   } else {
-    showToast(`Telegram Stars Payment: ⭐ ${starsAmount}`, '⭐');
+    showToast(`Telegram Stars Payment: ${starsAmount}`, '<img class="inline-star-icon" src="assets/icon_user_star.png" />');
   }
 }
 

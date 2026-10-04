@@ -936,3 +936,15 @@ body, html {
   0% { transform: translate(0, 0) scale(0.7); opacity: 1; }
   100% { transform: translate(0, -50px) scale(1.15); opacity: 0; }
 }
+
+.inline-star-icon {
+  width: 15px !important;
+  height: 15px !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  object-fit: contain;
+  vertical-align: -2px;
+  display: inline-block;
+  filter: drop-shadow(0 0 6px rgba(122, 117, 245, 0.8));
+  margin: 0 2px;
+}
