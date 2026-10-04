@@ -48,7 +48,7 @@ body, html {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 10%, #172036 0%, #0B0E17 80%);
+  background: radial-gradient(circle at 50% 8%, #18223B 0%, #0B0E17 80%);
 }
 
 #pixi-canvas-container {
@@ -62,9 +62,9 @@ body, html {
 .top-bar {
   position: relative;
   z-index: 20;
-  height: 54px;
-  min-height: 54px;
-  padding: 0 14px;
+  height: 52px;
+  min-height: 52px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -77,21 +77,21 @@ body, html {
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .user-avatar-wrapper {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  max-width: 36px;
-  min-height: 36px;
-  max-height: 36px;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  max-width: 34px;
+  min-height: 34px;
+  max-height: 34px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--accent-cyan);
   background: #1B2132;
-  box-shadow: 0 0 10px rgba(0,212,255,0.35);
+  box-shadow: 0 0 8px rgba(0,212,255,0.35);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,10 +99,10 @@ body, html {
 }
 
 .user-avatar-img {
-  width: 36px !important;
-  height: 36px !important;
-  max-width: 36px !important;
-  max-height: 36px !important;
+  width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
   border-radius: 50%;
   object-fit: cover;
   display: block;
@@ -117,22 +117,22 @@ body, html {
   background: linear-gradient(135deg, #00D4FF, #0055FF);
   font-family: 'Fredoka', sans-serif;
   font-weight: 900;
-  font-size: 15px;
+  font-size: 14px;
   color: #fff;
 }
 
 .user-info-text {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 5px;
 }
 
 .username-pill {
   font-family: 'Fredoka', sans-serif;
   font-weight: 800;
-  font-size: 13px;
+  font-size: 12px;
   color: #fff;
-  max-width: 95px;
+  max-width: 85px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -143,38 +143,48 @@ body, html {
   color: #000;
   font-family: 'Fredoka', sans-serif;
   font-weight: 900;
-  font-size: 10px;
-  padding: 2px 7px;
-  border-radius: 10px;
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(255,159,28,0.4);
-  width: fit-content;
+}
+
+.wallet-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  padding: 3px 6px;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .header-pills {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .header-pill {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-family: 'Fredoka', sans-serif;
   font-weight: 900;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .pill-icon {
-  width: 20px !important;
-  height: 20px !important;
-  max-width: 20px !important;
-  max-height: 20px !important;
+  width: 18px !important;
+  height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
   object-fit: contain;
   flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
 
 .pill-val {
@@ -189,7 +199,7 @@ body, html {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: 10px 14px 80px;
+  padding: 8px 12px 75px;
 }
 
 .tab-content {
@@ -200,20 +210,60 @@ body, html {
   display: block;
 }
 
-/* ================= 3. HERO LOBBY TAB ================= */
+/* ================= 3. HERO LOBBY & FLOATING SIDE PANELS ================= */
+.lobby-center-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.side-panel-left, .side-panel-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.side-chip {
+  background: rgba(20, 24, 36, 0.85);
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+.side-chip-icon {
+  font-size: 11px;
+}
+.side-chip-text {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 800;
+  font-size: 9.5px;
+  color: #fff;
+  white-space: nowrap;
+}
+.side-chip-sub {
+  font-size: 8px;
+  color: var(--accent-gold);
+  font-weight: 800;
+}
+
 .hero-dlp-counter {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin: 2px 0 6px;
+  gap: 6px;
 }
 
 .hero-dlp-coin {
-  width: 34px !important;
-  height: 34px !important;
-  max-width: 34px !important;
-  max-height: 34px !important;
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
   object-fit: contain;
   flex-shrink: 0;
   filter: drop-shadow(0 0 10px rgba(0,212,255,0.7));
@@ -222,111 +272,10 @@ body, html {
 .hero-dlp-number {
   font-family: 'Fredoka', sans-serif;
   font-weight: 900;
-  font-size: 34px;
+  font-size: 32px;
   color: #FFFFFF;
   letter-spacing: -0.5px;
   line-height: 1;
-}
-
-/* Trio Sub-Chips */
-.trio-chips-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 6px;
-}
-
-.chip-item {
-  background: rgba(20, 24, 36, 0.85);
-  border: 1px solid var(--stroke);
-  border-radius: 10px;
-  padding: 5px 6px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-}
-
-.chip-label {
-  font-size: 9px;
-  font-weight: 800;
-  color: var(--text-muted);
-  text-transform: uppercase;
-}
-
-.chip-val {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
-  font-size: 11px;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Liquid Level Progress Bar */
-.level-progress-container {
-  width: 100%;
-  margin: 3px 0 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.level-progress-labels {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 0 2px;
-}
-
-.level-progress-track {
-  width: 100%;
-  height: 7px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.level-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #FF9F1C, #FFC933, #6BE35A);
-  border-radius: 6px;
-  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 10px rgba(255, 201, 51, 0.8);
-}
-
-/* 11 Slots Deck Dots */
-.slots-deck-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 6px;
-}
-
-.slot-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.slot-dot.owned {
-  background: rgba(0, 212, 255, 0.4);
-}
-.slot-dot.active {
-  width: 18px;
-  border-radius: 4px;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 8px var(--accent-cyan);
 }
 
 /* 4:3 RATIO HERO STAGE CARD FRAME */
@@ -334,17 +283,25 @@ body, html {
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: rgba(20, 24, 36, 0.9);
+  background: rgba(20, 24, 36, 0.92);
   border: 1.5px solid var(--stroke);
   border-radius: 20px;
   padding: 10px 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
   backdrop-filter: blur(16px);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   overflow: hidden;
+}
+
+.hero-stage-card.dotted-locked {
+  border: 2px dashed #4A5568;
+  background: rgba(14, 18, 28, 0.75);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .card-pills-row {
@@ -365,10 +322,25 @@ body, html {
   border: 1px solid rgba(255,255,255,0.1);
   color: #fff;
 }
-.card-pill.rarity-common {
-  background: rgba(216, 220, 232, 0.15);
-  color: var(--rarity-common);
-  border-color: rgba(216, 220, 232, 0.3);
+.card-pill.rarity-uncommon {
+  background: rgba(61, 220, 104, 0.15);
+  color: var(--rarity-uncommon);
+  border-color: rgba(61, 220, 104, 0.4);
+}
+.card-pill.rarity-rare {
+  background: rgba(59, 130, 255, 0.15);
+  color: var(--rarity-rare);
+  border-color: rgba(59, 130, 255, 0.4);
+}
+.card-pill.rarity-epic {
+  background: rgba(168, 85, 247, 0.15);
+  color: var(--rarity-epic);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+.card-pill.rarity-legendary {
+  background: rgba(255, 201, 51, 0.15);
+  color: var(--rarity-legendary);
+  border-color: rgba(255, 201, 51, 0.4);
 }
 
 .card-center-stage {
@@ -387,7 +359,7 @@ body, html {
   width: auto;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 12px 20px rgba(0,0,0,0.65));
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.65));
   animation: floatBob 3s ease-in-out infinite alternate;
   transform-origin: center bottom;
   cursor: pointer;
@@ -404,40 +376,7 @@ body, html {
   transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* In-Card State Banners */
-.card-state-banner {
-  display: none;
-  width: 100%;
-  padding: 6px 8px;
-  border-radius: 10px;
-  margin-bottom: 4px;
-  text-align: center;
-  z-index: 5;
-}
-.card-state-banner.active {
-  display: block;
-}
-.banner-breeding {
-  background: rgba(255, 77, 141, 0.18);
-  border: 1px solid var(--heart-pink);
-}
-.banner-ready {
-  background: rgba(255, 201, 51, 0.18);
-  border: 1px solid var(--accent-gold);
-}
-.state-banner-title {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 900;
-  font-size: 12px;
-  color: #fff;
-}
-.state-banner-desc {
-  font-size: 9px;
-  color: var(--text-muted);
-  margin-top: 1px;
-}
-
-/* 3D Depth Feed Button */
+/* 3D Feed Button */
 .feed-btn {
   width: 100%;
   background: linear-gradient(180deg, #FFB703 0%, #FB8500 100%);
@@ -485,53 +424,267 @@ body, html {
 
 .feed-btn-timer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   font-size: 8.5px;
   font-weight: 800;
   color: rgba(0,0,0,0.75);
   margin-top: 2px;
-  padding: 0 4px;
 }
 
-/* Secondary Actions */
-.action-grid-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+/* Locked Slot Card Content */
+.locked-slot-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+}
+.locked-slot-icon {
+  font-size: 42px;
+  filter: grayscale(1) opacity(0.5);
+}
+.locked-slot-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  color: #fff;
+}
+.btn-buy-slot {
+  background: linear-gradient(135deg, #FFB703, #FB8500);
+  color: #000;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 13px;
+  padding: 10px 20px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(251,133,0,0.4);
 }
 
-.cta-btn {
+/* ================= 4. HORIZONTAL SLOT TRACKER ================= */
+.slots-tracker-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 6px;
+}
+
+.slot-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 9px;
-  border-radius: 12px;
+  font-size: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.slot-item.owned {
+  background: #3DDC68;
+}
+.slot-item.active {
+  width: 20px;
+  border-radius: 5px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+.slot-item.locked {
+  background: rgba(255,255,255,0.06);
+  color: #888;
+}
+.slot-item.add-plus {
+  background: rgba(255, 201, 51, 0.2);
+  border: 1px solid var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 900;
+}
+
+/* ================= 5. DUCK PROGRESS, BREEDING & STAKING BAR ================= */
+.dmd-progress-widget {
+  width: 100%;
+  background: rgba(20, 25, 38, 0.95);
+  border: 1.5px solid var(--stroke);
+  border-radius: 20px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 4px 0 6px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+}
+
+.dmd-progress-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.dmd-level-badge {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF9F1C, #FF6B00);
+  box-shadow: 0 0 8px rgba(255, 159, 28, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Fredoka', sans-serif;
   font-weight: 900;
-  font-size: 12px;
-  border: none;
+  font-size: 14px;
+  color: #FFFFFF;
+}
+
+.dmd-track-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.dmd-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dmd-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF9F1C, #FFC933, #6BE35A);
+  border-radius: 6px;
+  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 0 8px rgba(255, 201, 51, 0.8);
+}
+
+.dmd-milestone-egg {
+  width: 18px;
+  height: 18px;
+  margin-left: -5px;
+  z-index: 2;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(255, 201, 51, 0.6));
+}
+
+.dmd-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dmd-pill-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 5px 10px;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  color: #FFFFFF;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
-.cta-btn:active {
-  transform: scale(0.97);
-}
-
-.cta-btn-breed {
-  background: linear-gradient(135deg, #FF4D8D, #D81E5B);
-  color: #fff;
-}
-.cta-btn-stake {
-  background: linear-gradient(135deg, #00D4FF, #0066FF);
-  color: #fff;
+.dmd-pill-btn:active {
+  transform: scale(0.96);
 }
 
-/* ================= 4. 7x7 PEARLS MERGE BOARD ================= */
+.dmd-info-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ================= 6. BOTTOM NAVIGATION (5 TABS) ================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  height: 58px;
+  background: rgba(11, 14, 23, 0.96);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid var(--stroke);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-tab {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  color: var(--text-muted);
+  position: relative;
+  transition: all 0.15s ease;
+}
+.nav-tab.active {
+  color: var(--accent-cyan);
+}
+.nav-tab.active .tab-icon {
+  transform: scale(1.12);
+}
+
+.tab-icon {
+  font-size: 18px;
+  transition: transform 0.15s ease;
+}
+.tab-label {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 800;
+  font-size: 9.5px;
+  letter-spacing: 0.3px;
+}
+
+.tab-badge {
+  position: absolute;
+  top: 4px;
+  right: 18px;
+  background: #FF4D8D;
+  color: #fff;
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 900;
+  font-size: 8px;
+  padding: 1px 4px;
+  border-radius: 8px;
+}
+
+/* ================= 7. 7x7 PEARLS & OTHER TABS ================= */
 .section-card {
-  background: rgba(20, 24, 36, 0.9);
+  background: rgba(20, 24, 36, 0.92);
   border: 1.5px solid var(--stroke);
   border-radius: 18px;
   padding: 12px;
@@ -606,177 +759,31 @@ body, html {
   pointer-events: none;
 }
 
-/* ================= 5. 32 EVENT COLLECTIONS ================= */
-.event-card {
-  background: rgba(20, 24, 36, 0.9);
-  border: 1.5px solid var(--stroke);
-  border-radius: 16px;
-  padding: 12px;
-  margin-bottom: 10px;
-}
-
-.event-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.event-slots-tray {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin-bottom: 10px;
-}
-
-.event-slot-item {
-  aspect-ratio: 1/1;
-  background: #0E121E;
-  border: 1px solid var(--stroke);
-  border-radius: 10px;
+/* Secondary CTA Buttons */
+.cta-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-}
-.event-slot-item.filled {
-  border-color: var(--accent-gold);
-  background: rgba(255, 201, 51, 0.08);
-}
-.event-slot-img {
-  width: 75% !important;
-  height: 75% !important;
-  max-width: 42px !important;
-  max-height: 42px !important;
-  object-fit: contain;
-}
-
-/* ================= 6. LIVE MARKET ================= */
-.market-toggle-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 6px;
-  margin-bottom: 10px;
-}
-.market-toggle-btn {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--stroke);
-  border-radius: 10px;
-  padding: 8px;
+  padding: 9px;
+  border-radius: 12px;
   font-family: 'Fredoka', sans-serif;
   font-weight: 900;
   font-size: 12px;
-  color: var(--text-muted);
+  border: none;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-.market-toggle-btn.active {
-  background: var(--accent-cyan);
-  color: #000;
-  border-color: var(--accent-cyan);
+.cta-btn-breed {
+  background: linear-gradient(135deg, #FF4D8D, #D81E5B);
+  color: #fff;
 }
-
-.rarity-filter-row {
-  display: flex;
-  gap: 4px;
-  overflow-x: auto;
-  margin-bottom: 10px;
-  padding-bottom: 2px;
-}
-.rarity-chip {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--text-muted);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.rarity-chip.active {
-  background: rgba(0,212,255,0.15);
-  border-color: var(--accent-cyan);
+.cta-btn-stake {
+  background: linear-gradient(135deg, #00D4FF, #0066FF);
   color: #fff;
 }
 
-.chart-container {
-  width: 100%;
-  height: 120px;
-  background: #0E121E;
-  border-radius: 12px;
-  border: 1px solid var(--stroke);
-  overflow: hidden;
-  position: relative;
-}
-
-.market-card {
-  background: #0E121E;
-  border: 1px solid var(--stroke);
-  border-radius: 14px;
-  padding: 10px;
-  text-align: center;
-}
-
-/* ================= 7. TASKS TAB ================= */
-.task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #0E121E;
-  border: 1px solid var(--stroke);
-  border-radius: 12px;
-  padding: 10px;
-}
-
-/* ================= 8. BOTTOM NAVIGATION ================= */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 480px;
-  height: 60px;
-  background: rgba(11, 14, 23, 0.96);
-  backdrop-filter: blur(18px);
-  border-top: 1px solid var(--stroke);
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.nav-tab {
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: all 0.15s ease;
-}
-.nav-tab.active {
-  color: var(--accent-cyan);
-}
-.nav-tab.active .tab-icon {
-  transform: scale(1.15);
-}
-
-.tab-icon {
-  font-size: 18px;
-  transition: transform 0.15s ease;
-}
-.tab-label {
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 800;
-  font-size: 10px;
-  letter-spacing: 0.3px;
-}
-
-/* ================= 9. MODALS & OVERLAYS ================= */
+/* ================= 8. MODALS & OVERLAYS ================= */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -874,7 +881,7 @@ body, html {
   box-shadow: 0 4px 14px rgba(255,159,28,0.4);
 }
 
-/* ================= 10. GAME TOAST & PARTICLES ================= */
+/* ================= 9. GAME TOAST & PARTICLES ================= */
 .game-toast {
   position: fixed;
   top: 14px;
@@ -928,132 +935,4 @@ body, html {
 @keyframes tapFloat {
   0% { transform: translate(0, 0) scale(0.7); opacity: 1; }
   100% { transform: translate(0, -50px) scale(1.15); opacity: 0; }
-}
-/* ================= AUTHENTIC DUCK MY DUCK PROGRESS & ACTION WIDGET ================= */
-.dmd-progress-widget {
-  width: 100%;
-  background: rgba(20, 25, 38, 0.95);
-  border: 1.5px solid var(--stroke);
-  border-radius: 20px;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin: 6px 0 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-  backdrop-filter: blur(12px);
-}
-
-.dmd-progress-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-}
-
-.dmd-level-badge {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF9F1C, #FF6B00);
-  box-shadow: 0 0 10px rgba(255, 159, 28, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 900;
-  font-size: 15px;
-  color: #FFFFFF;
-}
-
-.dmd-track-wrapper {
-  position: relative;
-  flex: 1;
-  display: flex;
-  align-items: center;
-}
-
-.dmd-track {
-  width: 100%;
-  height: 7px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-}
-
-.dmd-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #FF9F1C, #FFC933, #6BE35A);
-  border-radius: 6px;
-  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 8px rgba(255, 201, 51, 0.8);
-}
-
-.dmd-milestone-egg {
-  width: 20px;
-  height: 20px;
-  margin-left: -6px;
-  z-index: 2;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 6px rgba(255, 201, 51, 0.6));
-}
-
-.dmd-actions-right {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dmd-pill-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  padding: 6px 12px;
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 900;
-  font-size: 12px;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.dmd-pill-btn:active {
-  transform: scale(0.96);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.dmd-pill-btn.ready-glow {
-  background: linear-gradient(135deg, #FF4D8D, #D81E5B);
-  border-color: #FF4D8D;
-  box-shadow: 0 0 10px rgba(255, 77, 141, 0.6);
-  animation: pulseGlow 1.5s infinite alternate;
-}
-
-@keyframes pulseGlow {
-  0% { transform: scale(1); box-shadow: 0 0 8px rgba(255, 77, 141, 0.5); }
-  100% { transform: scale(1.04); box-shadow: 0 0 14px rgba(255, 77, 141, 0.9); }
-}
-
-.dmd-info-btn {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: var(--text-muted);
-  font-family: 'Fredoka', sans-serif;
-  font-weight: 900;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
 }

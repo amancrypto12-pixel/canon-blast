@@ -2,30 +2,24 @@
 // --- 1. SINGLE-SOURCE-OF-TRUTH GAME STATE STORE ---
 const GameStore = {
   state: {
-    dlp: 187.74,
-    fish: 85361,
-    stars: 50,
+    dlp: 183.21,
+    fish: 92039,
+    stars: 45,
     hearts: 14,
     shells: 65,
     activeSlot: 0,
     slots: [
-      { id: 0, level: 1, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 1, level: 2, rarity: 'Uncommon', feedProgress: 2, feedMax: 5, state: 'active', skin: 'assets/events/skin_sailor_squad_1.png', breedEnd: 0 },
-      { id: 2, level: 3, rarity: 'Rare', feedProgress: 4, feedMax: 5, state: 'active', skin: 'assets/events/skin_cyber_currents_1.png', breedEnd: 0 },
-      { id: 3, level: 5, rarity: 'Epic', feedProgress: 5, feedMax: 5, state: 'ready_breed', skin: 'assets/events/skin_abyssal_mystic_1.png', breedEnd: 0 },
-      { id: 4, level: 1, rarity: 'Common', feedProgress: 1, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 5, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 6, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 7, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 8, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 9, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
-      { id: 10, level: 0, rarity: 'Common', feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 }
+      { id: 0, level: 5, rarity: 'Uncommon', feedCost: 150, feedProgress: 5, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 1, level: 2, rarity: 'Uncommon', feedCost: 110, feedProgress: 2, feedMax: 5, state: 'active', skin: 'assets/events/skin_sailor_squad_1.png', breedEnd: 0 },
+      { id: 2, level: 3, rarity: 'Rare', feedCost: 200, feedProgress: 4, feedMax: 5, state: 'active', skin: 'assets/events/skin_cyber_currents_1.png', breedEnd: 0 },
+      { id: 3, level: 1, rarity: 'Common', feedCost: 75, feedProgress: 1, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 4, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 5, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 },
+      { id: 6, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedEnd: 0 }
     ],
     grid: Array(49).fill(null),
     combo: 0,
-    lastMergeTime: 0,
-    hotTimer: 24,
-    marketMode: 'dolphins'
+    lastMergeTime: 0
   },
 
   listeners: [],
@@ -250,13 +244,7 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
   }
 }
 
-// --- 7. 1 TAP = 1 FEED PROGRESSION ---
-function getFeedCost(level, rarity) {
-  const baseCosts = { Common: 75, Uncommon: 150, Rare: 300, Epic: 750, Legendary: 2000 };
-  const base = baseCosts[rarity] || 75;
-  return Math.floor(base * Math.pow(1.35, level - 1));
-}
-
+// --- 7. DYNAMIC SLOTS & LOBBY SYSTEM ---
 function initLobby() {
   const heroCard = document.getElementById('heroCard');
   const feedBtn = document.getElementById('feedBtn');
@@ -271,7 +259,7 @@ function initLobby() {
       return;
     }
 
-    const cost = getFeedCost(dolphin.level, dolphin.rarity);
+    const cost = dolphin.feedCost || 150;
     if (s.fish < cost) {
       showToast(`Need ${cost} Fish! Breed or crack eggs for fish.`, '🐟');
       return;
@@ -293,7 +281,7 @@ function initLobby() {
     spawnTapParticle(tapX - 25, tapY - 10, `+${yieldAmount} DLP`, '#00D4FF');
     spawnTapParticle(tapX + 25, tapY, `-${cost} 🐟`, '#6BE35A');
 
-    // 1 Tap = 1 Full Feed progression
+    // Feed progression
     let nextFeeds = dolphin.feedProgress + 1;
     if (nextFeeds >= dolphin.feedMax) {
       if (dolphin.level < 5) {
@@ -321,96 +309,140 @@ function initLobby() {
 
   if (feedBtn) feedBtn.addEventListener('click', handleFeed);
   if (heroCard) heroCard.addEventListener('click', (e) => {
-    if (e.target !== feedBtn && !feedBtn.contains(e.target)) handleFeed(e);
+    const dolphin = GameStore.getActiveDolphin();
+    if (dolphin && dolphin.state !== 'locked' && e.target !== feedBtn && !feedBtn.contains(e.target)) {
+      handleFeed(e);
+    }
   });
 
   renderActiveDolphin();
-  initSlotSelector();
+  renderSlotsTracker();
 }
 
 function renderActiveDolphin() {
   const dolphin = GameStore.getActiveDolphin();
   if (!dolphin) return;
 
-  const sprite = document.getElementById('heroSprite');
-  const rarityPill = document.getElementById('heroRarityPill');
-  const slotPill = document.getElementById('heroSlotPill');
-  const feedCostSpan = document.getElementById('feedCostVal');
-  const breedProgressText = document.getElementById('breedProgressText');
-  const levelProgressFill = document.getElementById('levelProgressFill');
-  const levelProgressText = document.getElementById('levelProgressText');
-  const statusChipVal = document.getElementById('statusChipVal');
+  const heroCard = document.getElementById('heroCard');
+  const cardActiveView = document.getElementById('cardActiveView');
+  const cardLockedView = document.getElementById('cardLockedView');
 
-  if (sprite) {
-    sprite.src = dolphin.skin;
-    const scale = 0.85 + (dolphin.level * 0.05);
-    sprite.style.transform = `scale(${scale})`;
+  if (dolphin.state === 'locked') {
+    heroCard.classList.add('dotted-locked');
+    cardActiveView.style.display = 'none';
+    cardLockedView.style.display = 'flex';
+  } else {
+    heroCard.classList.remove('dotted-locked');
+    cardActiveView.style.display = 'flex';
+    cardLockedView.style.display = 'none';
+
+    const sprite = document.getElementById('heroSprite');
+    const levelPill = document.getElementById('heroLevelPill');
+    const rarityPill = document.getElementById('heroRarityPill');
+    const feedCostSpan = document.getElementById('feedCostVal');
+
+    if (sprite) {
+      sprite.src = dolphin.skin;
+      const scale = 0.85 + (dolphin.level * 0.05);
+      sprite.style.transform = `scale(${scale})`;
+    }
+
+    if (levelPill) levelPill.innerText = `LVL ${dolphin.level}`;
+    if (rarityPill) {
+      rarityPill.innerText = dolphin.rarity.toUpperCase();
+      rarityPill.className = `card-pill rarity-${dolphin.rarity.toLowerCase()}`;
+    }
+    if (feedCostSpan) feedCostSpan.innerText = dolphin.feedCost || 150;
   }
-
-  const cost = getFeedCost(dolphin.level, dolphin.rarity);
-  if (feedCostSpan) feedCostSpan.innerText = cost;
-  if (rarityPill) rarityPill.innerText = `LVL ${dolphin.level} • ${dolphin.rarity.toUpperCase()}`;
-  if (slotPill) slotPill.innerText = `SLOT ${GameStore.state.activeSlot + 1} / 11`;
-  if (statusChipVal) statusChipVal.innerText = `LVL ${dolphin.level} ~ ${dolphin.rarity.toUpperCase()}`;
 
   // Update Authentic Duck My Duck Widget
   const dmdLevelBadge = document.getElementById('dmdLevelBadge');
   const dmdProgressFill = document.getElementById('dmdProgressFill');
   const dmdBreedPill = document.getElementById('dmdBreedPill');
 
-  if (dmdLevelBadge) dmdLevelBadge.innerText = dolphin.level;
-  const percent = (dolphin.feedProgress / dolphin.feedMax) * 100;
+  if (dmdLevelBadge) dmdLevelBadge.innerText = dolphin.level || 1;
+  const percent = dolphin.feedMax ? (dolphin.feedProgress / dolphin.feedMax) * 100 : 0;
   if (dmdProgressFill) dmdProgressFill.style.width = percent + '%';
 
   if (dmdBreedPill) {
     if (dolphin.level >= 5 && dolphin.feedProgress >= 5) {
       dmdBreedPill.innerText = 'READY TO BREED';
-      dmdBreedPill.classList.add('ready-glow');
     } else {
-      dmdBreedPill.innerText = `BREED ${dolphin.feedProgress}/${dolphin.feedMax}`;
-      dmdBreedPill.classList.remove('ready-glow');
+      dmdBreedPill.innerText = `BREED ${dolphin.feedProgress || 0}/${dolphin.feedMax || 5}`;
     }
   }
 
-  if (breedProgressText) breedProgressText.innerText = `BREED ${dolphin.feedProgress}/${dolphin.feedMax}`;
-
-  // State Banners
-  const breedingBanner = document.getElementById('bannerBreeding');
-  const readyBanner = document.getElementById('bannerReady');
-
-  if (dolphin.state === 'breeding') {
-    if (breedingBanner) breedingBanner.classList.add('active');
-    if (readyBanner) readyBanner.classList.remove('active');
-  } else if (dolphin.state === 'ready_breed') {
-    if (readyBanner) readyBanner.classList.add('active');
-    if (breedingBanner) breedingBanner.classList.remove('active');
-  } else {
-    if (breedingBanner) breedingBanner.classList.remove('active');
-    if (readyBanner) readyBanner.classList.remove('active');
-  }
-
-  // 11 Slots row
-  document.querySelectorAll('.slot-dot').forEach((dot, idx) => {
-    dot.classList.remove('active', 'owned');
-    const sDolphin = GameStore.state.slots[idx];
-    if (sDolphin && sDolphin.state !== 'locked') dot.classList.add('owned');
-    if (idx === GameStore.state.activeSlot) dot.classList.add('active');
-  });
+  renderSlotsTracker();
 }
 
-function initSlotSelector() {
-  document.querySelectorAll('.slot-dot').forEach((dot, idx) => {
+function renderSlotsTracker() {
+  const container = document.getElementById('slotsTrackerRow');
+  if (!container) return;
+  container.innerHTML = '';
+  const s = GameStore.state;
+
+  s.slots.forEach((slot, idx) => {
+    const dot = document.createElement('div');
+    dot.className = 'slot-item';
+
+    if (idx === s.activeSlot) {
+      dot.classList.add('active');
+    } else if (slot.state !== 'locked') {
+      dot.classList.add('owned');
+    } else {
+      dot.classList.add('locked');
+      dot.innerText = '🔒';
+    }
+
     dot.addEventListener('click', () => {
-      const sDolphin = GameStore.state.slots[idx];
-      if (sDolphin && sDolphin.state !== 'locked') {
-        GameStore.update({ activeSlot: idx });
-        haptic('light');
-        renderActiveDolphin();
-      } else if (sDolphin && sDolphin.state === 'locked') {
-        showToast(`Unlock Slot ${idx + 1} with ⭐ 120 Stars!`, '🔒');
-      }
+      GameStore.update({ activeSlot: idx });
+      haptic('light');
+      renderActiveDolphin();
     });
+
+    container.appendChild(dot);
   });
+
+  // Plus button to buy in advance
+  const plusBtn = document.createElement('div');
+  plusBtn.className = 'slot-item add-plus';
+  plusBtn.innerText = '➕';
+  plusBtn.addEventListener('click', () => {
+    const lockedIdx = s.slots.findIndex(sl => sl.state === 'locked');
+    if (lockedIdx !== -1) {
+      GameStore.update({ activeSlot: lockedIdx });
+      renderActiveDolphin();
+    } else {
+      showToast('All slots currently unlocked! 👑', '⭐');
+    }
+  });
+  container.appendChild(plusBtn);
+}
+
+function unlockActiveSlotWithStars() {
+  const s = GameStore.state;
+  const dolphin = GameStore.getActiveDolphin();
+  if (!dolphin || dolphin.state !== 'locked') return;
+
+  if (s.stars < 120) {
+    payWithTelegramStars('Unlock Slot for New Dolphin', 120);
+    return;
+  }
+
+  // Deduct stars & unlock
+  dolphin.state = 'active';
+  dolphin.level = 1;
+  dolphin.feedCost = 75;
+  dolphin.feedProgress = 0;
+  dolphin.feedMax = 5;
+  dolphin.rarity = 'Common';
+  dolphin.skin = 'assets/dolphin_hero_stage.png';
+
+  GameStore.update({ stars: s.stars - 120 });
+  audio.play('fanfare');
+  haptic('heavy');
+  showToast('New Dolphin Slot Unlocked! Deploy & start feeding! 🎉', '🐬');
+  renderActiveDolphin();
 }
 
 function spawnTapParticle(x, y, text, color) {
@@ -424,7 +456,7 @@ function spawnTapParticle(x, y, text, color) {
   setTimeout(() => el.remove(), 750);
 }
 
-// --- 8. 7x7 MERGE-2 BOARD WITH BREEDING DROPS ---
+// --- 8. 7x7 MERGE-2 BOARD ---
 const lockedCorners = [0, 6, 42, 48];
 let selectedCellIndex = null;
 let draggedIndex = null;
@@ -702,15 +734,15 @@ function initMarketChart() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const width = canvas.width = canvas.parentElement.clientWidth || 360;
-  const height = canvas.height = 120;
+  const height = canvas.height = 110;
 
   const points = [
-    { x: 0, y: 80 },
-    { x: width * 0.2, y: 65 },
-    { x: width * 0.4, y: 75 },
-    { x: width * 0.6, y: 40 },
-    { x: width * 0.8, y: 50 },
-    { x: width, y: 25 }
+    { x: 0, y: 70 },
+    { x: width * 0.2, y: 55 },
+    { x: width * 0.4, y: 65 },
+    { x: width * 0.6, y: 35 },
+    { x: width * 0.8, y: 45 },
+    { x: width, y: 20 }
   ];
 
   ctx.clearRect(0, 0, width, height);
@@ -749,28 +781,12 @@ function initMarketChart() {
 // --- 11. DUAL BREEDING FLOW (REAL PLAYER & AUTO-BOT) ---
 function startBreedingWithBot() {
   const dolphin = GameStore.getActiveDolphin();
-  if (!dolphin) return;
+  if (!dolphin || dolphin.state === 'locked') return;
   dolphin.state = 'breeding';
   dolphin.breedEnd = Date.now() + 6 * 3600 * 1000;
   audio.play('fanfare');
   haptic('heavy');
   showToast('Matched with Breeding Bot! Status: DO NOT DISTURB 💖', '🐣');
-  
-  // Drop a Love Egg onto the Merge Board
-  dropLoveEggOnBoard(2);
-  
-  closeAllModals();
-  renderActiveDolphin();
-}
-
-function startBreedingActive() {
-  const dolphin = GameStore.getActiveDolphin();
-  if (!dolphin) return;
-  dolphin.state = 'breeding';
-  dolphin.breedEnd = Date.now() + 6 * 3600 * 1000;
-  audio.play('fanfare');
-  haptic('heavy');
-  showToast('Breeding started! Status: DO NOT DISTURB 💖', '🐣');
   
   dropLoveEggOnBoard(2);
   
@@ -780,7 +796,7 @@ function startBreedingActive() {
 
 function startStakingActive() {
   const dolphin = GameStore.getActiveDolphin();
-  if (!dolphin) return;
+  if (!dolphin || dolphin.state === 'locked') return;
   dolphin.state = 'staked';
   audio.play('fanfare');
   haptic('heavy');
@@ -806,97 +822,7 @@ function payWithTelegramStars(item, starsAmount) {
   }
 }
 
-// --- 13. 32 EVENT COLLECTIONS WITH PERMANENT LOCK ---
-const eventsList = [
-  { code: 'spring_cruise', name: 'Spring Cruise', slots: 8, prizeFish: 125000, prizeStars: 250, prizeStr: '125,000 🐟 + ⭐ 250' },
-  { code: 'jolly_roger', name: 'Jolly Roger Pirate', slots: 6, prizeFish: 350000, prizeStars: 500, prizeStr: '350,000 🐟 + ⭐ 500' },
-  { code: 'abyssal_mystic', name: 'Abyssal Mystic', slots: 20, prizeFish: 4500000, prizeStars: 5000, prizeStr: '4,500,000 🐟 + ⭐ 5,000' },
-  { code: 'cyber_currents', name: 'Cyber Currents', slots: 3, prizeFish: 1200000, prizeStars: 1500, prizeStr: '1,200,000 🐟 + ⭐ 1,500' },
-  { code: 'golden_overlord', name: 'Golden Overlord', slots: 8, prizeFish: 13500000, prizeStars: 25000, prizeStr: '13,500,000 🐟 + ⭐ 25,000' },
-  { code: 'sailor_squad', name: 'Sailor Squad', slots: 6, prizeFish: 650000, prizeStars: 800, prizeStr: '650,000 🐟 + ⭐ 800' },
-  { code: 'coral_carnival', name: 'Coral Carnival', slots: 8, prizeFish: 850000, prizeStars: 1000, prizeStr: '850,000 🐟 + ⭐ 1,000' },
-  { code: 'volcanic_vent', name: 'Volcanic Vent', slots: 6, prizeFish: 1500000, prizeStars: 2000, prizeStr: '1,500,000 🐟 + ⭐ 2,000' }
-];
-
-let selectedEventForDeposit = null;
-
-function renderEventsCollections() {
-  const container = document.getElementById('eventsContainer');
-  if (!container) return;
-  container.innerHTML = '';
-
-  eventsList.forEach(ev => {
-    const card = document.createElement('div');
-    card.className = 'event-card';
-
-    let slotsHtml = '';
-    for (let i = 1; i <= ev.slots; i++) {
-      const skinImg = `assets/events/skin_${ev.code}_${((i-1)%4)+1}.png`;
-      const isFilled = i <= 2;
-      slotsHtml += `
-        <div class="event-slot-item ${isFilled ? 'filled' : ''}">
-          <img class="event-slot-img" src="${skinImg}" />
-          ${isFilled ? '<span style="position:absolute;bottom:2px;right:2px;font-size:8px;color:#FFC933;">✓</span>' : ''}
-        </div>
-      `;
-    }
-
-    card.innerHTML = `
-      <div class="event-header">
-        <div>
-          <div style="font-family:'Fredoka',sans-serif; font-weight:900; font-size:15px; color:#fff;">${ev.name}</div>
-          <div style="font-size:10px; color:#8E98B0;">Requirement: ${ev.slots} Fully-Fed Lv5 Dolphins (Permanently Locked)</div>
-        </div>
-        <div style="font-family:'Fredoka',sans-serif; font-size:11px; color:#FFC933; font-weight:900;">${ev.prizeStr}</div>
-      </div>
-      <div class="event-slots-tray">${slotsHtml}</div>
-      <button class="cta-btn cta-btn-stake" style="font-size:11px; padding:8px;" onclick="openFeedAddModal('${ev.code}')">
-        FEED & ADD [Lv5+]
-      </button>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function openFeedAddModal(eventCode) {
-  const ev = eventsList.find(e => e.code === eventCode);
-  if (!ev) return;
-  selectedEventForDeposit = ev;
-  document.getElementById('feedAddEventTitle').innerText = ev.name;
-  document.getElementById('modalFeedAdd').classList.add('active');
-  haptic('medium');
-}
-
-function depositLv5DolphinToCollection() {
-  const dolphin = GameStore.getActiveDolphin();
-  if (!dolphin || dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
-    showToast('Requires a fully-fed Level 5 Dolphin! Active dolphin is not eligible.', '⚠️');
-    return;
-  }
-
-  if (selectedEventForDeposit) {
-    const s = GameStore.state;
-    // Permanently lock active dolphin into collection
-    dolphin.state = 'locked_collection';
-    dolphin.level = 1;
-    dolphin.feedProgress = 0;
-    
-    // Award prize
-    GameStore.update({
-      fish: s.fish + selectedEventForDeposit.prizeFish,
-      stars: s.stars + selectedEventForDeposit.prizeStars
-    });
-
-    audio.play('fanfare');
-    haptic('heavy');
-    showToast(`Locked in ${selectedEventForDeposit.name}! +${selectedEventForDeposit.prizeFish.toLocaleString()} 🐟 & ⭐ ${selectedEventForDeposit.prizeStars}!`, '🏆');
-    closeAllModals();
-    renderActiveDolphin();
-    renderEventsCollections();
-  }
-}
-
-// --- 14. TAB ROUTER & NAVIGATION ---
+// --- 13. TAB ROUTER & NAVIGATION (5 AUTHENTIC TABS) ---
 function initRouter() {
   const tabs = document.querySelectorAll('.nav-tab');
   const pages = document.querySelectorAll('.tab-content');
@@ -912,12 +838,11 @@ function initRouter() {
       haptic('light');
 
       if (target === 'market') initMarketChart();
-      if (target === 'events') renderEventsCollections();
     });
   });
 }
 
-// --- 15. MODAL CONTROLS ---
+// --- 14. MODAL CONTROLS ---
 function closeAllModals() {
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
 }
@@ -958,28 +883,6 @@ window.addEventListener('DOMContentLoaded', () => {
       startStakingActive();
     }
   });
-
-  document.getElementById('btnBreedCTA')?.addEventListener('click', () => {
-    const dolphin = GameStore.getActiveDolphin();
-    if (dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
-      showToast(`Reach Level 5 (5/5 Feeds) to breed! Currently: Level ${dolphin.level} (${dolphin.feedProgress}/${dolphin.feedMax})`, '💖');
-    } else {
-      document.getElementById('modalBreed').classList.add('active');
-      haptic('medium');
-    }
-  });
-
-  document.getElementById('btnStakeCTA')?.addEventListener('click', () => {
-    const dolphin = GameStore.getActiveDolphin();
-    if (dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
-      showToast(`Reach Level 5 (5/5 Feeds) to stake! Currently: Level ${dolphin.level}`, '⚡');
-    } else {
-      startStakingActive();
-    }
-  });
-
-  document.getElementById('btnStartBreedingBanner')?.addEventListener('click', startBreedingActive);
-  document.getElementById('btnStartStakingBanner')?.addEventListener('click', startStakingActive);
 
   document.getElementById('btnOpenWheelModal')?.addEventListener('click', () => {
     document.getElementById('modalWheel').classList.add('active');
