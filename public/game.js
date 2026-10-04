@@ -42,7 +42,7 @@ const GameStore = {
   }
 };
 
-// --- 2. PENTATONIC AUDIO SYNTHESIZER ---
+// --- 2. HIGH-ENERGY ARCADE AUDIO ENGINE ---
 class SoundEngine {
   constructor() {
     this.ctx = null;
@@ -68,51 +68,51 @@ class SoundEngine {
 
     if (type === 'tap' || type === 'quack') {
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(850, now);
+      osc.frequency.setValueAtTime(880, now);
       osc.frequency.exponentialRampToValueAtTime(1450, now + 0.04);
-      osc.frequency.exponentialRampToValueAtTime(320, now + 0.09);
-      gain.gain.setValueAtTime(0.35, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.09);
+      osc.frequency.exponentialRampToValueAtTime(320, now + 0.08);
+      gain.gain.setValueAtTime(0.4, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
       osc.start(now);
-      osc.stop(now + 0.09);
+      osc.stop(now + 0.08);
     } else if (type === 'eat') {
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(600, now);
-      osc.frequency.exponentialRampToValueAtTime(200, now + 0.07);
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
+      osc.frequency.setValueAtTime(650, now);
+      osc.frequency.exponentialRampToValueAtTime(220, now + 0.06);
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
       osc.start(now);
-      osc.stop(now + 0.07);
+      osc.stop(now + 0.06);
     } else if (type === 'merge') {
       const noteIdx = Math.min(param, this.scale.length - 1);
       const freq = this.scale[noteIdx];
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, now);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.14);
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.12);
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
       osc.start(now);
-      osc.stop(now + 0.14);
+      osc.stop(now + 0.12);
     } else if (type === 'crack') {
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(180, now);
-      osc.frequency.exponentialRampToValueAtTime(35, now + 0.22);
-      gain.gain.setValueAtTime(0.5, now);
-      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+      osc.frequency.setValueAtTime(220, now);
+      osc.frequency.exponentialRampToValueAtTime(30, now + 0.25);
+      gain.gain.setValueAtTime(0.6, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
       osc.start(now);
-      osc.stop(now + 0.22);
+      osc.stop(now + 0.25);
     } else if (type === 'fanfare') {
-      this.scale.slice(0, 4).forEach((freq, idx) => {
+      this.scale.slice(0, 5).forEach((freq, idx) => {
         const o = this.ctx.createOscillator();
         const g = this.ctx.createGain();
         o.connect(g);
         g.connect(this.ctx.destination);
         o.type = 'sine';
         o.frequency.value = freq;
-        g.gain.setValueAtTime(0.2, now + idx * 0.07);
-        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.07 + 0.24);
-        o.start(now + idx * 0.07);
-        o.stop(now + idx * 0.07 + 0.24);
+        g.gain.setValueAtTime(0.25, now + idx * 0.06);
+        g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.06 + 0.22);
+        o.start(now + idx * 0.06);
+        o.stop(now + idx * 0.06 + 0.22);
       });
     }
   }
@@ -161,7 +161,7 @@ function haptic(type = 'light') {
   } catch (e) {}
 }
 
-// --- 5. PIXIJS BACKGROUND PARTICLES ENGINE ---
+// --- 5. PIXIJS BACKGROUND AMBIENT ENGINE ---
 function initPixiEngine() {
   const container = document.getElementById('pixi-canvas-container');
   if (!container || typeof PIXI === 'undefined') return;
@@ -178,7 +178,7 @@ function initPixiEngine() {
 
   const orbs = [];
   const graphics = new PIXI.Graphics();
-  graphics.beginFill(0x00D4FF, 0.4);
+  graphics.beginFill(0x00D4FF, 0.45);
   graphics.drawCircle(0, 0, 3);
   graphics.endFill();
   const orbTexture = app.renderer.generateTexture(graphics);
@@ -219,15 +219,15 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
       document.body.appendChild(el);
 
       const startTime = performance.now();
-      const duration = 300;
-      const midX = (startX + targetX) / 2 + (Math.random() - 0.5) * 60;
-      const midY = Math.min(startY, targetY) - 50 - Math.random() * 30;
+      const duration = 280;
+      const midX = (startX + targetX) / 2 + (Math.random() - 0.5) * 50;
+      const midY = Math.min(startY, targetY) - 40 - Math.random() * 20;
 
       function animateFrame(now) {
         const t = Math.min((now - startTime) / duration, 1);
         const curX = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * targetX;
         const curY = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * midY + t * t * targetY;
-        const scale = 1 - t * 0.4;
+        const scale = 1 - t * 0.35;
 
         el.style.left = curX + 'px';
         el.style.top = curY + 'px';
@@ -241,16 +241,16 @@ function shootFlyingFood(startX, startY, targetX, targetY) {
           const sprite = document.getElementById('heroSprite');
           if (sprite) {
             sprite.classList.add('eating');
-            setTimeout(() => sprite.classList.remove('eating'), 100);
+            setTimeout(() => sprite.classList.remove('eating'), 90);
           }
         }
       }
       requestAnimationFrame(animateFrame);
-    }, i * 50);
+    }, i * 45);
   }
 }
 
-// --- 7. DYNAMIC LEVEL PROGRESSION & FEED ENGINE ---
+// --- 7. 1 TAP = 1 FEED PROGRESSION ---
 function getFeedCost(level, rarity) {
   const baseCosts = { Common: 75, Uncommon: 150, Rare: 300, Epic: 750, Legendary: 2000 };
   const base = baseCosts[rarity] || 75;
@@ -260,7 +260,6 @@ function getFeedCost(level, rarity) {
 function initLobby() {
   const heroCard = document.getElementById('heroCard');
   const feedBtn = document.getElementById('feedBtn');
-  const sprite = document.getElementById('heroSprite');
 
   function handleFeed(e) {
     const s = GameStore.state;
@@ -274,7 +273,7 @@ function initLobby() {
 
     const cost = getFeedCost(dolphin.level, dolphin.rarity);
     if (s.fish < cost) {
-      showToast(`Need ${cost} Fish! Merge pearls or crack eggs.`, '🐟');
+      showToast(`Need ${cost} Fish! Breed or crack eggs for fish.`, '🐟');
       return;
     }
 
@@ -286,7 +285,7 @@ function initLobby() {
     const tapX = e.clientX || (rect.left + rect.width / 2);
     const tapY = e.clientY || rect.top;
     const mouthX = cardRect.left + cardRect.width / 2;
-    const mouthY = cardRect.top + cardRect.height * 0.45;
+    const mouthY = cardRect.top + cardRect.height * 0.42;
 
     shootFlyingFood(tapX, tapY, mouthX, mouthY);
 
@@ -294,7 +293,7 @@ function initLobby() {
     spawnTapParticle(tapX - 25, tapY - 10, `+${yieldAmount} DLP`, '#00D4FF');
     spawnTapParticle(tapX + 25, tapY, `-${cost} 🐟`, '#6BE35A');
 
-    // Progress Level Up
+    // 1 Tap = 1 Full Feed progression
     let nextFeeds = dolphin.feedProgress + 1;
     if (nextFeeds >= dolphin.feedMax) {
       if (dolphin.level < 5) {
@@ -342,7 +341,6 @@ function renderActiveDolphin() {
   const levelProgressText = document.getElementById('levelProgressText');
   const statusChipVal = document.getElementById('statusChipVal');
 
-  // Update card visuals
   if (sprite) {
     sprite.src = dolphin.skin;
     const scale = 0.85 + (dolphin.level * 0.05);
@@ -355,7 +353,6 @@ function renderActiveDolphin() {
   if (slotPill) slotPill.innerText = `SLOT ${GameStore.state.activeSlot + 1} / 11`;
   if (statusChipVal) statusChipVal.innerText = `LVL ${dolphin.level} ~ ${dolphin.rarity.toUpperCase()}`;
 
-  // Update Progress Bars
   const percent = (dolphin.feedProgress / dolphin.feedMax) * 100;
   if (levelProgressFill) levelProgressFill.style.width = percent + '%';
   if (levelProgressText) {
@@ -369,7 +366,7 @@ function renderActiveDolphin() {
   }
   if (breedProgressText) breedProgressText.innerText = `BREED ${dolphin.feedProgress}/${dolphin.feedMax}`;
 
-  // State Banners (Breeding / Ready to Breed)
+  // State Banners
   const breedingBanner = document.getElementById('bannerBreeding');
   const readyBanner = document.getElementById('bannerReady');
 
@@ -384,7 +381,7 @@ function renderActiveDolphin() {
     if (readyBanner) readyBanner.classList.remove('active');
   }
 
-  // Update 11 Slots row
+  // 11 Slots row
   document.querySelectorAll('.slot-dot').forEach((dot, idx) => {
     dot.classList.remove('active', 'owned');
     const sDolphin = GameStore.state.slots[idx];
@@ -419,7 +416,7 @@ function spawnTapParticle(x, y, text, color) {
   setTimeout(() => el.remove(), 750);
 }
 
-// --- 8. 7x7 MERGE-2 BOARD ---
+// --- 8. 7x7 MERGE-2 BOARD WITH BREEDING DROPS ---
 const lockedCorners = [0, 6, 42, 48];
 let selectedCellIndex = null;
 let draggedIndex = null;
@@ -434,7 +431,7 @@ function initMergeBoard() {
     if (!lockedCorners.includes(i) && Math.random() < 0.28 && !s.grid[i]) {
       s.grid[i] = {
         level: Math.floor(Math.random() * 3) + 1,
-        type: Math.random() < 0.3 ? 'heart' : 'pearl'
+        type: Math.random() < 0.4 ? 'heart' : 'pearl'
       };
     }
   }
@@ -443,7 +440,6 @@ function initMergeBoard() {
   setupPointerDrag();
 
   document.getElementById('btnAutoMerge')?.addEventListener('click', autoMergeGrid);
-  document.getElementById('btnSpawnPearl')?.addEventListener('click', spawnPearlToBoard);
 }
 
 function renderMergeGrid() {
@@ -502,8 +498,8 @@ function setupPointerDrag() {
     ghostDragEl = document.createElement('img');
     ghostDragEl.src = item.type === 'heart' ? `assets/heart_egg_lvl${item.level}.png` : `assets/pearl_egg_lvl${item.level}.png`;
     ghostDragEl.style.position = 'fixed';
-    ghostDragEl.style.width = '50px';
-    ghostDragEl.style.height = '50px';
+    ghostDragEl.style.width = '46px';
+    ghostDragEl.style.height = '46px';
     ghostDragEl.style.pointerEvents = 'none';
     ghostDragEl.style.zIndex = '5000';
     ghostDragEl.style.transform = 'translate(-50%, -50%) scale(1.18)';
@@ -626,29 +622,17 @@ function autoMergeGrid() {
   }
 }
 
-function spawnPearlToBoard() {
+function dropLoveEggOnBoard(level = 1) {
   const s = GameStore.state;
-  if (s.fish < 150) {
-    showToast('Need 150 Fish to spawn pearl!', '🐟');
-    return;
-  }
   const emptyIndices = [];
   for (let i = 0; i < 49; i++) {
     if (!lockedCorners.includes(i) && !s.grid[i]) emptyIndices.push(i);
   }
-  if (emptyIndices.length === 0) {
-    showToast('Board is full! Merge or crack pearls.', '⚠️');
-    return;
+  if (emptyIndices.length > 0) {
+    const targetIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+    s.grid[targetIdx] = { level: level, type: 'heart' };
+    renderMergeGrid();
   }
-  const targetIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-  s.grid[targetIdx] = {
-    level: Math.random() < 0.2 ? 2 : 1,
-    type: Math.random() < 0.3 ? 'heart' : 'pearl'
-  };
-  audio.play('tap');
-  haptic('medium');
-  GameStore.update({ fish: s.fish - 150 });
-  renderMergeGrid();
 }
 
 // --- 9. 5-STAGE EGG CRACKING RITUAL MODAL ---
@@ -666,7 +650,7 @@ function openCrackModal(egg, idx) {
   const isHeart = egg.type === 'heart';
   img.src = isHeart ? `assets/heart_egg_lvl${egg.level}.png` : `assets/pearl_egg_lvl${egg.level}.png`;
   img.classList.remove('shake');
-  title.innerText = `LEVEL ${egg.level} ${isHeart ? 'HEART PEARL' : 'PEARL'}`;
+  title.innerText = `LEVEL ${egg.level} ${isHeart ? 'LOVE HEART EGG' : 'PEARL'}`;
   
   const fishYield = egg.level * 25000;
   const heartsYield = egg.level * 2;
@@ -701,7 +685,7 @@ function executeCrackEgg() {
     closeAllModals();
     renderMergeGrid();
     audio.play('fanfare');
-  }, 450);
+  }, 420);
 }
 
 // --- 10. LIVE CANVAS PRICE GRAPH (MARKET) ---
@@ -754,15 +738,34 @@ function initMarketChart() {
   ctx.stroke();
 }
 
-// --- 11. BREEDING AND STAKING IN-GAME STATE TRANSITIONS ---
+// --- 11. DUAL BREEDING FLOW (REAL PLAYER & AUTO-BOT) ---
+function startBreedingWithBot() {
+  const dolphin = GameStore.getActiveDolphin();
+  if (!dolphin) return;
+  dolphin.state = 'breeding';
+  dolphin.breedEnd = Date.now() + 6 * 3600 * 1000;
+  audio.play('fanfare');
+  haptic('heavy');
+  showToast('Matched with Breeding Bot! Status: DO NOT DISTURB 💖', '🐣');
+  
+  // Drop a Love Egg onto the Merge Board
+  dropLoveEggOnBoard(2);
+  
+  closeAllModals();
+  renderActiveDolphin();
+}
+
 function startBreedingActive() {
   const dolphin = GameStore.getActiveDolphin();
   if (!dolphin) return;
   dolphin.state = 'breeding';
-  dolphin.breedEnd = Date.now() + 6 * 3600 * 1000; // 6 hours
+  dolphin.breedEnd = Date.now() + 6 * 3600 * 1000;
   audio.play('fanfare');
   haptic('heavy');
   showToast('Breeding started! Status: DO NOT DISTURB 💖', '🐣');
+  
+  dropLoveEggOnBoard(2);
+  
   closeAllModals();
   renderActiveDolphin();
 }
@@ -795,17 +798,19 @@ function payWithTelegramStars(item, starsAmount) {
   }
 }
 
-// --- 13. 32 EVENT COLLECTIONS RENDERER ---
+// --- 13. 32 EVENT COLLECTIONS WITH PERMANENT LOCK ---
 const eventsList = [
-  { code: 'spring_cruise', name: 'Spring Cruise', slots: 8, prize: '125,000 🐟 + ⭐ 250' },
-  { code: 'jolly_roger', name: 'Jolly Roger Pirate', slots: 6, prize: '350,000 🐟 + ⭐ 500' },
-  { code: 'abyssal_mystic', name: 'Abyssal Mystic', slots: 20, prize: '4,500,000 🐟 + ⭐ 5,000' },
-  { code: 'cyber_currents', name: 'Cyber Currents', slots: 3, prize: '1,200,000 🐟 + ⭐ 1,500' },
-  { code: 'golden_overlord', name: 'Golden Overlord', slots: 8, prize: '13,500,000 🐟 + ⭐ 25,000' },
-  { code: 'sailor_squad', name: 'Sailor Squad', slots: 6, prize: '650,000 🐟 + ⭐ 800' },
-  { code: 'coral_carnival', name: 'Coral Carnival', slots: 8, prize: '850,000 🐟 + ⭐ 1,000' },
-  { code: 'volcanic_vent', name: 'Volcanic Vent', slots: 6, prize: '1,500,000 🐟 + ⭐ 2,000' }
+  { code: 'spring_cruise', name: 'Spring Cruise', slots: 8, prizeFish: 125000, prizeStars: 250, prizeStr: '125,000 🐟 + ⭐ 250' },
+  { code: 'jolly_roger', name: 'Jolly Roger Pirate', slots: 6, prizeFish: 350000, prizeStars: 500, prizeStr: '350,000 🐟 + ⭐ 500' },
+  { code: 'abyssal_mystic', name: 'Abyssal Mystic', slots: 20, prizeFish: 4500000, prizeStars: 5000, prizeStr: '4,500,000 🐟 + ⭐ 5,000' },
+  { code: 'cyber_currents', name: 'Cyber Currents', slots: 3, prizeFish: 1200000, prizeStars: 1500, prizeStr: '1,200,000 🐟 + ⭐ 1,500' },
+  { code: 'golden_overlord', name: 'Golden Overlord', slots: 8, prizeFish: 13500000, prizeStars: 25000, prizeStr: '13,500,000 🐟 + ⭐ 25,000' },
+  { code: 'sailor_squad', name: 'Sailor Squad', slots: 6, prizeFish: 650000, prizeStars: 800, prizeStr: '650,000 🐟 + ⭐ 800' },
+  { code: 'coral_carnival', name: 'Coral Carnival', slots: 8, prizeFish: 850000, prizeStars: 1000, prizeStr: '850,000 🐟 + ⭐ 1,000' },
+  { code: 'volcanic_vent', name: 'Volcanic Vent', slots: 6, prizeFish: 1500000, prizeStars: 2000, prizeStr: '1,500,000 🐟 + ⭐ 2,000' }
 ];
+
+let selectedEventForDeposit = null;
 
 function renderEventsCollections() {
   const container = document.getElementById('eventsContainer');
@@ -831,13 +836,13 @@ function renderEventsCollections() {
     card.innerHTML = `
       <div class="event-header">
         <div>
-          <div style="font-family:'Fredoka',sans-serif; font-weight:900; font-size:16px; color:#fff;">${ev.name}</div>
-          <div style="font-size:11px; color:#9AA0B4;">Requirement: ${ev.slots} Fully-Fed Lv5 Dolphins</div>
+          <div style="font-family:'Fredoka',sans-serif; font-weight:900; font-size:15px; color:#fff;">${ev.name}</div>
+          <div style="font-size:10px; color:#8E98B0;">Requirement: ${ev.slots} Fully-Fed Lv5 Dolphins (Permanently Locked)</div>
         </div>
-        <div style="font-family:'Fredoka',sans-serif; font-size:12px; color:#FFC933; font-weight:900;">${ev.prize}</div>
+        <div style="font-family:'Fredoka',sans-serif; font-size:11px; color:#FFC933; font-weight:900;">${ev.prizeStr}</div>
       </div>
       <div class="event-slots-tray">${slotsHtml}</div>
-      <button class="cta-btn cta-btn-stake" style="font-size:12px; padding:9px;" onclick="openFeedAddModal('${ev.name}')">
+      <button class="cta-btn cta-btn-stake" style="font-size:11px; padding:8px;" onclick="openFeedAddModal('${ev.code}')">
         FEED & ADD [Lv5+]
       </button>
     `;
@@ -845,10 +850,42 @@ function renderEventsCollections() {
   });
 }
 
-function openFeedAddModal(eventName) {
-  document.getElementById('feedAddEventTitle').innerText = eventName;
+function openFeedAddModal(eventCode) {
+  const ev = eventsList.find(e => e.code === eventCode);
+  if (!ev) return;
+  selectedEventForDeposit = ev;
+  document.getElementById('feedAddEventTitle').innerText = ev.name;
   document.getElementById('modalFeedAdd').classList.add('active');
   haptic('medium');
+}
+
+function depositLv5DolphinToCollection() {
+  const dolphin = GameStore.getActiveDolphin();
+  if (!dolphin || dolphin.level < 5 || dolphin.feedProgress < dolphin.feedMax) {
+    showToast('Requires a fully-fed Level 5 Dolphin! Active dolphin is not eligible.', '⚠️');
+    return;
+  }
+
+  if (selectedEventForDeposit) {
+    const s = GameStore.state;
+    // Permanently lock active dolphin into collection
+    dolphin.state = 'locked_collection';
+    dolphin.level = 1;
+    dolphin.feedProgress = 0;
+    
+    // Award prize
+    GameStore.update({
+      fish: s.fish + selectedEventForDeposit.prizeFish,
+      stars: s.stars + selectedEventForDeposit.prizeStars
+    });
+
+    audio.play('fanfare');
+    haptic('heavy');
+    showToast(`Locked in ${selectedEventForDeposit.name}! +${selectedEventForDeposit.prizeFish.toLocaleString()} 🐟 & ⭐ ${selectedEventForDeposit.prizeStars}!`, '🏆');
+    closeAllModals();
+    renderActiveDolphin();
+    renderEventsCollections();
+  }
 }
 
 // --- 14. TAB ROUTER & NAVIGATION ---

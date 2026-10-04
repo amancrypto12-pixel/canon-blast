@@ -98,7 +98,7 @@
           <div class="slot-dot" data-slot="10"></div>
         </div>
 
-        <!-- Hero Card Stage Frame -->
+        <!-- Hero Card Stage Frame (Strict 4:3 Ratio) -->
         <div class="hero-stage-card" id="heroCard">
           <div class="card-pills-row">
             <div class="card-pill rarity-common" id="heroRarityPill">LVL 1 • COMMON</div>
@@ -118,9 +118,9 @@
           <div class="card-state-banner banner-ready" id="bannerReady">
             <div class="state-banner-title">🎉 HOORAY! DOLPHIN READY TO BREED</div>
             <div class="state-banner-desc">Max Level (5/5 Feeds) reached! Choose an action:</div>
-            <div style="display:flex; gap:8px; margin-top:8px;">
-              <button class="cta-btn cta-btn-breed" id="btnStartBreedingBanner" style="padding:7px 12px; font-size:11px;">START BREEDING</button>
-              <button class="cta-btn cta-btn-stake" id="btnStartStakingBanner" style="padding:7px 12px; font-size:11px;">START STAKING</button>
+            <div style="display:flex; gap:8px; margin-top:6px;">
+              <button class="cta-btn cta-btn-breed" id="btnStartBreedingBanner" style="padding:6px 10px; font-size:10px;">START BREEDING</button>
+              <button class="cta-btn cta-btn-stake" id="btnStartStakingBanner" style="padding:6px 10px; font-size:10px;">START STAKING</button>
             </div>
           </div>
 
@@ -129,7 +129,7 @@
             <div class="feed-btn-content">
               <span class="feed-btn-text">TAP TO FEED</span>
               <div class="feed-btn-cost">
-                <img src="assets/icon_user_fish.png" style="width:16px; height:16px;" alt="Fish" />
+                <img src="assets/icon_user_fish.png" style="width:14px; height:14px;" alt="Fish" />
                 <span id="feedCostVal">75</span>
               </div>
             </div>
@@ -159,10 +159,10 @@
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <div>
-              <div style="font-family:'Fredoka',sans-serif; font-size:18px; font-weight:900; color:#fff;">PEARL REEF GRID</div>
-              <div style="font-size:11px; color:var(--text-muted);">Merge-2 identical pearls (12 Tiers) or crack eggs!</div>
+              <div style="font-family:'Fredoka',sans-serif; font-size:17px; font-weight:900; color:#fff;">PEARL REEF GRID</div>
+              <div style="font-size:11px; color:var(--text-muted);">Merge Love Eggs dropped from breeding & crack for fish!</div>
             </div>
-            <button class="header-pill" id="btnOpenWheelModal" style="background:linear-gradient(135deg,#FF9F1C,#FFC933); color:#000; font-weight:900; cursor:pointer;">
+            <button class="header-pill" id="btnOpenWheelModal" style="background:linear-gradient(135deg,#FF9F1C,#FFC933); color:#000; font-weight:900; cursor:pointer; padding:4px 8px; border-radius:10px;">
               🎡 TIDE WHEEL
             </button>
           </div>
@@ -171,18 +171,17 @@
             <div class="merge-grid" id="mergeGrid"></div>
           </div>
 
-          <div style="display:flex; gap:8px; margin-top:14px;">
-            <button class="cta-btn cta-btn-stake" id="btnAutoMerge" style="flex:1;">⚡ AUTO MERGE</button>
-            <button class="cta-btn cta-btn-breed" id="btnSpawnPearl" style="flex:1;">➕ SPAWN (🐟 150)</button>
+          <div style="margin-top:12px;">
+            <button class="cta-btn cta-btn-stake" id="btnAutoMerge" style="width:100%;">⚡ AUTO MERGE PEARLS</button>
           </div>
         </div>
       </section>
 
       <!-- ================= TAB 3: 32 EVENT COLLECTIONS ================= -->
       <section class="tab-content" id="tab-events">
-        <div style="margin-bottom:12px;">
-          <div style="font-family:'Fredoka',sans-serif; font-size:18px; font-weight:900; color:#fff;">32 EVENT COLLECTIONS</div>
-          <div style="font-size:11px; color:var(--text-muted);">Slot fully-fed Lv5 dolphins into event sets for massive Star & Fish rewards!</div>
+        <div style="margin-bottom:10px;">
+          <div style="font-family:'Fredoka',sans-serif; font-size:17px; font-weight:900; color:#fff;">32 EVENT COLLECTIONS</div>
+          <div style="font-size:11px; color:var(--text-muted);">Lock fully-fed Lv5 dolphins permanently into sets for massive payouts!</div>
         </div>
         <div id="eventsContainer"></div>
       </section>
@@ -191,7 +190,7 @@
       <section class="tab-content" id="tab-market">
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div style="font-family:'Fredoka',sans-serif; font-size:18px; font-weight:900; color:#fff;">DOLPHIN FIFO MARKET</div>
+            <div style="font-family:'Fredoka',sans-serif; font-size:17px; font-weight:900; color:#fff;">DOLPHIN FIFO MARKET</div>
             <div style="font-size:11px; color:#FF9F1C; font-weight:800;" id="marketHotTimer">🔥 HOT ENDS 09:22</div>
           </div>
 
@@ -212,15 +211,15 @@
             <canvas id="priceChartCanvas"></canvas>
           </div>
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
             <div class="market-card">
-              <img src="assets/events/skin_cyber_currents_1.png" style="width:58px; height:58px; margin:0 auto 6px; display:block;" />
+              <img src="assets/events/skin_cyber_currents_1.png" style="width:52px; height:52px; margin:0 auto 4px; display:block;" />
               <div style="font-family:'Fredoka',sans-serif; font-size:12px; font-weight:900; color:#fff;">Cyber Dolphin #402</div>
               <div style="font-size:10px; color:#6BE35A; font-weight:800;">234.5K 🐟 (+103%)</div>
               <button class="cta-btn cta-btn-stake" style="padding:6px; font-size:10px; margin-top:6px;" onclick="showToast('Purchased Cyber Dolphin for 234.5K Fish!', '🐟')">BUY FISH</button>
             </div>
             <div class="market-card">
-              <img src="assets/events/skin_golden_overlord_1.png" style="width:58px; height:58px; margin:0 auto 6px; display:block;" />
+              <img src="assets/events/skin_golden_overlord_1.png" style="width:52px; height:52px; margin:0 auto 4px; display:block;" />
               <div style="font-family:'Fredoka',sans-serif; font-size:12px; font-weight:900; color:#fff;">Golden Overlord #012</div>
               <div style="font-size:10px; color:#FFC933; font-weight:800;">⭐ 450 Stars</div>
               <button class="cta-btn cta-btn-breed" style="padding:6px; font-size:10px; margin-top:6px;" onclick="payWithTelegramStars('Golden Overlord Dolphin', 450)">BUY STARS</button>
@@ -232,7 +231,7 @@
       <!-- ================= TAB 5: TASKS & REFERRALS ================= -->
       <section class="tab-content" id="tab-tasks">
         <div class="section-card">
-          <div style="font-family:'Fredoka',sans-serif; font-size:18px; font-weight:900; color:#fff; margin-bottom:4px;">FRIENDS & REFERRALS</div>
+          <div style="font-family:'Fredoka',sans-serif; font-size:17px; font-weight:900; color:#fff; margin-bottom:4px;">FRIENDS & REFERRALS</div>
           <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px;">Invite frens to earn 28% of their tap yield & direct Fish bounties!</div>
 
           <div style="display:flex; flex-direction:column; gap:8px;">
@@ -295,21 +294,26 @@
     </div>
   </div>
 
-  <!-- Modal 2: Shared Breeding Nest -->
+  <!-- Modal 2: Shared Breeding Nest (Real Player + Auto-Bot) -->
   <div class="modal-overlay" id="modalBreed">
     <div class="modal-card">
       <button class="modal-close-btn">&times;</button>
       <div class="modal-title">SHARED BREEDING NEST</div>
-      <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Pair with a partner to produce Love Heart Eggs!</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Pair with a Telegram friend or instant auto-match with a bot partner to produce Love Heart Eggs!</div>
       
-      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px; margin-bottom:14px;">
+      <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:10px; margin-bottom:12px;">
         <div style="font-size:11px; color:#FF9F1C; font-weight:800;">ROOM CODE: REEF-8921</div>
-        <div style="font-size:10px; color:#9AA0B4; margin-top:2px;">Status: Waiting for partner connection...</div>
+        <div style="font-size:10px; color:#9AA0B4; margin-top:2px;">Status: Ready for matchmaking</div>
       </div>
 
-      <button class="modal-action-btn btn-crack" onclick="window.open('https://t.me/share/url?url=https://t.me/DolphinPearlsBot?start=breed_REEF8921&text=Join%20my%20Dolphin%20Breeding%20Nest!')">
-        📤 SHARE ROOM ON TELEGRAM
-      </button>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="modal-action-btn btn-crack" onclick="window.open('https://t.me/share/url?url=https://t.me/DolphinPearlsBot?start=breed_REEF8921&text=Join%20my%20Dolphin%20Breeding%20Nest!')">
+          📤 SHARE ROOM ON TELEGRAM
+        </button>
+        <button class="modal-action-btn" style="background:linear-gradient(135deg, #00D4FF, #0066FF); color:#fff;" onclick="startBreedingWithBot()">
+          🤖 INSTANT AUTO-MATCH (BOT PARTNER)
+        </button>
+      </div>
     </div>
   </div>
 
@@ -354,13 +358,13 @@
     </div>
   </div>
 
-  <!-- Modal 6: Feed & Add Event Slot -->
+  <!-- Modal 6: Feed & Add Event Slot (Permanent Lock) -->
   <div class="modal-overlay" id="modalFeedAdd">
     <div class="modal-card">
       <button class="modal-close-btn">&times;</button>
       <div class="modal-title" id="feedAddEventTitle">EVENT COLLECTION</div>
-      <div style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Deposit a fully-fed Level 5 Dolphin into this themed collection slot!</div>
-      <button class="modal-action-btn btn-crack" onclick="showToast('Dolphin deposited into collection! Reward Claimed!', '🏆'); closeAllModals();">
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Deposit and permanently lock a fully-fed Level 5 Dolphin into this themed collection slot!</div>
+      <button class="modal-action-btn btn-crack" onclick="depositLv5DolphinToCollection()">
         🏆 DEPOSIT LVL 5 DOLPHIN & CLAIM
       </button>
     </div>
