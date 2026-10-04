@@ -156,7 +156,7 @@
 
       </section>
 
-      <!-- ================= TAB 2: EGGS (7x7 PEARLS MERGE) ================= -->
+      <!-- ================= TAB 2: EGGS (7x7 PEARLS MERGE & INCUBATOR) ================= -->
       <section class="tab-content" id="tab-eggs">
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -179,35 +179,19 @@
         </div>
       </section>
 
-      <!-- ================= TAB 3: GODS ================= -->
-      <section class="tab-content" id="tab-gods">
-        <div class="section-card">
-          <div style="font-family:'Fredoka',sans-serif; font-size:16px; font-weight:900; color:#fff; margin-bottom:4px;">GODS & TOTEMS</div>
-          <div style="font-size:10px; color:var(--text-muted); margin-bottom:12px;">High-tier deities & global passive multipliers!</div>
-
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="section-card" style="background:#0E121E; text-align:center; padding:10px;">
-              <div style="font-size:32px; margin-bottom:4px;">🔱</div>
-              <div style="font-family:'Fredoka',sans-serif; font-size:13px; font-weight:900; color:#FFC933;">Poseidon God</div>
-              <div style="font-size:10px; color:#6BE35A;">+25% Global Token Yield</div>
-              <button class="cta-btn cta-btn-breed" style="margin-top:8px; font-size:10px; padding:5px 8px;" onclick="payWithTelegramStars('Poseidon Deity', 1500)">UNLOCK <img class="inline-star-icon" src="assets/icon_user_star.png" alt="Star" /> 1,500</button>
-            </div>
-            <div class="section-card" style="background:#0E121E; text-align:center; padding:10px;">
-              <div style="font-size:32px; margin-bottom:4px;">🌊</div>
-              <div style="font-family:'Fredoka',sans-serif; font-size:13px; font-weight:900; color:#00D4FF;">Ocean Totem</div>
-              <div style="font-size:10px; color:#3DDC68;">+50% Staking APR</div>
-              <button class="cta-btn cta-btn-stake" style="margin-top:8px; font-size:10px; padding:5px 8px;" onclick="payWithTelegramStars('Ocean Totem', 800)">UNLOCK <img class="inline-star-icon" src="assets/icon_user_star.png" alt="Star" /> 800</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TAB 4: MARKET ================= -->
+      <!-- ================= TAB 3: MARKET (DYNAMIC FIFO TRADING) ================= -->
       <section class="tab-content" id="tab-market">
         <div class="section-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
             <div style="font-family:'Fredoka',sans-serif; font-size:16px; font-weight:900; color:#fff;">DOLPHIN FIFO MARKET</div>
             <div style="font-size:10px; color:#FF9F1C; font-weight:800;" id="marketHotTimer">🔥 HOT ENDS 09:22</div>
+          </div>
+
+          <div class="timeframe-row">
+            <button class="timeframe-chip active">10S</button>
+            <button class="timeframe-chip">5M</button>
+            <button class="timeframe-chip">1H</button>
+            <button class="timeframe-chip">1D</button>
           </div>
 
           <div class="chart-container">
@@ -231,11 +215,34 @@
         </div>
       </section>
 
-      <!-- ================= TAB 5: TASKS & QUESTS ================= -->
+      <!-- ================= TAB 4: GODS (HIGH-TIER DEITIES & TOTEMS) ================= -->
+      <section class="tab-content" id="tab-gods">
+        <div class="section-card">
+          <div style="font-family:'Fredoka',sans-serif; font-size:16px; font-weight:900; color:#fff; margin-bottom:4px;">GODS & TOTEMS</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:12px;">High-tier deities & global passive multipliers!</div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div class="section-card" style="background:#0E121E; text-align:center; padding:10px;">
+              <div style="font-size:30px; margin-bottom:4px;">🔱</div>
+              <div style="font-family:'Fredoka',sans-serif; font-size:12px; font-weight:900; color:#FFC933;">Poseidon God</div>
+              <div style="font-size:9.5px; color:#6BE35A;">+25% Global Token Yield</div>
+              <button class="cta-btn cta-btn-breed" style="margin-top:8px; font-size:10px; padding:5px 8px;" onclick="payWithTelegramStars('Poseidon Deity', 1500)">UNLOCK <img class="inline-star-icon" src="assets/icon_user_star.png" alt="Star" /> 1,500</button>
+            </div>
+            <div class="section-card" style="background:#0E121E; text-align:center; padding:10px;">
+              <div style="font-size:30px; margin-bottom:4px;">🌊</div>
+              <div style="font-family:'Fredoka',sans-serif; font-size:12px; font-weight:900; color:#00D4FF;">Ocean Totem</div>
+              <div style="font-size:9.5px; color:#3DDC68;">+50% Staking APR</div>
+              <button class="cta-btn cta-btn-stake" style="margin-top:8px; font-size:10px; padding:5px 8px;" onclick="payWithTelegramStars('Ocean Totem', 800)">UNLOCK <img class="inline-star-icon" src="assets/icon_user_star.png" alt="Star" /> 800</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: TASKS (QUESTS & TIERED REFERRALS) ================= -->
       <section class="tab-content" id="tab-tasks">
         <div class="section-card">
-          <div style="font-family:'Fredoka',sans-serif; font-size:16px; font-weight:900; color:#fff; margin-bottom:4px;">QUESTS & SOCIAL TASKS</div>
-          <div style="font-size:10px; color:var(--text-muted); margin-bottom:10px;">Complete tasks to earn free Fish & Telegram Stars!</div>
+          <div style="font-family:'Fredoka',sans-serif; font-size:16px; font-weight:900; color:#fff; margin-bottom:4px;">QUESTS & REFERRAL PROGRAM</div>
+          <div style="font-size:10px; color:var(--text-muted); margin-bottom:10px;">Complete tasks and invite friends to earn up to 28% referral yield!</div>
 
           <div style="display:flex; flex-direction:column; gap:6px;">
             <div class="task-item">
@@ -247,7 +254,7 @@
             </div>
             <div class="task-item">
               <div>
-                <div style="font-weight:800; color:#fff; font-size:11px;">Invite 1 Friend</div>
+                <div style="font-weight:800; color:#fff; font-size:11px;">Invite Friends (Tier 1: 28% Yield)</div>
                 <div style="font-size:9.5px; color:#FFC933;">+50,000 🐟 + 5 Love Hearts</div>
               </div>
               <button class="cta-btn cta-btn-breed" style="padding:5px 10px; font-size:10px;" onclick="window.open('https://t.me/share/url?url=https://t.me/DolphinPearlsBot?start=ref_102&text=Join%20my%20Dolphin%20Reef%20Pod!')">INVITE</button>
@@ -363,8 +370,7 @@
     </div>
   </div>
 
-  
-  <!-- Modal 7: Daily Login Streak -->
+  <!-- Modal 6: Daily Login Streak -->
   <div class="modal-overlay" id="modalDailyStreak">
     <div class="modal-card">
       <button class="modal-close-btn">&times;</button>
@@ -400,7 +406,7 @@
     </div>
   </div>
 
-  <!-- Modal 8: Energy Refill & Capacity Upgrade -->
+  <!-- Modal 7: Energy Refill & Capacity Upgrade -->
   <div class="modal-overlay" id="modalEnergy">
     <div class="modal-card">
       <button class="modal-close-btn">&times;</button>
@@ -428,7 +434,7 @@
     </div>
   </div>
 
-  <!-- Modal 9: Active Multipliers & Boosters -->
+  <!-- Modal 8: Active Multipliers & Boosters -->
   <div class="modal-overlay" id="modalBooster">
     <div class="modal-card">
       <button class="modal-close-btn">&times;</button>
