@@ -3,393 +3,226 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Dolphin Pearls</title>
-  <link rel="stylesheet" href="styles.css?v=3.0" />
+  <title>Dolphin my Dolphin</title>
+  <link rel="stylesheet" href="styles.css?v=4.0" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
 </head>
 <body>
-  <div class="game-viewport">
-    <!-- PIXI WEBGL AMBIENT ORBS CANVAS -->
-    <div id="pixi-canvas-container"></div>
+  <!-- 1. MAIN WRAPPER (APP CONTAINER) - EXACT 390x844 px -->
+  <div class="app-container">
 
-    <!-- 1. TOP APP BAR (1:1 DUCK MY DUCK) -->
-    <header class="top-app-bar">
-      <div class="user-profile-badge">
-        <div class="avatar-wrapper" onclick="toggleWallet()">
-          <img id="userAvatarImg" src="assets/dolphin_hero_stage.png" alt="Profile" style="display:none;" />
-          <span id="userAvatarFallback" class="avatar-fallback">WA</span>
-        </div>
-        <div>
-          <div class="username-title" id="usernameDisplay">@Wild_airdrop</div>
-          <div class="pack-clan-tag" onclick="document.getElementById('modalPackClan').classList.add('active')">PACK #102</div>
+    <!-- 2. TOP BAR (HEADER) - EXACT 390x60 px -->
+    <header class="top-bar">
+      <div class="user-profile">
+        <img class="user-avatar" src="assets/dolphin_hero_stage.png" alt="Avatar" />
+        <div class="user-info">
+          <span class="username-text">@Wild_airdrop</span>
+          <span class="clan-badge">SHOVEL WALLET</span>
         </div>
       </div>
 
-      <div class="top-currencies-row">
-        <div class="header-chip" onclick="document.getElementById('modalBuyFish').classList.add('active')">
-          <img class="header-chip-icon" src="assets/icon_user_fish.png" alt="Fish" />
-          <span class="header-chip-val" id="top-fish">92,039</span>
+      <div class="currencies-display">
+        <div class="currency-chip">
+          <img class="currency-icon" src="assets/icon_user_fish.png" alt="Blue Pearls" />
+          <span id="pearlsTopDisplay">92,039</span>
         </div>
-        <div class="header-chip" onclick="document.getElementById('modalBuyStars').classList.add('active')">
-          <img class="header-chip-icon inline-star-icon" src="assets/icon_user_star.png" alt="Blue Star" />
-          <span class="header-chip-val" id="top-stars">45</span>
+        <div class="currency-chip">
+          <img class="currency-icon" src="assets/icon_user_star.png" alt="Gold Stars" />
+          <span id="starsTopDisplay">45</span>
         </div>
       </div>
     </header>
 
-    <!-- 2. TAB CONTENT AREA -->
-    <main class="tab-content-area">
-      <!-- TAB 1: DOLPHINS (LOBBY) -->
-      <section id="tab-dolphins" class="tab-pane active">
-        <!-- TOKEN BALANCE DISPLAY -->
-        <div class="lobby-token-display">
-          <img class="token-large-coin" src="assets/blue_token_coin.png" alt="DLP Token" />
-          <span class="token-balance-big" id="tokenBalance">183.21</span>
+    <!-- MAIN SCROLLABLE CONTENT AREA -->
+    <main class="content-area">
+
+      <!-- TAB 1: DOLPHINS (CLICKER CORE SCREEN) -->
+      <section id="tabPane-dolphins" class="tab-content active dolphins-tab-pane">
+        <!-- Energy Meter -->
+        <div class="energy-bar-container">
+          <span>⚡ ENERGY</span>
+          <div class="energy-fill-track">
+            <div class="energy-fill-progress" id="energyProgressFill"></div>
+          </div>
+          <span id="energyTextVal">2000 / 2000</span>
         </div>
 
-        <!-- CENTER ARENA (SIDE PANELS + 4:3 HERO CARD) -->
-        <div class="lobby-center-arena">
-          <!-- LEFT FLANKING PANEL -->
-          <div class="side-panel-column">
-            <div class="side-quick-widget" onclick="document.getElementById('modalDuckerPass').classList.add('active'); haptic('medium');">
-              <div class="side-widget-icon">👑</div>
-              <div class="side-widget-label">DUCKER<br>PASS</div>
-            </div>
-            <div class="side-quick-widget" onclick="document.getElementById('modalDailyPass').classList.add('active'); haptic('medium');">
-              <div class="side-widget-icon">📅</div>
-              <div class="side-widget-label">DAILY<br>PASS</div>
-              <div class="side-widget-sub">(+1)</div>
-            </div>
+        <!-- DOLPHIN CARD (EXACT 320x450 px) -->
+        <div class="dolphin-card" id="dolphinCardContainer">
+          <div class="card-top-row">
+            <span class="card-badge">LVL 5</span>
+            <span class="card-badge rarity">~LEGENDARY</span>
           </div>
 
-          <!-- CENTER 4:3 HERO STAGE CARD -->
-          <div class="hero-stage-card-wrapper">
-            <div class="hero-stage-card" id="heroStageCard">
-              <!-- Dynamically populated by game.js -->
-            </div>
+          <div class="dolphin-avatar-center" onclick="handleDolphinTap(event)">
+            <img class="dolphin-main-img" src="assets/premium/legendary_dolphin_poseidon.png" alt="Poseidon Dolphin" />
           </div>
 
-          <!-- RIGHT FLANKING PANEL -->
-          <div class="side-panel-column">
-            <div class="side-quick-widget" onclick="document.getElementById('modalEnergyTank').classList.add('active'); haptic('medium');">
-              <div class="side-widget-icon">⚡</div>
-              <div class="side-widget-label" id="energySideVal">0<br>/ 2 000</div>
-            </div>
-            <div class="side-quick-widget" onclick="document.getElementById('modalBooster').classList.add('active'); haptic('medium');">
-              <div class="side-widget-icon">🚀</div>
-              <div class="side-widget-label">5 DAYS</div>
-              <div class="side-widget-sub">(+2)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 1:1 DUCK MY DUCK PROGRESSION WIDGET -->
-        <div class="dmd-progress-widget">
-          <div class="dmd-lvl-badge" id="dmdLvlBadge">5</div>
-          <div class="dmd-track-container">
-            <div class="dmd-track-bg">
-              <div class="dmd-track-fill" id="dmdXpFill"></div>
-            </div>
-            <img class="dmd-egg-milestone" src="assets/pearl_t1.png" alt="Milestone Egg" />
-          </div>
-          <div class="dmd-widget-actions">
-            <div class="dmd-breed-pill" id="dmdBreedPill" onclick="openBreedingModal()">
-              <span>BREED 5/5</span>
-            </div>
-            <button class="dmd-stake-btn" id="dmdStakeBtn" onclick="toggleStaking()">
-              <span>👑 STAKE</span>
+          <div class="card-actions-container">
+            <button class="feed-button" onclick="handleDolphinTap(event)">
+              <span>TAP TO FEED (Cost: 10 Pearls)</span>
             </button>
-            <div class="dmd-info-icon" onclick="document.getElementById('modalBreedInfo').classList.add('active')">ℹ️</div>
+            <div class="secondary-actions-row">
+              <button class="sub-action-btn breed" onclick="startBreeding()">
+                <span id="breedBtnText">BREED (5/5)</span>
+              </button>
+              <button class="sub-action-btn stake" onclick="toggleStaking()">
+                <span id="stakeBtnText">👑 START STAKING</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- 11 DECK SLOTS INDICATOR TRACKER -->
-        <div class="deck-slots-tracker" id="deckSlotDots">
-          <!-- Rendered dynamically by game.js -->
+        <!-- Quick Side Modals: Dolphin Pass & Daily Pass -->
+        <div style="display:flex; gap:8px; width:100%; max-width:320px; margin-top:8px;">
+          <div class="sub-action-btn" style="flex:1; padding:6px; font-size:10px; cursor:pointer;" onclick="showToast('Dolphin Pass Active: +20K Daily Pearls 👑', '👑')">
+            👑 DOLPHIN PASS (14D)
+          </div>
+          <div class="sub-action-btn" style="flex:1; padding:6px; font-size:10px; cursor:pointer;" onclick="showToast('Daily Pass Active: +2x Multiplier 📅', '📅')">
+            📅 DAILY PASS (+1)
+          </div>
         </div>
       </section>
 
-      <!-- TAB 2: EGGS (7x7 MERGE BOARD) -->
-      <section id="tab-eggs" class="tab-pane">
-        <div class="eggs-tab-header">
-          <div class="egg-queue-banner">
-            <span class="egg-queue-text">NEXT EGG IN QUEUE AND 27 MORE</span>
-            <span class="egg-queue-timer" id="eggQueueTimer">03:59:25</span>
-          </div>
-          <button class="multiplier-toggle-btn" id="multiplierBtn" onclick="toggleEggMultiplier()">X10</button>
+      <!-- TAB 2: SHELLS (EXACT 7x6 MERGE GRID = 42 SLOTS) -->
+      <section id="tabPane-shells" class="tab-content shells-tab-pane">
+        <div class="grid-header-stats">
+          <span style="color:var(--accent-cyan); font-weight:900;">🐚 OCEAN SHELLS INVENTORY</span>
+          <span id="shellsCountBadge" style="color:var(--text-muted); font-size:10px;">7 / 42 Slots</span>
         </div>
 
-        <div class="merge-board-container">
-          <div class="merge-grid-7x7" id="mergeGrid">
-            <!-- 7x7 cells rendered dynamically -->
-          </div>
+        <!-- 7 Rows x 6 Columns (42 cells, 50x50 px) -->
+        <div class="merge-grid-wrapper" id="mergeGridWrapper">
+          <!-- Dynamically populated by game.js -->
         </div>
 
-        <div class="board-action-bar">
-          <button class="btn-board-action primary" onclick="spawnPearlToBoard()">
-            <span>🥚 SPAWN (200 🐟)</span>
+        <div class="grid-bottom-actions">
+          <button class="btn-grid-action spawn-btn" onclick="spawnNewShell()">
+            <span>SPAWN (200 🔵)</span>
           </button>
-          <button class="btn-board-action" onclick="autoMergeBoard()">
+          <button class="btn-grid-action" onclick="autoMergeAll()">
             <span>⚡ AUTO MERGE</span>
           </button>
-          <button class="btn-board-action" onclick="spinTideWheel()">
+          <button class="btn-grid-action" onclick="spinTideWheel()">
             <span>🎡 TIDE WHEEL</span>
           </button>
         </div>
       </section>
 
-      <!-- TAB 3: MARKET (TRADING) -->
-      <section id="tab-market" class="tab-pane">
-        <div class="market-header-tabs">
-          <button class="market-subtab-btn active" id="subtabDolphins" onclick="switchMarketSubtab('dolphins')">DOLPHINS</button>
-          <button class="market-subtab-btn" id="subtabGods" onclick="switchMarketSubtab('gods')">GODS</button>
+      <!-- TAB 3: MARKET (TRADING & CANDLESTICK CHART) -->
+      <section id="tabPane-market" class="tab-content market-pane">
+        <div style="font-size:12px; font-weight:900; color:var(--accent-cyan);">📊 PEARLS VS STARS MARKET VOLUME</div>
+        <div class="market-chart-container">
+          <img src="assets/premium/market_chart_widget.png" style="width:100%; height:100%; object-fit:contain;" alt="Market Chart" />
         </div>
 
-        <div class="market-rarity-filters">
-          <button class="rarity-pill-btn active" onclick="filterMarketRarity('all')">ALL</button>
-          <button class="rarity-pill-btn" onclick="filterMarketRarity('uncommon')">UNCOMMON</button>
-          <button class="rarity-pill-btn" onclick="filterMarketRarity('rare')">RARE</button>
-          <button class="rarity-pill-btn" onclick="filterMarketRarity('epic')">EPIC</button>
-          <button class="rarity-pill-btn" onclick="filterMarketRarity('legendary')">LEGENDARY</button>
-        </div>
-
-        <div class="hot-market-banner">
-          <span>🔥 Hot market ends in 09:22</span>
-          <span style="color:var(--accent-cyan);">VOLUME: 2.4M 🐟</span>
-        </div>
-
-        <div class="market-chart-card">
-          <canvas id="marketChartCanvas"></canvas>
-        </div>
-
-        <div class="market-grid" id="marketListingGrid">
-          <!-- Rendered dynamically -->
-        </div>
-      </section>
-
-      <!-- TAB 4: GODS -->
-      <section id="tab-gods" class="tab-pane">
-        <div class="gods-container">
-          <div class="god-hero-banner">
-            <img class="god-banner-sprite" src="assets/events/skin_cyber_currents_1.png" alt="God" />
-            <div>
-              <div class="god-info-title">POSEIDON DOLPHIN</div>
-              <div class="god-info-buff">⚡ +45% Passive DLP Yield for all deck slots</div>
-              <button class="modal-action-btn btn-stars" onclick="buyStarsItem('Poseidon Deity', 499)" style="padding:4px 10px; font-size:10.5px;">
-                UNLOCK <img class="inline-star-icon" src="assets/icon_user_star.png" /> 499
-              </button>
-            </div>
+        <div style="font-size:12px; font-weight:900; margin-top:4px;">🐬 FEATURED DOLPHIN AUCTIONS</div>
+        <!-- 3-Column Collection Grid (100x140 px per card) -->
+        <div class="market-3col-grid">
+          <div class="market-item-card">
+            <span style="font-size:9px; font-weight:900; color:var(--accent-cyan);">LVL 4 M</span>
+            <img src="assets/events/skin_sailor_squad_1.png" style="width:55px; height:55px; object-fit:contain;" />
+            <span style="font-size:10px; font-weight:800;">Sailor Dolphin</span>
+            <button class="feed-button" style="padding:4px; font-size:9px; width:100%;" onclick="showToast('Bid Placed! (45K Pearls)', '🛒')">45K 🔵</button>
           </div>
-
-          <div class="god-hero-banner" style="border-color:var(--accent-gold);">
-            <img class="god-banner-sprite" src="assets/events/skin_golden_gilded_1.png" alt="God" />
-            <div>
-              <div class="god-info-title">AURA OF THE ABYSS</div>
-              <div class="god-info-buff">❤️ +20% Love Egg Hatching Multiplier</div>
-              <button class="modal-action-btn btn-stars" onclick="buyStarsItem('Abyss Deity', 799)" style="padding:4px 10px; font-size:10.5px;">
-                UNLOCK <img class="inline-star-icon" src="assets/icon_user_star.png" /> 799
-              </button>
-            </div>
+          <div class="market-item-card">
+            <span style="font-size:9px; font-weight:900; color:var(--accent-purple);">LVL 5 XL</span>
+            <img src="assets/events/skin_cyber_currents_1.png" style="width:55px; height:55px; object-fit:contain;" />
+            <span style="font-size:10px; font-weight:800;">Cyber Dolphin</span>
+            <button class="feed-button" style="padding:4px; font-size:9px; width:100%;" onclick="showToast('Bid Placed! (120 Stars)', '🛒')">120 ⭐</button>
+          </div>
+          <div class="market-item-card">
+            <span style="font-size:9px; font-weight:900; color:var(--accent-gold);">LVL 5 GOD</span>
+            <img src="assets/premium/legendary_dolphin_poseidon.png" style="width:55px; height:55px; object-fit:contain;" />
+            <span style="font-size:10px; font-weight:800;">Poseidon</span>
+            <button class="feed-button" style="padding:4px; font-size:9px; width:100%;" onclick="showToast('Bid Placed! (499 Stars)', '🛒')">499 ⭐</button>
           </div>
         </div>
       </section>
 
-      <!-- TAB 5: TASKS & FRIENDS -->
-      <section id="tab-tasks" class="tab-pane">
-        <div class="market-header-tabs" style="padding-bottom:0;">
-          <button class="market-subtab-btn active" id="subtabTasks" onclick="switchTasksSubtab('tasks')">TASKS</button>
-          <button class="market-subtab-btn" id="subtabFriends" onclick="switchTasksSubtab('friends')">FRIENDS</button>
-        </div>
-
-        <div class="tasks-container" id="tasksContainerView">
-          <div class="task-card-item">
-            <div>
-              <div style="font-size:12px; font-weight:900;">Join Official Channel</div>
-              <div style="font-size:10px; color:var(--accent-cyan);">+5,000 🐟 & +2 ⭐</div>
-            </div>
-            <button class="task-claim-btn" onclick="claimTask(this, 5000, 2)">CLAIM</button>
-          </div>
-
-          <div class="task-card-item">
-            <div>
-              <div style="font-size:12px; font-weight:900;">Follow on X (Twitter)</div>
-              <div style="font-size:10px; color:var(--accent-cyan);">+10,000 🐟 & +3 ⭐</div>
-            </div>
-            <button class="task-claim-btn" onclick="claimTask(this, 10000, 3)">CLAIM</button>
-          </div>
-
-          <div class="task-card-item">
-            <div>
-              <div style="font-size:12px; font-weight:900;">Complete 5 Feed Duels</div>
-              <div style="font-size:10px; color:var(--accent-cyan);">+15,000 🐟 & +5 ⭐</div>
-            </div>
-            <button class="task-claim-btn" onclick="claimTask(this, 15000, 5)">CLAIM</button>
+      <!-- TAB 4: GODS (NFT & PASSIVE YIELD) -->
+      <section id="tabPane-gods" class="tab-content gods-pane">
+        <div class="god-card-full">
+          <img class="god-main-artwork" src="assets/premium/legendary_dolphin_poseidon.png" alt="Poseidon Dolphin" />
+          <div style="flex:1;">
+            <div style="font-size:14px; font-weight:900; color:#fff;">POSEIDON DOLPHIN</div>
+            <div style="font-size:11px; color:var(--accent-cyan); margin:3px 0 6px 0;">⚡ +45% Passive Yield for all deck slots</div>
+            <button class="feed-button" style="padding:5px 12px; font-size:10px; width:auto;" onclick="showToast('Unlocked Poseidon God Deity! 👑', '👑')">
+              UNLOCK 499 ⭐
+            </button>
           </div>
         </div>
 
-        <div class="tasks-container" id="friendsContainerView" style="display:none;">
-          <div class="task-card-item">
-            <div>
-              <div style="font-size:12px; font-weight:900;">Player6407793</div>
-              <div style="font-size:9.5px; color:var(--accent-green);">Yield: +1,240 🐟</div>
-            </div>
-            <button class="task-claim-btn" onclick="claimFriendYield(this, 1240)">CLAIM</button>
-          </div>
-
-          <div class="task-card-item">
-            <div>
-              <div style="font-size:12px; font-weight:900;">Player6407912</div>
-              <div style="font-size:9.5px; color:var(--accent-green);">Yield: +3,850 🐟</div>
-            </div>
-            <button class="task-claim-btn" onclick="claimFriendYield(this, 3850)">CLAIM</button>
-          </div>
-
-          <div class="referral-rules-card">
-            <div style="font-weight:900; color:#fff; font-size:11px; margin-bottom:4px;">YOUR REFERRALS</div>
-            <div>Invite unlimited friends. Collect more hearts to expand invite bonuses!</div>
-            <div class="referral-tier-list">
-              <div>• First 10 referrals: <b>2.0% Yield</b></div>
-              <div>• First 100 referrals: <b>0.5% Yield</b></div>
-              <div>• First 1,000 referrals: <b>0.1% Yield</b></div>
-              <div>• Above 1,000 referrals: <b>0.0025% Yield</b></div>
-            </div>
-            <button class="modal-action-btn" onclick="shareReferralLink()" style="width:100%; margin-top:8px;">
-              🚀 INVITE FRIENDS VIA TELEGRAM
+        <div class="god-card-full" style="border-color:var(--accent-gold);">
+          <img class="god-main-artwork" src="assets/premium/mystic_sea_egg_t12.png" alt="Aura of the Abyss" />
+          <div style="flex:1;">
+            <div style="font-size:14px; font-weight:900; color:#fff;">AURA OF THE ABYSS</div>
+            <div style="font-size:11px; color:var(--accent-pink); margin:3px 0 6px 0;">❤️ +20% Love Shell Hatching Multiplier</div>
+            <button class="feed-button" style="padding:5px 12px; font-size:10px; width:auto; background:linear-gradient(180deg, #FFB800 0%, #CC8800 100%);" onclick="showToast('Unlocked Aura of the Abyss! ✨', '✨')">
+              UNLOCK 799 ⭐
             </button>
           </div>
         </div>
       </section>
+
+      <!-- TAB 5: TASKS (QUESTS & SOCIALS) -->
+      <section id="tabPane-tasks" class="tab-content tasks-pane">
+        <div class="task-list-row">
+          <div>
+            <div style="font-size:12px; font-weight:900;">Join Official Channel</div>
+            <div style="font-size:10px; color:var(--accent-cyan);">+5,000 Blue Pearls & +2 Gold Stars</div>
+          </div>
+          <button class="claim-quest-btn" onclick="this.disabled=true; this.innerText='CLAIMED'; showToast('Claimed +5,000 Pearls & 2 Stars! 🎁', '🎁')">CLAIM</button>
+        </div>
+
+        <div class="task-list-row">
+          <div>
+            <div style="font-size:12px; font-weight:900;">Follow on X (Twitter)</div>
+            <div style="font-size:10px; color:var(--accent-cyan);">+10,000 Blue Pearls & +3 Gold Stars</div>
+          </div>
+          <button class="claim-quest-btn" onclick="this.disabled=true; this.innerText='CLAIMED'; showToast('Claimed +10,000 Pearls & 3 Stars! 🎁', '🎁')">CLAIM</button>
+        </div>
+
+        <div class="task-list-row">
+          <div>
+            <div style="font-size:12px; font-weight:900;">Complete 5 Feed Duels</div>
+            <div style="font-size:10px; color:var(--accent-cyan);">+15,000 Blue Pearls & +5 Gold Stars</div>
+          </div>
+          <button class="claim-quest-btn" onclick="this.disabled=true; this.innerText='CLAIMED'; showToast('Claimed +15,000 Pearls & 5 Stars! 🎁', '🎁')">CLAIM</button>
+        </div>
+      </section>
+
     </main>
 
-    <!-- 3. BOTTOM NAVIGATION BAR (5 TABS) -->
-    <nav class="bottom-tab-bar">
-      <div class="nav-tab-item" id="navTabMarket" onclick="switchTab('market')">
-        <div class="nav-tab-icon">📊</div>
-        <div class="nav-tab-label">MARKET</div>
-      </div>
-      <div class="nav-tab-item" id="navTabEggs" onclick="switchTab('eggs')">
-        <div class="nav-tab-icon">🥚</div>
-        <div class="nav-tab-label">EGGS</div>
-        <div class="nav-badge">11</div>
-      </div>
-      <div class="nav-tab-item active" id="navTabDolphins" onclick="switchTab('dolphins')">
-        <div class="nav-tab-icon">🐬</div>
-        <div class="nav-tab-label">DUCKS</div>
-      </div>
-      <div class="nav-tab-item" id="navTabGods" onclick="switchTab('gods')">
-        <div class="nav-tab-icon">👑</div>
-        <div class="nav-tab-label">GODS</div>
-      </div>
-      <div class="nav-tab-item" id="navTabTasks" onclick="switchTab('tasks')">
-        <div class="nav-tab-icon">📋</div>
-        <div class="nav-tab-label">TASKS</div>
-        <div class="nav-badge">1</div>
-      </div>
+    <!-- 8. BOTTOM NAVIGATION BAR - EXACT 390x80 px (5 TABS) -->
+    <nav class="bottom-nav-bar">
+      <button class="nav-tab-button" id="navBtn-market" onclick="switchTab('market')">
+        <div class="nav-icon">📊</div>
+        <span class="nav-text">Market</span>
+      </button>
+      <button class="nav-tab-button" id="navBtn-shells" onclick="switchTab('shells')">
+        <div class="nav-icon">🐚</div>
+        <span class="nav-text">Shells</span>
+      </button>
+      <button class="nav-tab-button active" id="navBtn-dolphins" onclick="switchTab('dolphins')">
+        <div class="nav-icon">🐬</div>
+        <span class="nav-text">Dolphins</span>
+      </button>
+      <button class="nav-tab-button" id="navBtn-gods" onclick="switchTab('gods')">
+        <div class="nav-icon">👑</div>
+        <span class="nav-text">Gods</span>
+      </button>
+      <button class="nav-tab-button" id="navBtn-tasks" onclick="switchTab('tasks')">
+        <div class="nav-icon">📋</div>
+        <span class="nav-text">Tasks</span>
+      </button>
     </nav>
 
-    <!-- 4. MODALS & POPUPS (1:1 PARITY) -->
-    <!-- DUCKER PASS MODAL -->
-    <div class="modal-overlay" id="modalDuckerPass">
-      <div class="modal-sheet-card">
-        <div class="modal-title-row">
-          <div class="modal-title">👑 DUCKER PASS SELECTION</div>
-          <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted); line-height:1.4;">
-          Become VIP Ducker for 14 Days to unlock exclusive superpowers:
-          <ul style="margin:8px 0 8px 18px; color:#fff; font-size:10px;">
-            <li>+20,000 Everyday Fish Reward</li>
-            <li>+15% Chance to get Rare Dolphin on breeding</li>
-            <li>Auto-merge Eggs and Love Eggs (15 Levels)</li>
-            <li>Skip ads in tasks</li>
-            <li>Unique Ducker skins</li>
-            <li>Turbo Dolphin Feed</li>
-            <li>Advanced market order queues</li>
-          </ul>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="modal-action-btn btn-stars" onclick="buyStarsItem('Prince Ducker (14 Days)', 499)" style="flex:1;">
-            PRINCE <img class="inline-star-icon" src="assets/icon_user_star.png" /> 499
-          </button>
-          <button class="modal-action-btn btn-stars" onclick="buyStarsItem('VIP Ducker (14 Days)', 999)" style="flex:1;">
-            VIP <img class="inline-star-icon" src="assets/icon_user_star.png" /> 999
-          </button>
-        </div>
-      </div>
-    </div>
+    <!-- FLOATING TOAST -->
+    <div id="toastNotification" style="position:fixed; top:65px; left:50%; transform:translateX(-50%) translateY(-20px); background:rgba(18,28,48,0.95); border:1px solid var(--accent-cyan); padding:7px 14px; border-radius:12px; font-size:11px; font-weight:800; color:#fff; z-index:9999; opacity:0; transition:all 0.2s ease; pointer-events:none;"></div>
 
-    <!-- DAILY PASS MODAL -->
-    <div class="modal-overlay" id="modalDailyPass">
-      <div class="modal-sheet-card">
-        <div class="modal-title-row">
-          <div class="modal-title">📅 DAILY LOGIN STREAK</div>
-          <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted);">Current Streak: <b>Day 5 (+2 Multiplier)</b></div>
-        <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; font-size:11px;">
-          Today's Bonus: <b>+25,000 🐟 & +10 <img class="inline-star-icon" src="assets/icon_user_star.png" /></b>
-        </div>
-        <button class="modal-action-btn" onclick="claimDailyBonus()">CLAIM TODAY'S BONUS 🎁</button>
-      </div>
-    </div>
-
-    <!-- ENERGY TANK MODAL -->
-    <div class="modal-overlay" id="modalEnergyTank">
-      <div class="modal-sheet-card">
-        <div class="modal-title-row">
-          <div class="modal-title">⚡ ENERGY TANK REFILL</div>
-          <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted);">Refill capacity back to 2 000 / 2 000!</div>
-        <button class="modal-action-btn" onclick="refillEnergyTank()">REFILL FULL TANK (500 🐟)</button>
-      </div>
-    </div>
-
-    <!-- BOOSTER MODAL -->
-    <div class="modal-overlay" id="modalBooster">
-      <div class="modal-sheet-card">
-        <div class="modal-title-row">
-          <div class="modal-title">🚀 5-DAY TURBO BOOSTER</div>
-          <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted);">Multiply all tapping yields by 2.5x for 5 days!</div>
-        <button class="modal-action-btn btn-stars" onclick="buyStarsItem('5-Day Booster', 150)">
-          ACTIVATE <img class="inline-star-icon" src="assets/icon_user_star.png" /> 150
-        </button>
-      </div>
-    </div>
-
-    <!-- EGG CRACKING MODAL -->
-    <div class="modal-overlay" id="modalCrackEgg">
-      <div class="modal-sheet-card" style="align-items:center; text-align:center;">
-        <div class="modal-title" id="crackEggTitle">CRACK TIER EGG</div>
-        <img id="crackEggImg" src="assets/pearl_t1.png" style="width:100px; height:100px; object-fit:contain; margin:10px 0;" />
-        <button class="modal-action-btn" onclick="doCrackCurrentEgg()" style="width:100%;">💥 HATCH & CLAIM REWARDS</button>
-      </div>
-    </div>
-
-    <!-- UNLOCK SLOT MODAL -->
-    <div class="modal-overlay" id="modalSlotUnlock">
-      <div class="modal-sheet-card">
-        <div class="modal-title-row">
-          <div class="modal-title">🔓 UNLOCK NEW DECK SLOT</div>
-          <button class="modal-close-btn" onclick="closeAllModals()">✕</button>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted);">Expand your active dolphin deck capacity up to 11 slots!</div>
-        <button class="modal-action-btn btn-stars" onclick="buySlotWithStars()">
-          UNLOCK SLOT <img class="inline-star-icon" src="assets/icon_user_star.png" /> 120
-        </button>
-      </div>
-    </div>
-
-    <!-- TOAST NOTIFICATION -->
-    <div class="game-toast" id="gameToast">
-      <span id="gameToastIcon">✨</span>
-      <span id="gameToastMsg">Action completed!</span>
-    </div>
   </div>
 
-  <script src="game.js?v=3.0"></script>
+  <script src="game.js?v=4.0"></script>
 </body>
 </html>

@@ -1,65 +1,46 @@
-// --- DOLPHIN PEARLS PRODUCTION MASTER GAME ENGINE (1:1 DUCK MY DUCK PARITY) ---
+// --- DOLPHIN MY DOLPHIN - MASTER TECHNICAL GAME ENGINE ---
 
-// 1. SINGLE-SOURCE-OF-TRUTH STATE STORE
-window.GameStore = {
-  state: {
-    dlp: 183.21,
-    fish: 92039,
-    stars: 45,
-    hearts: 14,
-    shells: 65,
-    energy: 0,
-    maxEnergy: 2000,
-    activeSlot: 0,
-    slots: [
-      { id: 0, level: 5, rarity: 'Uncommon', feedCost: 150, feedProgress: 5, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedCount: 5, maxBreeds: 5, isStaked: false },
-      { id: 1, level: 2, rarity: 'Uncommon', feedCost: 110, feedProgress: 2, feedMax: 5, state: 'active', skin: 'assets/events/skin_sailor_squad_1.png', breedCount: 5, maxBreeds: 5, isStaked: false },
-      { id: 2, level: 3, rarity: 'Rare', feedCost: 200, feedProgress: 4, feedMax: 5, state: 'active', skin: 'assets/events/skin_cyber_currents_1.png', breedCount: 5, maxBreeds: 5, isStaked: false },
-      { id: 3, level: 1, rarity: 'Common', feedCost: 75, feedProgress: 1, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedCount: 5, maxBreeds: 5, isStaked: false },
-      { id: 4, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 5, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 6, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 7, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 8, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 9, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 10, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false }
-    ],
-    grid: [
-      { id: 'p1', tier: 1, type: 'pearl' },
-      { id: 'p2', tier: 1, type: 'pearl' },
-      { id: 'p3', tier: 2, type: 'pearl' },
-      { id: 'p4', tier: 2, type: 'pearl' },
-      { id: 'p5', tier: 3, type: 'pearl' },
-      { id: 'h1', tier: 1, type: 'heart' },
-      ...Array(43).fill(null)
-    ],
-    selectedCell: null,
-    crackingEggIdx: null,
-    combo: 0,
-    resetSecondsRemaining: 24190 // 6h 43m 10s
-  },
+window.GameState = {
+  // Currencies
+  pearlsBalance: 92039,
+  starsBalance: 45,
+  dlpBalance: 183.21,
 
-  listeners: [],
-  subscribe(fn) {
-    this.listeners.push(fn);
-  },
-  notify() {
-    this.listeners.forEach(fn => fn(this.state));
-  },
-  update(patch) {
-    Object.assign(this.state, patch);
-    this.notify();
-  },
-  getActiveSlot() {
-    return this.state.slots[this.state.activeSlot];
-  }
+  // Clicker State
+  dolphinLevel: 5,
+  dolphinRarity: 'LEGENDARY',
+  dolphinEnergy: 2000,
+  maxEnergy: 2000,
+  isBreeding: false,
+  breedEndTime: null,
+  isStaked: false,
+
+  // Merge Grid: 7 Rows x 6 Columns = 42 Slots
+  gridArray: Array(42).fill(null),
+  selectedCell: null,
+  draggedCell: null,
+
+  // Active Tab
+  currentTab: 'dolphins'
 };
 
-// 2. AUDIO & HAPTIC SYSTEM
-class SoundEngine {
+// Initialize Grid with default starter Sea Shells / Pearls
+(function initStarterGrid() {
+  const s = window.GameState;
+  s.gridArray[0] = { id: 's1', level: 1, type: 'shell', name: 'Nautilus Shell' };
+  s.gridArray[1] = { id: 's2', level: 1, type: 'shell', name: 'Nautilus Shell' };
+  s.gridArray[2] = { id: 's3', level: 2, type: 'shell', name: 'Coral Shell' };
+  s.gridArray[3] = { id: 's4', level: 2, type: 'shell', name: 'Coral Shell' };
+  s.gridArray[4] = { id: 's5', level: 3, type: 'shell', name: 'Abyssal Shell' };
+  s.gridArray[5] = { id: 'p1', level: 1, type: 'pearl', name: 'Blue Pearl' };
+  s.gridArray[6] = { id: 'p2', level: 1, type: 'pearl', name: 'Blue Pearl' };
+})();
+
+// WebAudio Juice
+class SoundFX {
   constructor() {
     this.ctx = null;
-    this.scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+    this.scale = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5];
   }
   init() {
     if (!this.ctx) {
@@ -70,7 +51,7 @@ class SoundEngine {
       this.ctx.resume();
     }
   }
-  play(type, customParam = 0) {
+  play(type, lvl = 1) {
     try {
       this.init();
       if (!this.ctx) return;
@@ -82,378 +63,132 @@ class SoundEngine {
 
       if (type === 'tap') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(320, now);
-        osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
+        osc.frequency.setValueAtTime(360, now);
+        osc.frequency.exponentialRampToValueAtTime(90, now + 0.08);
         gain.gain.setValueAtTime(0.3, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
         osc.start(now);
         osc.stop(now + 0.08);
+      } else if (type === 'merge') {
+        const noteIdx = Math.min(lvl, this.scale.length - 1);
+        const f = this.scale[noteIdx];
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(f, now);
+        osc.frequency.exponentialRampToValueAtTime(f * 1.5, now + 0.16);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.22);
       } else if (type === 'coin') {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(987.77, now);
         osc.frequency.setValueAtTime(1318.51, now + 0.06);
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
         osc.start(now);
-        osc.stop(now + 0.2);
-      } else if (type === 'swipe') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(420, now);
-        osc.frequency.exponentialRampToValueAtTime(640, now + 0.07);
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
-        osc.start(now);
-        osc.stop(now + 0.07);
-      } else if (type === 'merge') {
-        const noteIdx = Math.min(customParam, this.scale.length - 1);
-        const freq = this.scale[noteIdx];
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.14);
-        gain.gain.setValueAtTime(0.35, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
-      } else if (type === 'crack') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.exponentialRampToValueAtTime(35, now + 0.16);
-        gain.gain.setValueAtTime(0.5, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-        osc.start(now);
-        osc.stop(now + 0.2);
-      } else if (type === 'fanfare') {
-        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
-          const o = this.ctx.createOscillator();
-          const g = this.ctx.createGain();
-          o.connect(g);
-          g.connect(this.ctx.destination);
-          o.frequency.setValueAtTime(f, now + i * 0.08);
-          g.gain.setValueAtTime(0.25, now + i * 0.08);
-          g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.25);
-          o.start(now + i * 0.08);
-          o.stop(now + i * 0.08 + 0.25);
-        });
+        osc.stop(now + 0.18);
       }
-    } catch (e) {
-      console.warn('Audio error:', e);
-    }
+    } catch (e) {}
   }
 }
-const audio = new SoundEngine();
+const sfx = new SoundFX();
 
-window.haptic = function(type = 'light') {
-  if (window.Telegram?.WebApp?.HapticFeedback) {
-    const h = window.Telegram.WebApp.HapticFeedback;
-    if (type === 'light') h.impactOccurred('light');
-    else if (type === 'medium') h.impactOccurred('medium');
-    else if (type === 'heavy') h.impactOccurred('heavy');
-    else if (type === 'success') h.notificationOccurred('success');
-    else if (type === 'error') h.notificationOccurred('error');
-  }
-};
+// 1. NAVIGATION (5 TABS: Market, Shells, Dolphins, Gods, Tasks)
+window.switchTab = function(tabName) {
+  sfx.play('tap');
+  GameState.currentTab = tabName;
 
-window.showToast = function(text, icon = '✨') {
-  const t = document.getElementById('gameToast');
-  const ic = document.getElementById('gameToastIcon');
-  const msg = document.getElementById('gameToastMsg');
-  if (!t || !msg) return;
-  if (ic) ic.innerText = icon;
-  msg.innerText = text;
-  t.classList.add('show');
-  clearTimeout(window._toastTimeout);
-  window._toastTimeout = setTimeout(() => {
-    t.classList.remove('show');
-  }, 2200);
-};
-
-// 3. NAVIGATION (5 TABS)
-window.switchTab = function(tabId) {
-  haptic('medium');
-  audio.play('tap');
-
-  const tabs = ['dolphins', 'eggs', 'market', 'gods', 'tasks'];
+  const tabs = ['market', 'shells', 'dolphins', 'gods', 'tasks'];
   tabs.forEach(t => {
-    const sec = document.getElementById(`tab-${t}`);
-    const nav = document.getElementById(`navTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-    if (sec) sec.classList.toggle('active', t === tabId);
-    if (nav) nav.classList.toggle('active', t === tabId);
+    const pane = document.getElementById(`tabPane-${t}`);
+    const btn = document.getElementById(`navBtn-${t}`);
+    if (pane) pane.classList.toggle('active', t === tabName);
+    if (btn) btn.classList.toggle('active', t === tabName);
   });
 
-  if (tabId === 'eggs') {
+  if (tabName === 'shells') {
     renderMergeGrid();
-  } else if (tabId === 'market') {
-    initMarketChart();
   }
 };
 
-// 4. LOBBY & 11 DECK SLOTS WITH TOUCH SWIPE/SLIDE PHYSICS
-window.switchSlot = function(slotIdx) {
-  const s = GameStore.state;
-  if (slotIdx < 0 || slotIdx >= s.slots.length) return;
-  haptic('light');
-  audio.play('swipe');
-  GameStore.update({ activeSlot: slotIdx });
-  renderActiveDolphin();
-  renderSlotsTracker();
-};
-
-function initCardSwipeGestures() {
-  const card = document.getElementById('heroStageCard');
-  if (!card) return;
-
-  let startX = 0;
-  let currentX = 0;
-  let isSwiping = false;
-
-  card.addEventListener('touchstart', (e) => {
-    if (e.target.closest('#feedActionBtn') || e.target.closest('button')) return;
-    startX = e.touches[0].clientX;
-    currentX = startX;
-    isSwiping = true;
-    card.style.transition = 'none';
-  }, { passive: true });
-
-  card.addEventListener('touchmove', (e) => {
-    if (!isSwiping) return;
-    currentX = e.touches[0].clientX;
-    const diffX = currentX - startX;
-    card.style.transform = `translateX(${diffX * 0.4}px) rotate(${diffX * 0.02}deg)`;
-  }, { passive: true });
-
-  card.addEventListener('touchend', () => {
-    if (!isSwiping) return;
-    isSwiping = false;
-    card.style.transition = 'transform 0.25s ease';
-    const diffX = currentX - startX;
-
-    if (diffX < -45) {
-      const nextSlot = Math.min(GameStore.state.activeSlot + 1, GameStore.state.slots.length - 1);
-      switchSlot(nextSlot);
-    } else if (diffX > 45) {
-      const prevSlot = Math.max(GameStore.state.activeSlot - 1, 0);
-      switchSlot(prevSlot);
-    }
-
-    card.style.transform = 'translateX(0px) rotate(0deg)';
-  });
-}
-
-function renderSlotsTracker() {
-  const container = document.getElementById('deckSlotDots');
-  if (!container) return;
-  const s = GameStore.state;
-  
-  let html = '';
-  s.slots.forEach((slot, i) => {
-    if (slot.state === 'active') {
-      if (i === s.activeSlot) {
-        html += `<div class="slot-item active" onclick="switchSlot(${i})"></div>`;
-      } else {
-        html += `<div class="slot-item owned" onclick="switchSlot(${i})"></div>`;
-      }
-    } else {
-      html += `<div class="slot-item locked" onclick="switchSlot(${i})">🔒</div>`;
-    }
-  });
-  html += `<div class="slot-item add-plus" onclick="document.getElementById('modalSlotUnlock').classList.add('active'); haptic('medium');">➕</div>`;
-  container.innerHTML = html;
-}
-
-function renderActiveDolphin() {
-  const slot = GameStore.getActiveSlot();
-  const card = document.getElementById('heroStageCard');
-  if (!card || !slot) return;
-
-  if (slot.state === 'locked') {
-    card.className = 'hero-stage-card dotted-locked';
-    card.style.borderColor = '#4A5568';
-    card.innerHTML = `
-      <div style="font-size:32px; margin-bottom:4px;">🔒</div>
-      <div style="font-family:'Fredoka',sans-serif; font-weight:900; font-size:14px; color:#fff; margin-bottom:4px;">BUY A SLOT FOR A NEW DOLPHIN</div>
-      <div style="font-size:10px; color:var(--text-muted); margin-bottom:12px;">Expand deck capacity to keep more dolphins active!</div>
-      <button class="modal-action-btn btn-crack" onclick="buySlotWithStars()" style="width:auto; padding:8px 16px;">
-        GET A NEW SLOT <img class="inline-star-icon" src="assets/icon_user_star.png" /> 120
-      </button>
-    `;
+// 2. CLICKER CORE LOGIC (Dolphins Tab)
+window.handleDolphinTap = function(event) {
+  const s = GameState;
+  if (s.isBreeding) {
+    showToast('Dolphin is currently breeding! Please wait.', '⏳');
     return;
   }
 
-  card.className = 'hero-stage-card';
-  const rarityBorder = slot.rarity === 'Rare' ? 'var(--rarity-rare)' : (slot.rarity === 'Epic' ? 'var(--rarity-epic)' : (slot.rarity === 'Legendary' ? 'var(--rarity-legendary)' : 'var(--rarity-uncommon)'));
-  card.style.borderColor = rarityBorder;
-
-  card.innerHTML = `
-    <div class="card-pills-row">
-      <div class="card-pill">LVL ${slot.level}</div>
-      <div class="card-pill rarity-${slot.rarity.toLowerCase()}">~${slot.rarity.toUpperCase()}</div>
-    </div>
-    <div class="card-center-stage">
-      <img id="dolphinMascot" class="mascot-sprite" src="${slot.skin}" alt="Dolphin" onclick="handleFeedTap(event)" />
-    </div>
-    <button class="feed-btn" id="feedActionBtn" onclick="handleFeedTap(event)">
-      <div class="feed-btn-content">
-        <span class="feed-btn-text">TAP TO FEED</span>
-        <div class="feed-btn-cost">
-          <span>${slot.feedCost}</span>
-          <img src="assets/icon_user_fish.png" style="width:14px; height:14px; object-fit:contain;" />
-        </div>
-      </div>
-      <span class="feed-btn-timer" id="feedTimerText">${formatTimer(GameStore.state.resetSecondsRemaining)}</span>
-    </button>
-  `;
-
-  // Update Progression widget
-  const lvlBadge = document.getElementById('dmdLvlBadge');
-  const xpFill = document.getElementById('dmdXpFill');
-  const breedPill = document.getElementById('dmdBreedPill');
-  const stakeBtn = document.getElementById('dmdStakeBtn');
-
-  if (lvlBadge) lvlBadge.innerText = slot.level;
-  if (xpFill) xpFill.style.width = `${(slot.feedProgress / slot.feedMax) * 100}%`;
-  if (breedPill) breedPill.innerHTML = `<span>BREED ${slot.breedCount}/${slot.maxBreeds}</span>`;
-  if (stakeBtn) {
-    stakeBtn.innerHTML = slot.isStaked ? `<span>⚡ STAKED (+1.85 DLP/hr)</span>` : `<span>👑 STAKE</span>`;
-  }
-}
-
-function formatTimer(totalSec) {
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  return `RESET IN ${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
-}
-
-// 5. TAP FEEDING MECHANISM WITH FLYING FISH STREAM & MASCOT GULP
-window.handleFeedTap = function(e) {
-  if (e) e.preventDefault();
-  const s = GameStore.state;
-  const slot = GameStore.getActiveSlot();
-  if (!slot || slot.state === 'locked') return;
-
-  if (s.fish < slot.feedCost) {
-    haptic('error');
-    showToast('Not enough Fish! Merge eggs or complete tasks.', '⚠️');
+  if (s.dolphinEnergy < 10) {
+    showToast('Energy depleted! Refill to keep feeding.', '⚡');
     return;
   }
 
-  const dlpYield = 0.02 * slot.level;
-  let newProgress = slot.feedProgress + 1;
-  let newLevel = slot.level;
-  let leveledUp = false;
+  // Deplete 10 energy, add 10 pearls
+  s.dolphinEnergy -= 10;
+  s.pearlsBalance += 10;
+  s.dlpBalance = +(s.dlpBalance + 0.01).toFixed(2);
 
-  if (newProgress >= slot.feedMax && slot.level < 5) {
-    newProgress = 0;
-    newLevel += 1;
-    leveledUp = true;
-  }
+  sfx.play('tap');
+  sfx.play('coin');
 
-  slot.feedProgress = newProgress;
-  slot.level = newLevel;
+  // Floating text animation (+10)
+  const target = event.currentTarget || event.target;
+  const rect = target.getBoundingClientRect();
+  const clickX = event.clientX || (rect.left + rect.width / 2);
+  const clickY = event.clientY || (rect.top + rect.height / 2);
 
-  GameStore.update({
-    fish: s.fish - slot.feedCost,
-    dlp: +(s.dlp + dlpYield).toFixed(2)
-  });
-
-  haptic('medium');
-  audio.play('tap');
-  audio.play('coin');
-
-  // Mascot squash-and-stretch gulp
-  const mascot = document.getElementById('dolphinMascot');
-  if (mascot) {
-    mascot.classList.add('eating');
-    setTimeout(() => mascot.classList.remove('eating'), 180);
-  }
-
-  // Flying fish particles stream
-  const btn = document.getElementById('feedActionBtn');
-  const btnRect = btn ? btn.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight * 0.6 };
-  const mascotRect = mascot ? mascot.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight * 0.4 };
-
-  shootFlyingFish(btnRect.left + btnRect.width / 2, btnRect.top, mascotRect.left + mascotRect.width / 2, mascotRect.top + mascotRect.height / 2);
-
-  // Floating text
-  spawnTapParticle(mascotRect.left + 30, mascotRect.top - 15, `+${dlpYield.toFixed(2)} DLP`, '#00D4FF');
-  spawnTapParticle(mascotRect.left - 20, mascotRect.top + 15, `-${slot.feedCost} 🐟`, '#FF4D8D');
-
-  if (leveledUp) {
-    audio.play('fanfare');
-    haptic('heavy');
-    showToast(`Dolphin upgraded to Level ${newLevel}! 🎉`, '✨');
-  }
-
-  renderActiveDolphin();
+  spawnFloatingText(clickX, clickY, '+10 🔵');
+  updateUI();
 };
 
-function shootFlyingFish(startX, startY, targetX, targetY) {
-  for (let i = 0; i < 3; i++) {
-    setTimeout(() => {
-      const f = document.createElement('img');
-      f.src = 'assets/icon_user_fish.png';
-      f.className = 'flying-food';
-      f.style.left = `${startX + (Math.random() * 20 - 10)}px`;
-      f.style.top = `${startY}px`;
-      document.body.appendChild(f);
-
-      const duration = 380;
-      const startTime = performance.now();
-
-      function animate(time) {
-        const elapsed = time - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const curX = startX + (targetX - startX) * progress;
-        const curY = startY + (targetY - startY) * progress - Math.sin(progress * Math.PI) * 45;
-
-        f.style.left = `${curX}px`;
-        f.style.top = `${curY}px`;
-        f.style.transform = `scale(${1 - progress * 0.3}) rotate(${progress * 360}deg)`;
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          f.remove();
-        }
-      }
-      requestAnimationFrame(animate);
-    }, i * 60);
-  }
+function spawnFloatingText(x, y, text) {
+  const el = document.createElement('div');
+  el.className = 'floating-text';
+  el.innerText = text;
+  el.style.left = `${x - 20}px`;
+  el.style.top = `${y - 20}px`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 650);
 }
 
-function spawnTapParticle(x, y, text, color) {
-  const p = document.createElement('div');
-  p.className = 'tap-particle';
-  p.innerText = text;
-  p.style.color = color;
-  p.style.left = `${x}px`;
-  p.style.top = `${y}px`;
-  document.body.appendChild(p);
-  setTimeout(() => p.remove(), 750);
-}
+window.startBreeding = function() {
+  const s = GameState;
+  if (s.isBreeding) return;
 
-// 6. 7x7 MERGE-2 BOARD SYSTEM
+  s.isBreeding = true;
+  s.breedEndTime = Date.now() + 60 * 1000; // 1 minute demo countdown
+
+  sfx.play('coin');
+  showToast('Breeding ritual initiated! (1m duration)', '❤️');
+  updateUI();
+};
+
+window.toggleStaking = function() {
+  const s = GameState;
+  s.isStaked = !s.isStaked;
+  sfx.play('coin');
+  showToast(s.isStaked ? 'Dolphin Staked! Earning passive DLP 👑' : 'Dolphin Unstaked.', '👑');
+  updateUI();
+};
+
+// 3. MERGE GRID LOGIC (7 Rows x 6 Columns = 42 Cells)
 function renderMergeGrid() {
-  const gridEl = document.getElementById('mergeGrid');
+  const gridEl = document.getElementById('mergeGridWrapper');
   if (!gridEl) return;
-  const s = GameStore.state;
+  const s = GameState;
   gridEl.innerHTML = '';
 
-  const lockedCorners = [0, 6, 42, 48];
-
-  s.grid.forEach((item, idx) => {
+  s.gridArray.forEach((item, idx) => {
     const cell = document.createElement('div');
-    cell.className = 'grid-cell';
+    cell.className = 'grid-cell-item';
     cell.dataset.index = idx;
 
-    if (lockedCorners.includes(idx)) {
-      cell.classList.add('locked');
-      cell.innerHTML = '<span style="font-size:8px; color:#444;">🔒</span>';
-    } else if (item) {
-      const imgPath = item.type === 'heart' ? `assets/heart_egg_t${item.tier}.png` : `assets/pearl_t${item.tier}.png`;
+    if (item) {
+      const assetUrl = item.type === 'pearl' ? `assets/pearl_t${Math.min(item.level, 12)}.png` : `assets/heart_egg_t${Math.min(item.level, 12)}.png`;
       cell.innerHTML = `
-        <img class="pearl-item" src="${imgPath}" alt="Egg T${item.tier}" />
-        <span class="pearl-lvl-tag">T${item.tier}</span>
+        <img class="shell-sprite" src="${assetUrl}" alt="${item.name}" />
+        <span class="shell-level-badge">L${item.level}</span>
       `;
     }
 
@@ -461,23 +196,26 @@ function renderMergeGrid() {
       cell.classList.add('selected');
     }
 
-    cell.addEventListener('click', () => handleCellClick(idx));
+    // Touch / Click Handler
+    cell.addEventListener('click', () => handleGridCellClick(idx));
     gridEl.appendChild(cell);
   });
+
+  const countEl = document.getElementById('shellsCountBadge');
+  if (countEl) {
+    const occupied = s.gridArray.filter(x => x !== null).length;
+    countEl.innerText = `${occupied} / 42 Slots`;
+  }
 }
 
-function handleCellClick(idx) {
-  const lockedCorners = [0, 6, 42, 48];
-  if (lockedCorners.includes(idx)) return;
-
-  const s = GameStore.state;
-  const item = s.grid[idx];
+function handleGridCellClick(idx) {
+  const s = GameState;
+  const clickedItem = s.gridArray[idx];
 
   if (s.selectedCell === null) {
-    if (item) {
+    if (clickedItem) {
       s.selectedCell = idx;
-      haptic('light');
-      audio.play('tap');
+      sfx.play('tap');
       renderMergeGrid();
     }
   } else {
@@ -485,437 +223,177 @@ function handleCellClick(idx) {
     s.selectedCell = null;
 
     if (fromIdx === idx) {
-      if (item) {
-        openCrackModal(item, idx);
-      }
       renderMergeGrid();
       return;
     }
 
-    const sourceItem = s.grid[fromIdx];
-    const targetItem = s.grid[idx];
+    const source = s.gridArray[fromIdx];
+    const target = s.gridArray[idx];
 
-    if (!targetItem) {
-      s.grid[idx] = sourceItem;
-      s.grid[fromIdx] = null;
-      haptic('light');
-      audio.play('tap');
-    } else if (sourceItem.type === targetItem.type && sourceItem.tier === targetItem.tier && sourceItem.tier < 12) {
-      s.combo = (s.combo || 0) + 1;
-      s.grid[idx] = {
-        id: 'egg_' + Date.now(),
-        type: sourceItem.type,
-        tier: sourceItem.tier + 1
+    if (!target) {
+      // Move to empty cell
+      s.gridArray[idx] = source;
+      s.gridArray[fromIdx] = null;
+      sfx.play('tap');
+    } else if (source.level === target.level && source.level < 12) {
+      // MERGE LOGIC (source.level === target.level -> level + 1)
+      console.log(`Merged to Level ${source.level + 1}`);
+      s.gridArray[idx] = {
+        id: 'shell_' + Date.now(),
+        type: source.type,
+        level: source.level + 1,
+        name: `Tier ${source.level + 1} Ocean Shell`
       };
-      s.grid[fromIdx] = null;
-      haptic('heavy');
-      audio.play('merge', s.combo);
-      showToast(`Merged to Tier ${sourceItem.tier + 1} Egg! ✨`, '🔮');
+      s.gridArray[fromIdx] = null;
+      sfx.play('merge', source.level);
+      showToast(`Merged to Level ${source.level + 1} Sea Shell! ✨`, '🔮');
+
+      // Add visual glow animation to target
+      setTimeout(() => {
+        const targetEl = document.querySelector(`[data-index="${idx}"]`);
+        if (targetEl) targetEl.classList.add('merge-glow');
+      }, 20);
     } else {
-      s.grid[idx] = sourceItem;
-      s.grid[fromIdx] = targetItem;
-      haptic('light');
+      // Swap
+      s.gridArray[idx] = source;
+      s.gridArray[fromIdx] = target;
+      sfx.play('tap');
     }
 
     renderMergeGrid();
   }
 }
 
-window.spawnPearlToBoard = function(tier = 1) {
-  const s = GameStore.state;
-  if (s.fish < 200) {
-    haptic('error');
-    showToast('Need 200 Fish to buy Egg!', '⚠️');
+window.spawnNewShell = function() {
+  const s = GameState;
+  if (s.pearlsBalance < 200) {
+    showToast('Need 200 Blue Pearls to spawn Sea Shell!', '⚠️');
     return;
   }
 
-  const lockedCorners = [0, 6, 42, 48];
-  const emptyIndices = s.grid.map((item, i) => (item === null && !lockedCorners.includes(i)) ? i : null).filter(i => i !== null);
-  
+  const emptyIndices = s.gridArray.map((item, i) => item === null ? i : null).filter(i => i !== null);
   if (emptyIndices.length === 0) {
-    haptic('error');
-    showToast('Board is full! Merge eggs to free space.', '⚠️');
+    showToast('Grid full! Merge shells to free slots.', '⚠️');
     return;
   }
 
   const targetIdx = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
-  s.grid[targetIdx] = { id: 'p_' + Date.now(), tier, type: 'pearl' };
-  GameStore.update({ fish: s.fish - 200 });
+  s.gridArray[targetIdx] = {
+    id: 's_' + Date.now(),
+    type: Math.random() > 0.5 ? 'shell' : 'pearl',
+    level: 1,
+    name: 'Nautilus Shell'
+  };
+  s.pearlsBalance -= 200;
 
-  haptic('medium');
-  audio.play('tap');
-  showToast('Egg spawned on Reef Board! 🥚', '✨');
+  sfx.play('tap');
+  showToast('Spawned Level 1 Sea Shell! 🐚', '✨');
+  updateUI();
   renderMergeGrid();
 };
 
-window.autoMergeBoard = function() {
-  const s = GameStore.state;
-  let mergedAny = false;
-  const lockedCorners = [0, 6, 42, 48];
+window.autoMergeAll = function() {
+  const s = GameState;
+  let merged = false;
 
-  for (let i = 0; i < s.grid.length; i++) {
-    if (!s.grid[i] || lockedCorners.includes(i)) continue;
-    for (let j = i + 1; j < s.grid.length; j++) {
-      if (!s.grid[j] || lockedCorners.includes(j)) continue;
-      if (s.grid[i].type === s.grid[j].type && s.grid[i].tier === s.grid[j].tier && s.grid[i].tier < 12) {
-        s.grid[i] = { id: 'm_' + Date.now(), type: s.grid[i].type, tier: s.grid[i].tier + 1 };
-        s.grid[j] = null;
-        mergedAny = true;
+  for (let i = 0; i < s.gridArray.length; i++) {
+    if (!s.gridArray[i]) continue;
+    for (let j = i + 1; j < s.gridArray.length; j++) {
+      if (!s.gridArray[j]) continue;
+      if (s.gridArray[i].level === s.gridArray[j].level && s.gridArray[i].level < 12) {
+        s.gridArray[i] = {
+          id: 'am_' + Date.now(),
+          type: s.gridArray[i].type,
+          level: s.gridArray[i].level + 1,
+          name: `Tier ${s.gridArray[i].level + 1} Shell`
+        };
+        s.gridArray[j] = null;
+        merged = true;
         break;
       }
     }
   }
 
-  if (mergedAny) {
-    haptic('heavy');
-    audio.play('merge', 2);
-    showToast('Auto-merged all matching pairs! ⚡', '🎉');
+  if (merged) {
+    sfx.play('merge', 3);
+    showToast('Auto-merged matching Sea Shells! ⚡', '🎉');
   } else {
-    showToast('No matching pairs found to merge.', 'ℹ️');
+    showToast('No matching pairs to merge.', 'ℹ️');
   }
-  renderMergeGrid();
-};
-
-function openCrackModal(egg, idx) {
-  GameStore.state.crackingEggIdx = idx;
-  const modal = document.getElementById('modalCrackEgg');
-  const img = document.getElementById('crackEggImg');
-  const title = document.getElementById('crackEggTitle');
-
-  if (img) img.src = egg.type === 'heart' ? `assets/heart_egg_t${egg.tier}.png` : `assets/pearl_t${egg.tier}.png`;
-  if (title) title.innerText = `CRACK TIER ${egg.tier} ${egg.type.toUpperCase()} EGG`;
-  if (modal) modal.classList.add('active');
-}
-
-window.doCrackCurrentEgg = function() {
-  const s = GameStore.state;
-  if (s.crackingEggIdx === null) return;
-
-  const egg = s.grid[s.crackingEggIdx];
-  if (!egg) return;
-
-  s.grid[s.crackingEggIdx] = null;
-  s.crackingEggIdx = null;
-
-  const rewardFish = egg.tier * 2500;
-  GameStore.update({
-    fish: s.fish + rewardFish,
-    hearts: s.hearts + egg.tier
-  });
-
-  audio.play('crack');
-  audio.play('fanfare');
-  haptic('heavy');
-  showToast(`Hatched! Earned +${rewardFish.toLocaleString()} 🐟 & +${egg.tier} ❤️`, '💥');
-
-  closeAllModals();
   renderMergeGrid();
 };
 
 window.spinTideWheel = function() {
-  haptic('heavy');
-  audio.play('fanfare');
-  const s = GameStore.state;
-  GameStore.update({ fish: s.fish + 15000, stars: s.stars + 5 });
-  showToast('Tide Wheel: Won +15,000 Fish & 5 Blue Stars! 🎡', '🎁');
+  const s = GameState;
+  s.pearlsBalance += 15000;
+  s.starsBalance += 5;
+  sfx.play('coin');
+  showToast('Tide Wheel: Won +15,000 Blue Pearls & 5 Stars! 🎡', '🎁');
+  updateUI();
 };
 
-// 7. BREEDING & STAKING FLOWS
-window.openBreedingModal = function() {
-  const slot = GameStore.getActiveSlot();
-  if (!slot || slot.state === 'locked') return;
+// 4. UI REFRESH & TICKER
+function updateUI() {
+  const s = window.GameState;
+  const pEl = document.getElementById('pearlsTopDisplay');
+  const stEl = document.getElementById('starsTopDisplay');
+  const eProg = document.getElementById('energyProgressFill');
+  const eText = document.getElementById('energyTextVal');
+  const breedBtn = document.getElementById('breedBtnText');
+  const stakeBtn = document.getElementById('stakeBtnText');
 
-  if (slot.breedCount <= 0) {
-    showToast('This dolphin has reached max breeding capacity (5/5)!', '⚠️');
-    return;
-  }
+  if (pEl) pEl.innerText = s.pearlsBalance.toLocaleString();
+  if (stEl) stEl.innerText = s.starsBalance.toLocaleString();
+  if (eProg) eProg.style.width = `${(s.dolphinEnergy / s.maxEnergy) * 100}%`;
+  if (eText) eText.innerText = `${s.dolphinEnergy} / ${s.maxEnergy}`;
 
-  haptic('medium');
-  audio.play('fanfare');
-  slot.breedCount -= 1;
-  const s = GameStore.state;
-  GameStore.update({
-    hearts: s.hearts + 5,
-    fish: s.fish + 5000
-  });
-
-  const lockedCorners = [0, 6, 42, 48];
-  const emptyIdx = s.grid.findIndex((item, i) => item === null && !lockedCorners.includes(i));
-  if (emptyIdx !== -1) {
-    s.grid[emptyIdx] = { id: 'h_' + Date.now(), tier: 1, type: 'heart' };
-  }
-
-  showToast('Breeding Successful! Love Egg dropped on Reef Board! ❤️', '🎉');
-  renderActiveDolphin();
-  renderMergeGrid();
-};
-
-window.toggleStaking = function() {
-  const slot = GameStore.getActiveSlot();
-  if (!slot || slot.state === 'locked') return;
-
-  slot.isStaked = !slot.isStaked;
-  haptic('heavy');
-  audio.play('coin');
-
-  if (slot.isStaked) {
-    showToast('Dolphin Staked! Earning +1.85 DLP/hr 24/7 passive yield 👑', '✨');
-  } else {
-    showToast('Dolphin Unstaked! Returned to active tapping deck.', 'ℹ️');
-  }
-  renderActiveDolphin();
-};
-
-// 8. MODAL ACTIONS & TELEGRAM STARS CHECKOUT
-window.buySlotWithStars = function() {
-  const s = GameStore.state;
-  if (s.stars < 120) {
-    haptic('error');
-    showToast('Need 120 Blue Stars to unlock new Slot!', '⚠️');
-    return;
-  }
-
-  const lockedSlot = s.slots.find(slot => slot.state === 'locked');
-  if (!lockedSlot) {
-    showToast('All 11 slots already unlocked!', 'ℹ️');
-    closeAllModals();
-    return;
-  }
-
-  lockedSlot.state = 'active';
-  lockedSlot.level = 1;
-  lockedSlot.rarity = 'Common';
-  lockedSlot.feedCost = 75;
-  lockedSlot.feedProgress = 0;
-
-  GameStore.update({ stars: s.stars - 120 });
-  haptic('heavy');
-  audio.play('fanfare');
-  showToast('New Dolphin Slot Unlocked! 🎉', '🐬');
-
-  closeAllModals();
-  renderActiveDolphin();
-  renderSlotsTracker();
-};
-
-window.buyStarsItem = function(name, cost) {
-  const s = GameStore.state;
-  if (s.stars < cost) {
-    haptic('error');
-    showToast(`Need ${cost} Blue Stars for ${name}!`, '⚠️');
-    return;
-  }
-
-  GameStore.update({ stars: s.stars - cost });
-  haptic('heavy');
-  audio.play('fanfare');
-  showToast(`Purchased ${name}! Active now. ✨`, '👑');
-  closeAllModals();
-};
-
-window.refillEnergyTank = function() {
-  const s = GameStore.state;
-  if (s.fish < 500) {
-    haptic('error');
-    showToast('Need 500 Fish to refill energy tank!', '⚠️');
-    return;
-  }
-
-  GameStore.update({
-    fish: s.fish - 500,
-    energy: s.maxEnergy
-  });
-
-  const sideVal = document.getElementById('energySideVal');
-  if (sideVal) sideVal.innerHTML = `2 000<br>/ 2 000`;
-
-  haptic('medium');
-  audio.play('coin');
-  showToast('Energy Tank fully refilled! (2 000 / 2 000) ⚡', '🔋');
-  closeAllModals();
-};
-
-window.claimDailyBonus = function() {
-  const s = GameStore.state;
-  GameStore.update({
-    fish: s.fish + 25000,
-    stars: s.stars + 10
-  });
-  haptic('heavy');
-  audio.play('fanfare');
-  showToast('Claimed Daily Streak: +25,000 Fish & 10 Blue Stars! 🎁', '🎉');
-  closeAllModals();
-};
-
-window.shareReferralLink = function() {
-  haptic('medium');
-  const text = encodeURIComponent('Join Dolphin Pearls! Tap, Breed, and Mine DLP tokens with me! 🐬');
-  const shareUrl = `https://t.me/share/url?url=https://t.me/DolphinPearlsBot/play&text=${text}`;
-  if (window.Telegram?.WebApp?.openTelegramLink) {
-    window.Telegram.WebApp.openTelegramLink(shareUrl);
-  } else {
-    window.open(shareUrl, '_blank');
-  }
-};
-
-window.toggleWallet = function() {
-  haptic('light');
-  showToast('TON Wallet Connect: Connected to Shovel Mainnet', '👛');
-};
-
-window.closeAllModals = function() {
-  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-};
-
-// 9. PIXI.JS BACKGROUND ORBS
-function initPixiEngine() {
-  const container = document.getElementById('pixi-canvas-container');
-  if (!container || typeof PIXI === 'undefined') return;
-
-  try {
-    const app = new PIXI.Application({
-      resizeTo: container,
-      backgroundAlpha: 0,
-      antialias: true,
-      resolution: window.devicePixelRatio || 1,
-      autoDensity: true
-    });
-    container.appendChild(app.view);
-
-    const particles = new PIXI.ParticleContainer(40, {
-      scale: true,
-      position: true,
-      alpha: true
-    });
-    app.stage.addChild(particles);
-
-    const graphics = new PIXI.Graphics();
-    graphics.beginFill(0x00D4FF, 0.4);
-    graphics.drawCircle(0, 0, 6);
-    graphics.endFill();
-    const texture = app.renderer.generateTexture(graphics);
-
-    const sprites = [];
-    for (let i = 0; i < 25; i++) {
-      const sp = new PIXI.Sprite(texture);
-      sp.x = Math.random() * app.screen.width;
-      sp.y = Math.random() * app.screen.height;
-      sp.scale.set(Math.random() * 0.8 + 0.4);
-      sp.alpha = Math.random() * 0.5 + 0.2;
-      sp.vy = -(Math.random() * 0.4 + 0.2);
-      particles.addChild(sp);
-      sprites.push(sp);
+  if (breedBtn) {
+    if (s.isBreeding) {
+      const rem = Math.max(0, Math.floor((s.breedEndTime - Date.now()) / 1000));
+      breedBtn.innerText = `BREEDING (${rem}s)`;
+    } else {
+      breedBtn.innerText = 'BREED (5/5)';
     }
+  }
 
-    app.ticker.add(() => {
-      for (const sp of sprites) {
-        sp.y += sp.vy;
-        if (sp.y < -10) {
-          sp.y = app.screen.height + 10;
-          sp.x = Math.random() * app.screen.width;
-        }
-      }
-    });
-  } catch (e) {
-    console.warn('Pixi init:', e);
+  if (stakeBtn) {
+    stakeBtn.innerText = s.isStaked ? '⚡ STAKED' : '👑 START STAKING';
   }
 }
 
-// 10. AUTHENTIC NEON MARKET TRADING CHART
-function initMarketChart() {
-  const canvas = document.getElementById('marketChartCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  canvas.width = canvas.parentElement.clientWidth || 300;
-  canvas.height = canvas.parentElement.clientHeight || 80;
+window.showToast = function(msg, icon = '✨') {
+  const t = document.getElementById('toastNotification');
+  if (!t) return;
+  t.innerText = `${icon} ${msg}`;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(window._tHide);
+  window._tHide = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(-20px)';
+  }, 2200);
+};
 
-  const points = [22, 26, 24, 38, 32, 50, 44, 62, 58, 70, 65, 78];
-  const step = canvas.width / (points.length - 1);
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.lineWidth = 1;
-  for (let y = 20; y < canvas.height; y += 25) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvas.width, y);
-    ctx.stroke();
-  }
-
-  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  grad.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
-  grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
-
-  ctx.beginPath();
-  ctx.moveTo(0, canvas.height);
-  points.forEach((p, i) => {
-    const y = canvas.height - (p / 85) * canvas.height;
-    ctx.lineTo(i * step, y);
-  });
-  ctx.lineTo(canvas.width, canvas.height);
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  ctx.beginPath();
-  points.forEach((p, i) => {
-    const y = canvas.height - (p / 85) * canvas.height;
-    if (i === 0) ctx.moveTo(0, y);
-    else ctx.lineTo(i * step, y);
-  });
-  ctx.strokeStyle = '#00D4FF';
-  ctx.lineWidth = 2.5;
-  ctx.shadowColor = '#00D4FF';
-  ctx.shadowBlur = 8;
-  ctx.stroke();
-  ctx.shadowBlur = 0;
-}
-
-// 11. INITIALIZATION & LIVE COUNTDOWN TIMER
+// 5. LIFECYCLE
 document.addEventListener('DOMContentLoaded', () => {
-  // Telegram User Photo & Name Binding
   if (window.Telegram?.WebApp) {
     window.Telegram.WebApp.ready();
     window.Telegram.WebApp.expand();
-    const user = window.Telegram.WebApp.initDataUnsafe?.user;
-    if (user) {
-      const uDisp = document.getElementById('usernameDisplay');
-      if (uDisp) uDisp.innerText = user.username ? `@${user.username}` : (user.first_name || '@Wild_airdrop');
-      if (user.photo_url) {
-        const aImg = document.getElementById('userAvatarImg');
-        const aFall = document.getElementById('userAvatarFallback');
-        if (aImg) {
-          aImg.src = user.photo_url;
-          aImg.style.display = 'block';
-          if (aFall) aFall.style.display = 'none';
-        }
-      }
-    }
   }
 
-  // Subscribe UI to State Changes
-  GameStore.subscribe((s) => {
-    const fishEl = document.getElementById('top-fish');
-    const starsEl = document.getElementById('top-stars');
-    const dlpEl = document.getElementById('tokenBalance');
-    if (fishEl) fishEl.innerText = s.fish.toLocaleString();
-    if (starsEl) starsEl.innerText = s.stars.toLocaleString();
-    if (dlpEl) dlpEl.innerText = s.dlp.toFixed(2);
-  });
-
-  // Live Timer Countdown
+  // Energy regeneration (10 energy every 3s)
   setInterval(() => {
-    if (GameStore.state.resetSecondsRemaining > 0) {
-      GameStore.state.resetSecondsRemaining -= 1;
-      const t = document.getElementById('feedTimerText');
-      if (t) t.innerText = formatTimer(GameStore.state.resetSecondsRemaining);
+    if (GameState.dolphinEnergy < GameState.maxEnergy) {
+      GameState.dolphinEnergy = Math.min(GameState.maxEnergy, GameState.dolphinEnergy + 10);
+      updateUI();
+    }
+    if (GameState.isBreeding && Date.now() >= GameState.breedEndTime) {
+      GameState.isBreeding = false;
+      showToast('Breeding complete! Love Pearl ready. ❤️', '🎉');
+      updateUI();
     }
   }, 1000);
 
-  // Initial Renders & Swipe Gestures
-  renderActiveDolphin();
-  renderSlotsTracker();
+  updateUI();
   renderMergeGrid();
-  initCardSwipeGestures();
-  initPixiEngine();
 });
