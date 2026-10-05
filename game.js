@@ -91,6 +91,14 @@ class SoundEngine {
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
         osc.start(now);
         osc.stop(now + 0.2);
+      } else if (type === 'swipe') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.06);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+        osc.start(now);
+        osc.stop(now + 0.06);
       } else if (type === 'merge') {
         const noteIdx = Math.min(customParam, this.scale.length - 1);
         const freq = this.scale[noteIdx];
@@ -174,16 +182,60 @@ window.switchTab = function(tabId) {
   }
 };
 
-// 4. LOBBY & DECK SLOTS
+// 4. LOBBY & DECK SLOTS WITH TOUCH SWIPE/SLIDE PHYSICS
 window.switchSlot = function(slotIdx) {
   const s = GameStore.state;
-  if (slotIdx >= s.slots.length) return;
+  if (slotIdx < 0 || slotIdx >= s.slots.length) return;
   haptic('light');
-  audio.play('tap');
+  audio.play('swipe');
   GameStore.update({ activeSlot: slotIdx });
   renderActiveDolphin();
   renderSlotsTracker();
 };
+
+function initCardSwipeGestures() {
+  const card = document.getElementById('heroStageCard');
+  if (!card) return;
+
+  let startX = 0;
+  let currentX = 0;
+  let isSwiping = false;
+
+  card.addEventListener('touchstart', (e) => {
+    if (e.target.closest('#feedActionBtn') || e.target.closest('button')) return;
+    startX = e.touches[0].clientX;
+    currentX = startX;
+    isSwiping = true;
+    card.style.transition = 'none';
+  }, { passive: true });
+
+  card.addEventListener('touchmove', (e) => {
+    if (!isSwiping) return;
+    currentX = e.touches[0].clientX;
+    const diffX = currentX - startX;
+    // Elastic resistance
+    card.style.transform = `translateX(${diffX * 0.4}px) rotate(${diffX * 0.02}deg)`;
+  }, { passive: true });
+
+  card.addEventListener('touchend', () => {
+    if (!isSwiping) return;
+    isSwiping = false;
+    card.style.transition = 'transform 0.25s ease';
+    const diffX = currentX - startX;
+
+    if (diffX < -50) {
+      // Swipe left -> Next slot
+      const nextSlot = Math.min(GameStore.state.activeSlot + 1, GameStore.state.slots.length - 1);
+      switchSlot(nextSlot);
+    } else if (diffX > 50) {
+      // Swipe right -> Prev slot
+      const prevSlot = Math.max(GameStore.state.activeSlot - 1, 0);
+      switchSlot(prevSlot);
+    }
+
+    card.style.transform = 'translateX(0px) rotate(0deg)';
+  });
+}
 
 function renderSlotsTracker() {
   const container = document.getElementById('deckSlotDots');
@@ -213,6 +265,7 @@ function renderActiveDolphin() {
 
   if (slot.state === 'locked') {
     card.className = 'hero-stage-card dotted-locked';
+    card.style.borderColor = '#4A5568';
     card.innerHTML = `
       <div style="font-size:32px; margin-bottom:4px;">🔒</div>
       <div style="font-family:'Fredoka',sans-serif; font-weight:900; font-size:14px; color:#fff; margin-bottom:4px;">BUY A SLOT FOR A NEW DOLPHIN</div>
@@ -225,7 +278,9 @@ function renderActiveDolphin() {
   }
 
   card.className = 'hero-stage-card';
-  card.style.borderColor = slot.rarity === 'Rare' ? 'var(--rarity-rare)' : (slot.rarity === 'Epic' ? 'var(--rarity-epic)' : 'var(--rarity-uncommon)');
+  const rarityBorder = slot.rarity === 'Rare' ? 'var(--rarity-rare)' : (slot.rarity === 'Epic' ? 'var(--rarity-epic)' : (slot.rarity === 'Legendary' ? 'var(--rarity-legendary)' : 'var(--rarity-uncommon)'));
+  card.style.borderColor = rarityBorder;
+
   card.innerHTML = `
     <div class="card-pills-row">
       <div class="card-pill">LVL ${slot.level}</div>
@@ -329,7 +384,7 @@ function spawnTapParticle(x, y, text, color) {
   setTimeout(() => p.remove(), 750);
 }
 
-// 6. 7x7 TOUCH MERGE-2 BOARD SYSTEM
+// 6. 7x7 MERGE-2 BOARD SYSTEM
 function renderMergeGrid() {
   const gridEl = document.getElementById('mergeGrid');
   if (!gridEl) return;
@@ -393,13 +448,11 @@ function handleCellClick(idx) {
     const targetItem = s.grid[idx];
 
     if (!targetItem) {
-      // Move item
       s.grid[idx] = sourceItem;
       s.grid[fromIdx] = null;
       haptic('light');
       audio.play('tap');
     } else if (sourceItem.type === targetItem.type && sourceItem.tier === targetItem.tier && sourceItem.tier < 12) {
-      // Merge items!
       s.combo = (s.combo || 0) + 1;
       s.grid[idx] = {
         id: 'egg_' + Date.now(),
@@ -411,7 +464,6 @@ function handleCellClick(idx) {
       audio.play('merge', s.combo);
       showToast(`Merged to Tier ${sourceItem.tier + 1} Egg! ✨`, '🔮');
     } else {
-      // Swap items
       s.grid[idx] = sourceItem;
       s.grid[fromIdx] = targetItem;
       haptic('light');
@@ -722,7 +774,7 @@ function initPixiEngine() {
   }
 }
 
-// 10. MARKET CHART CANVAS
+// 10. AUTHENTIC NEON MARKET TRADING CHART
 function initMarketChart() {
   const canvas = document.getElementById('marketChartCanvas');
   if (!canvas) return;
@@ -730,36 +782,49 @@ function initMarketChart() {
   canvas.width = canvas.parentElement.clientWidth || 300;
   canvas.height = canvas.parentElement.clientHeight || 80;
 
-  const points = [20, 25, 22, 35, 30, 48, 42, 60, 55, 68, 62, 75];
+  const points = [22, 26, 24, 38, 32, 50, 44, 62, 58, 70, 65, 78];
   const step = canvas.width / (points.length - 1);
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // Draw gradient
+  // Subtle grid lines
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.lineWidth = 1;
+  for (let y = 20; y < canvas.height; y += 25) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvas.width, y);
+    ctx.stroke();
+  }
+
+  // Draw glowing gradient area
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  grad.addColorStop(0, 'rgba(0, 212, 255, 0.35)');
-  grad.addColorStop(1, 'rgba(0, 212, 255, 0)');
+  grad.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+  grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
 
   ctx.beginPath();
   ctx.moveTo(0, canvas.height);
   points.forEach((p, i) => {
-    const y = canvas.height - (p / 80) * canvas.height;
+    const y = canvas.height - (p / 85) * canvas.height;
     ctx.lineTo(i * step, y);
   });
   ctx.lineTo(canvas.width, canvas.height);
   ctx.fillStyle = grad;
   ctx.fill();
 
-  // Draw line
+  // Draw glowing price line
   ctx.beginPath();
   points.forEach((p, i) => {
-    const y = canvas.height - (p / 80) * canvas.height;
+    const y = canvas.height - (p / 85) * canvas.height;
     if (i === 0) ctx.moveTo(0, y);
     else ctx.lineTo(i * step, y);
   });
   ctx.strokeStyle = '#00D4FF';
   ctx.lineWidth = 2.5;
+  ctx.shadowColor = '#00D4FF';
+  ctx.shadowBlur = 8;
   ctx.stroke();
+  ctx.shadowBlur = 0;
 }
 
 // 11. INITIALIZATION ON DOM READY
@@ -794,9 +859,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dlpEl) dlpEl.innerText = s.dlp.toFixed(2);
   });
 
-  // Initial Renders
+  // Initial Renders & Swipe Gestures
   renderActiveDolphin();
   renderSlotsTracker();
   renderMergeGrid();
+  initCardSwipeGestures();
   initPixiEngine();
 });
