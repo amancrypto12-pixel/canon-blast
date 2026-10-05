@@ -767,3 +767,13 @@ body, html {
   0% { transform: translate(0, 0) scale(0.7); opacity: 1; }
   100% { transform: translate(0, -45px) scale(1.1); opacity: 0; }
 }
+
+.flying-food {
+  position: fixed;
+  width: 22px !important;
+  height: 22px !important;
+  object-fit: contain;
+  z-index: 9999;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 8px rgba(0, 212, 255, 0.6));
+}

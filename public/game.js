@@ -1,4 +1,4 @@
-// --- DOLPHIN PEARLS PRODUCTION MASTER GAME ENGINE ---
+// --- DOLPHIN PEARLS PRODUCTION MASTER GAME ENGINE (1:1 DUCK MY DUCK PARITY) ---
 
 // 1. SINGLE-SOURCE-OF-TRUTH STATE STORE
 window.GameStore = {
@@ -18,7 +18,11 @@ window.GameStore = {
       { id: 3, level: 1, rarity: 'Common', feedCost: 75, feedProgress: 1, feedMax: 5, state: 'active', skin: 'assets/dolphin_hero_stage.png', breedCount: 5, maxBreeds: 5, isStaked: false },
       { id: 4, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
       { id: 5, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
-      { id: 6, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false }
+      { id: 6, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
+      { id: 7, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
+      { id: 8, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
+      { id: 9, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false },
+      { id: 10, level: 0, rarity: 'Common', feedCost: 75, feedProgress: 0, feedMax: 5, state: 'locked', skin: 'assets/dolphin_hero_stage.png', breedCount: 0, maxBreeds: 5, isStaked: false }
     ],
     grid: [
       { id: 'p1', tier: 1, type: 'pearl' },
@@ -31,7 +35,8 @@ window.GameStore = {
     ],
     selectedCell: null,
     crackingEggIdx: null,
-    combo: 0
+    combo: 0,
+    resetSecondsRemaining: 24190 // 6h 43m 10s
   },
 
   listeners: [],
@@ -93,30 +98,30 @@ class SoundEngine {
         osc.stop(now + 0.2);
       } else if (type === 'swipe') {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(400, now);
-        osc.frequency.exponentialRampToValueAtTime(600, now + 0.06);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.06);
+        osc.frequency.setValueAtTime(420, now);
+        osc.frequency.exponentialRampToValueAtTime(640, now + 0.07);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.07);
         osc.start(now);
-        osc.stop(now + 0.06);
+        osc.stop(now + 0.07);
       } else if (type === 'merge') {
         const noteIdx = Math.min(customParam, this.scale.length - 1);
         const freq = this.scale[noteIdx];
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.12);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.14);
         gain.gain.setValueAtTime(0.35, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
         osc.start(now);
-        osc.stop(now + 0.22);
+        osc.stop(now + 0.25);
       } else if (type === 'crack') {
         osc.type = 'square';
-        osc.frequency.setValueAtTime(140, now);
-        osc.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(35, now + 0.16);
         gain.gain.setValueAtTime(0.5, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
         osc.start(now);
-        osc.stop(now + 0.18);
+        osc.stop(now + 0.2);
       } else if (type === 'fanfare') {
         [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
           const o = this.ctx.createOscillator();
@@ -131,7 +136,7 @@ class SoundEngine {
         });
       }
     } catch (e) {
-      console.warn('Audio play error:', e);
+      console.warn('Audio error:', e);
     }
   }
 }
@@ -182,7 +187,7 @@ window.switchTab = function(tabId) {
   }
 };
 
-// 4. LOBBY & DECK SLOTS WITH TOUCH SWIPE/SLIDE PHYSICS
+// 4. LOBBY & 11 DECK SLOTS WITH TOUCH SWIPE/SLIDE PHYSICS
 window.switchSlot = function(slotIdx) {
   const s = GameStore.state;
   if (slotIdx < 0 || slotIdx >= s.slots.length) return;
@@ -213,7 +218,6 @@ function initCardSwipeGestures() {
     if (!isSwiping) return;
     currentX = e.touches[0].clientX;
     const diffX = currentX - startX;
-    // Elastic resistance
     card.style.transform = `translateX(${diffX * 0.4}px) rotate(${diffX * 0.02}deg)`;
   }, { passive: true });
 
@@ -223,12 +227,10 @@ function initCardSwipeGestures() {
     card.style.transition = 'transform 0.25s ease';
     const diffX = currentX - startX;
 
-    if (diffX < -50) {
-      // Swipe left -> Next slot
+    if (diffX < -45) {
       const nextSlot = Math.min(GameStore.state.activeSlot + 1, GameStore.state.slots.length - 1);
       switchSlot(nextSlot);
-    } else if (diffX > 50) {
-      // Swipe right -> Prev slot
+    } else if (diffX > 45) {
       const prevSlot = Math.max(GameStore.state.activeSlot - 1, 0);
       switchSlot(prevSlot);
     }
@@ -297,7 +299,7 @@ function renderActiveDolphin() {
           <img src="assets/icon_user_fish.png" style="width:14px; height:14px; object-fit:contain;" />
         </div>
       </div>
-      <span class="feed-btn-timer">RESET IN 6:43:10</span>
+      <span class="feed-btn-timer" id="feedTimerText">${formatTimer(GameStore.state.resetSecondsRemaining)}</span>
     </button>
   `;
 
@@ -315,7 +317,14 @@ function renderActiveDolphin() {
   }
 }
 
-// 5. TAP FEEDING MECHANISM
+function formatTimer(totalSec) {
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  return `RESET IN ${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+}
+
+// 5. TAP FEEDING MECHANISM WITH FLYING FISH STREAM & MASCOT GULP
 window.handleFeedTap = function(e) {
   if (e) e.preventDefault();
   const s = GameStore.state;
@@ -328,7 +337,6 @@ window.handleFeedTap = function(e) {
     return;
   }
 
-  // Deduct fish, add DLP yield
   const dlpYield = 0.02 * slot.level;
   let newProgress = slot.feedProgress + 1;
   let newLevel = slot.level;
@@ -352,17 +360,23 @@ window.handleFeedTap = function(e) {
   audio.play('tap');
   audio.play('coin');
 
-  // Gulp animation on mascot
+  // Mascot squash-and-stretch gulp
   const mascot = document.getElementById('dolphinMascot');
   if (mascot) {
     mascot.classList.add('eating');
     setTimeout(() => mascot.classList.remove('eating'), 180);
   }
 
+  // Flying fish particles stream
+  const btn = document.getElementById('feedActionBtn');
+  const btnRect = btn ? btn.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight * 0.6 };
+  const mascotRect = mascot ? mascot.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight * 0.4 };
+
+  shootFlyingFish(btnRect.left + btnRect.width / 2, btnRect.top, mascotRect.left + mascotRect.width / 2, mascotRect.top + mascotRect.height / 2);
+
   // Floating text
-  const rect = (e && e.target) ? e.target.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2 };
-  spawnTapParticle(rect.left + 30, rect.top - 10, `+${dlpYield.toFixed(2)} DLP`, '#00D4FF');
-  spawnTapParticle(rect.left - 20, rect.top + 10, `-${slot.feedCost} 🐟`, '#FF4D8D');
+  spawnTapParticle(mascotRect.left + 30, mascotRect.top - 15, `+${dlpYield.toFixed(2)} DLP`, '#00D4FF');
+  spawnTapParticle(mascotRect.left - 20, mascotRect.top + 15, `-${slot.feedCost} 🐟`, '#FF4D8D');
 
   if (leveledUp) {
     audio.play('fanfare');
@@ -372,6 +386,40 @@ window.handleFeedTap = function(e) {
 
   renderActiveDolphin();
 };
+
+function shootFlyingFish(startX, startY, targetX, targetY) {
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      const f = document.createElement('img');
+      f.src = 'assets/icon_user_fish.png';
+      f.className = 'flying-food';
+      f.style.left = `${startX + (Math.random() * 20 - 10)}px`;
+      f.style.top = `${startY}px`;
+      document.body.appendChild(f);
+
+      const duration = 380;
+      const startTime = performance.now();
+
+      function animate(time) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const curX = startX + (targetX - startX) * progress;
+        const curY = startY + (targetY - startY) * progress - Math.sin(progress * Math.PI) * 45;
+
+        f.style.left = `${curX}px`;
+        f.style.top = `${curY}px`;
+        f.style.transform = `scale(${1 - progress * 0.3}) rotate(${progress * 360}deg)`;
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          f.remove();
+        }
+      }
+      requestAnimationFrame(animate);
+    }, i * 60);
+  }
+}
 
 function spawnTapParticle(x, y, text, color) {
   const p = document.createElement('div');
@@ -591,7 +639,6 @@ window.openBreedingModal = function() {
     fish: s.fish + 5000
   });
 
-  // Spawn Love Heart Egg on Board
   const lockedCorners = [0, 6, 42, 48];
   const emptyIdx = s.grid.findIndex((item, i) => item === null && !lockedCorners.includes(i));
   if (emptyIdx !== -1) {
@@ -787,7 +834,6 @@ function initMarketChart() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  // Subtle grid lines
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
   ctx.lineWidth = 1;
   for (let y = 20; y < canvas.height; y += 25) {
@@ -797,7 +843,6 @@ function initMarketChart() {
     ctx.stroke();
   }
 
-  // Draw glowing gradient area
   const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
   grad.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
   grad.addColorStop(1, 'rgba(0, 212, 255, 0.0)');
@@ -812,7 +857,6 @@ function initMarketChart() {
   ctx.fillStyle = grad;
   ctx.fill();
 
-  // Draw glowing price line
   ctx.beginPath();
   points.forEach((p, i) => {
     const y = canvas.height - (p / 85) * canvas.height;
@@ -827,7 +871,7 @@ function initMarketChart() {
   ctx.shadowBlur = 0;
 }
 
-// 11. INITIALIZATION ON DOM READY
+// 11. INITIALIZATION & LIVE COUNTDOWN TIMER
 document.addEventListener('DOMContentLoaded', () => {
   // Telegram User Photo & Name Binding
   if (window.Telegram?.WebApp) {
@@ -858,6 +902,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (starsEl) starsEl.innerText = s.stars.toLocaleString();
     if (dlpEl) dlpEl.innerText = s.dlp.toFixed(2);
   });
+
+  // Live Timer Countdown
+  setInterval(() => {
+    if (GameStore.state.resetSecondsRemaining > 0) {
+      GameStore.state.resetSecondsRemaining -= 1;
+      const t = document.getElementById('feedTimerText');
+      if (t) t.innerText = formatTimer(GameStore.state.resetSecondsRemaining);
+    }
+  }, 1000);
 
   // Initial Renders & Swipe Gestures
   renderActiveDolphin();
