@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Dolphin my Dolphin</title>
-  <link rel="stylesheet" href="styles.css?v=4.0" />
+  <link rel="stylesheet" href="styles.css?v=5.0" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -36,50 +36,60 @@
     <!-- MAIN SCROLLABLE CONTENT AREA -->
     <main class="content-area">
 
-      <!-- TAB 1: DOLPHINS (CLICKER CORE SCREEN) -->
+      <!-- TAB 1: DOLPHINS (CLICKER CORE SCREEN - PROMPTS 3 & 4) -->
       <section id="tabPane-dolphins" class="tab-content active dolphins-tab-pane">
-        <!-- Energy Meter -->
-        <div class="energy-bar-container">
-          <span>⚡ ENERGY</span>
-          <div class="energy-fill-track">
-            <div class="energy-fill-progress" id="energyProgressFill"></div>
-          </div>
-          <span id="energyTextVal">2000 / 2000</span>
-        </div>
 
-        <!-- DOLPHIN CARD (EXACT 320x450 px) -->
+        <!-- CENTRAL DOLPHIN CARD (EXACT 320x450 px) -->
         <div class="dolphin-card" id="dolphinCardContainer">
+          
+          <!-- BREEDING IN PROGRESS OVERLAY (PROMPT 4) -->
+          <div class="breeding-overlay" id="breedingOverlay">
+            <div class="breeding-heart-icon">💖</div>
+            <div class="breeding-title">BREEDING IN PROGRESS</div>
+            <div style="font-size:11px; color:var(--text-muted);">Love Shell incubation active. Tap feed is locked.</div>
+            <div class="breeding-timer-display" id="breedingTimerCountdown">23:59:59</div>
+          </div>
+
+          <!-- Top Row (Level & Rarity) -->
           <div class="card-top-row">
-            <span class="card-badge">LVL 5</span>
+            <span class="card-badge" id="cardLvlBadge">LVL 5</span>
             <span class="card-badge rarity">~LEGENDARY</span>
           </div>
 
+          <!-- Central Dolphin Character (200x200 px) -->
           <div class="dolphin-avatar-center" onclick="handleDolphinTap(event)">
-            <img class="dolphin-main-img" src="assets/premium/legendary_dolphin_poseidon.png" alt="Poseidon Dolphin" />
+            <img class="dolphin-main-img" id="dolphinMainImg" src="assets/premium/legendary_dolphin_poseidon.png" alt="Poseidon Dolphin" />
           </div>
 
+          <!-- Dynamic Level Progress Bar (Prompt 3) -->
+          <div class="level-progress-wrapper">
+            <div class="level-progress-labels">
+              <span>EXP PROGRESS</span>
+              <span id="levelProgressText">Level 5 (40%)</span>
+            </div>
+            <div class="level-progress-track">
+              <div class="level-progress-fill" id="levelProgressFill" style="width:40%;"></div>
+            </div>
+          </div>
+
+          <!-- Action Buttons (Prompt 3 & 4) -->
           <div class="card-actions-container">
-            <button class="feed-button" onclick="handleDolphinTap(event)">
+            <button class="feed-button" id="feedActionButton" onclick="handleDolphinTap(event)">
               <span>TAP TO FEED (Cost: 10 Pearls)</span>
             </button>
-            <div class="secondary-actions-row">
-              <button class="sub-action-btn breed" onclick="startBreeding()">
-                <span id="breedBtnText">BREED (5/5)</span>
-              </button>
-              <button class="sub-action-btn stake" onclick="toggleStaking()">
-                <span id="stakeBtnText">👑 START STAKING</span>
-              </button>
-            </div>
+            <button class="breeding-trigger-btn" id="breedingTriggerBtn" onclick="startBreeding()">
+              <span>❤️ START BREEDING</span>
+            </button>
           </div>
         </div>
 
-        <!-- Quick Side Modals: Dolphin Pass & Daily Pass -->
-        <div style="display:flex; gap:8px; width:100%; max-width:320px; margin-top:8px;">
+        <!-- Quick Sub Pass Indicators -->
+        <div style="display:flex; gap:8px; width:100%; max-width:320px;">
           <div class="sub-action-btn" style="flex:1; padding:6px; font-size:10px; cursor:pointer;" onclick="showToast('Dolphin Pass Active: +20K Daily Pearls 👑', '👑')">
             👑 DOLPHIN PASS (14D)
           </div>
-          <div class="sub-action-btn" style="flex:1; padding:6px; font-size:10px; cursor:pointer;" onclick="showToast('Daily Pass Active: +2x Multiplier 📅', '📅')">
-            📅 DAILY PASS (+1)
+          <div class="sub-action-btn" style="flex:1; padding:6px; font-size:10px; cursor:pointer;" onclick="toggleStaking()">
+            👑 STAKE (+1.85 DLP/hr)
           </div>
         </div>
       </section>
@@ -223,6 +233,6 @@
 
   </div>
 
-  <script src="game.js?v=4.0"></script>
+  <script src="game.js?v=5.0"></script>
 </body>
 </html>

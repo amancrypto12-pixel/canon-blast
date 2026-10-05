@@ -1,4 +1,4 @@
-/* DOLPHIN MY DOLPHIN - MASTER TECHNICAL BLUEPRINT STYLESHEET (390x844px) */
+/* DOLPHIN MY DOLPHIN - MASTER PRODUCTION STYLESHEET (EXACT 390x844px) */
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800;900&family=Nunito:wght@700;800;900&display=swap');
 
 :root {
@@ -14,7 +14,7 @@
   --text-primary: #FFFFFF;
   --text-muted: #8B98A5;
   --font-family: 'Fredoka', 'Nunito', sans-serif;
-  --cyan-glow: 0 0 15px rgba(0, 212, 255, 0.5);
+  --cyan-glow: 0 0 18px rgba(0, 212, 255, 0.5);
 }
 
 * {
@@ -144,74 +144,44 @@ body {
   display: flex;
 }
 
-/* 3. TAB 1: DOLPHINS CLICKER CARD (320x450 px) */
+/* 3. TAB 1: DOLPHINS CLICKER CARD (EXACT 320x450 px) */
 .dolphins-tab-pane {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
+  justify-content: center;
+  padding: 8px 14px;
   height: 100%;
+  gap: 10px;
 }
 
-.energy-bar-container {
-  width: 100%;
-  max-width: 320px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(18, 28, 48, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 6px 12px;
-  margin-bottom: 6px;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.energy-fill-track {
-  flex: 1;
-  height: 6px;
-  background: #080C14;
-  border-radius: 3px;
-  margin: 0 10px;
-  overflow: hidden;
-}
-
-.energy-fill-progress {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(90deg, #00D4FF 0%, #2ECC71 100%);
-  border-radius: 3px;
-  transition: width 0.2s ease;
-}
-
-/* DOLPHIN CARD - EXACT 320x450 px */
+/* CENTRAL DOLPHIN CARD - EXACT 320x450 px */
 .dolphin-card {
   width: 320px;
-  height: 430px;
+  height: 450px;
   background: radial-gradient(circle at 50% 30%, #172D4D 0%, #0E1B2E 100%);
   border-radius: 16px;
   border: 2px solid var(--accent-cyan);
-  box-shadow: 0 0 18px rgba(0, 212, 255, 0.45);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.45);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 12px;
+  padding: 14px;
   position: relative;
-  touch-action: pan-y;
+  overflow: hidden;
 }
 
 .card-top-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 5;
 }
 
 .card-badge {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 3px 10px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 12px;
   border-radius: 12px;
   font-size: 11px;
   font-weight: 900;
@@ -220,9 +190,11 @@ body {
 
 .card-badge.rarity {
   color: var(--accent-cyan);
-  border-color: rgba(0, 212, 255, 0.4);
+  border-color: rgba(0, 212, 255, 0.5);
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
 }
 
+/* DOLPHIN CENTER CHARACTER (200x200 px) */
 .dolphin-avatar-center {
   flex: 1;
   display: flex;
@@ -230,14 +202,15 @@ body {
   justify-content: center;
   position: relative;
   cursor: pointer;
+  z-index: 5;
 }
 
 .dolphin-main-img {
   width: 200px;
   height: 200px;
   object-fit: contain;
-  filter: drop-shadow(0 8px 24px rgba(0, 212, 255, 0.3));
-  transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 8px 24px rgba(0, 212, 255, 0.35));
+  transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: dolphinFloat 3s ease-in-out infinite;
 }
 
@@ -250,35 +223,108 @@ body {
   50% { transform: translateY(-6px); }
 }
 
-/* FLOATING TEXT ANIMATION (+10 PEARLS) */
-.floating-text {
+/* BREEDING IN PROGRESS OVERLAY */
+.breeding-overlay {
   position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 18, 32, 0.92);
+  backdrop-filter: blur(8px);
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.breeding-overlay.active {
+  display: flex;
+}
+
+.breeding-heart-icon {
+  font-size: 48px;
+  animation: heartPulse 1.2s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); filter: drop-shadow(0 0 14px #FF4D8D); }
+}
+
+.breeding-title {
   font-size: 16px;
   font-weight: 900;
-  color: var(--accent-cyan);
-  text-shadow: 0 0 8px rgba(0, 212, 255, 0.8);
-  pointer-events: none;
-  animation: floatUp 0.65s ease-out forwards;
-  z-index: 100;
+  color: var(--accent-pink);
+  margin-bottom: 4px;
 }
 
-@keyframes floatUp {
-  0% { transform: translateY(0) scale(0.8); opacity: 1; }
-  100% { transform: translateY(-50px) scale(1.15); opacity: 0; }
+.breeding-timer-display {
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  font-family: monospace;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 77, 141, 0.4);
+  margin-top: 8px;
+  box-shadow: 0 0 15px rgba(255, 77, 141, 0.3);
 }
 
-/* ACTION BUTTONS */
+/* DYNAMIC LEVEL PROGRESS BAR */
+.level-progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+  z-index: 5;
+}
+
+.level-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.level-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #080D16;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.level-progress-fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #00D4FF 0%, #2ECC71 100%);
+  border-radius: 4px;
+  transition: width 0.25s ease;
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+}
+
+/* ACTION BUTTONS ON CARD */
 .card-actions-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  z-index: 5;
 }
 
 .feed-button {
+  width: 100%;
   background: linear-gradient(180deg, #00D4FF 0%, #0088CC 100%);
   border: none;
   border-radius: 12px;
-  padding: 10px;
+  padding: 12px;
   font-family: var(--font-family);
   font-size: 14px;
   font-weight: 900;
@@ -296,35 +342,51 @@ body {
   transform: scale(0.97);
 }
 
-.secondary-actions-row {
-  display: flex;
-  gap: 8px;
+.feed-button.disabled {
+  background: #2D3748;
+  color: #718096;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
-.sub-action-btn {
-  flex: 1;
-  background: rgba(18, 28, 48, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 8px;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.sub-action-btn.breed {
-  border-color: var(--accent-pink);
+.breeding-trigger-btn {
+  width: 100%;
+  background: rgba(255, 77, 141, 0.15);
+  border: 1.5px solid var(--accent-pink);
+  border-radius: 12px;
+  padding: 10px;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 900;
   color: var(--accent-pink);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.sub-action-btn.stake {
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
+.breeding-trigger-btn:active {
+  background: rgba(255, 77, 141, 0.3);
+  transform: scale(0.98);
+}
+
+/* FLOATING TEXT ANIMATION (+10 PEARLS AT EXACT TAP COORDINATES) */
+.floating-text {
+  position: fixed;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.9);
+  pointer-events: none;
+  animation: floatUpFade 0.65s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  z-index: 9999;
+}
+
+@keyframes floatUpFade {
+  0% { transform: translateY(0) scale(0.8); opacity: 1; }
+  100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
 }
 
 /* 4. TAB 2: SHELLS TAB - EXACT 7x6 MERGE GRID (42 CELLS) */

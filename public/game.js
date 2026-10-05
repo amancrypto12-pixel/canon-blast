@@ -1,4 +1,4 @@
-// --- DOLPHIN MY DOLPHIN - MASTER TECHNICAL GAME ENGINE ---
+// --- DOLPHIN MY DOLPHIN - MASTER PRODUCTION ENGINE (PROMPT 3 & 4 PARITY) ---
 
 window.GameState = {
   // Currencies
@@ -6,25 +6,29 @@ window.GameState = {
   starsBalance: 45,
   dlpBalance: 183.21,
 
-  // Clicker State
+  // Clicker State (Prompt 3 & 4)
   dolphinLevel: 5,
   dolphinRarity: 'LEGENDARY',
-  dolphinEnergy: 2000,
-  maxEnergy: 2000,
+  levelProgress: 40, // 40% towards next level
+  maxLevelProgress: 100,
+  feedCost: 10,
+  
+  // Breeding State (Prompt 4)
   isBreeding: false,
-  breedEndTime: null,
+  breedEndTime: null, // Timestamp in ms (24 hours)
+  
+  // Staking State
   isStaked: false,
 
-  // Merge Grid: 7 Rows x 6 Columns = 42 Slots
+  // Merge Grid (42 Cells: 7 Rows x 6 Columns)
   gridArray: Array(42).fill(null),
   selectedCell: null,
-  draggedCell: null,
 
-  // Active Tab
+  // Current Tab
   currentTab: 'dolphins'
 };
 
-// Initialize Grid with default starter Sea Shells / Pearls
+// Initial starter shells
 (function initStarterGrid() {
   const s = window.GameState;
   s.gridArray[0] = { id: 's1', level: 1, type: 'shell', name: 'Nautilus Shell' };
@@ -36,7 +40,7 @@ window.GameState = {
   s.gridArray[6] = { id: 'p2', level: 1, type: 'pearl', name: 'Blue Pearl' };
 })();
 
-// WebAudio Juice
+// Audio Synthesizer
 class SoundFX {
   constructor() {
     this.ctx = null;
@@ -87,13 +91,25 @@ class SoundFX {
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
         osc.start(now);
         osc.stop(now + 0.18);
+      } else if (type === 'fanfare') {
+        [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+          const o = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          o.connect(g);
+          g.connect(this.ctx.destination);
+          o.frequency.setValueAtTime(f, now + i * 0.08);
+          g.gain.setValueAtTime(0.25, now + i * 0.08);
+          g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.25);
+          o.start(now + i * 0.08);
+          o.stop(now + i * 0.08 + 0.25);
+        });
       }
     } catch (e) {}
   }
 }
 const sfx = new SoundFX();
 
-// 1. NAVIGATION (5 TABS: Market, Shells, Dolphins, Gods, Tasks)
+// 1. NAVIGATION TABS (Market, Shells, Dolphins, Gods, Tasks)
 window.switchTab = function(tabName) {
   sfx.play('tap');
   GameState.currentTab = tabName;
@@ -111,34 +127,69 @@ window.switchTab = function(tabName) {
   }
 };
 
-// 2. CLICKER CORE LOGIC (Dolphins Tab)
+// 2. PROMPT 3: CLICKER LOGIC (TAP TO FEED & EXACT COORDINATE FLOATING TEXT)
 window.handleDolphinTap = function(event) {
   const s = GameState;
+
+  // Prompt 4 Rule: Disable tap-to-feed while breeding is active
   if (s.isBreeding) {
-    showToast('Dolphin is currently breeding! Please wait.', '⏳');
+    showToast('Breeding in progress! Tap disabled until breeding completes.', '⏳');
     return;
   }
 
-  if (s.dolphinEnergy < 10) {
-    showToast('Energy depleted! Refill to keep feeding.', '⚡');
+  if (s.pearlsBalance < s.feedCost) {
+    showToast('Not enough Blue Pearls! Merge shells or complete tasks.', '⚠️');
     return;
   }
 
-  // Deplete 10 energy, add 10 pearls
-  s.dolphinEnergy -= 10;
-  s.pearlsBalance += 10;
-  s.dlpBalance = +(s.dlpBalance + 0.01).toFixed(2);
+  // Deduct 10 Pearls
+  s.pearlsBalance -= s.feedCost;
+  s.dlpBalance = +(s.dlpBalance + 0.02).toFixed(2);
+  
+  // Increase Level progress (+10% per tap)
+  s.levelProgress += 10;
+  let leveledUp = false;
+
+  if (s.levelProgress >= s.maxLevelProgress) {
+    s.levelProgress = 0;
+    s.dolphinLevel += 1;
+    leveledUp = true;
+  }
 
   sfx.play('tap');
   sfx.play('coin');
 
-  // Floating text animation (+10)
-  const target = event.currentTarget || event.target;
-  const rect = target.getBoundingClientRect();
-  const clickX = event.clientX || (rect.left + rect.width / 2);
-  const clickY = event.clientY || (rect.top + rect.height / 2);
+  // Exact Tap Coordinates Floating Animation (+10)
+  let tapX, tapY;
+  if (event && event.clientX && event.clientY) {
+    tapX = event.clientX;
+    tapY = event.clientY;
+  } else if (event && event.touches && event.touches[0]) {
+    tapX = event.touches[0].clientX;
+    tapY = event.touches[0].clientY;
+  } else {
+    const target = (event && (event.currentTarget || event.target)) || document.getElementById('dolphinMainImg');
+    const rect = target ? target.getBoundingClientRect() : { left: window.innerWidth / 2, top: window.innerHeight / 2, width: 0, height: 0 };
+    tapX = rect.left + rect.width / 2;
+    tapY = rect.top + rect.height / 2;
+  }
 
-  spawnFloatingText(clickX, clickY, '+10 🔵');
+  spawnFloatingText(tapX, tapY, '+10 🔵');
+
+  // Mascot Squash & Stretch reaction
+  const mascot = document.getElementById('dolphinMainImg');
+  if (mascot) {
+    mascot.style.transform = 'scale(1.15, 0.85)';
+    setTimeout(() => {
+      mascot.style.transform = '';
+    }, 120);
+  }
+
+  if (leveledUp) {
+    sfx.play('fanfare');
+    showToast(`Dolphin reached Level ${s.dolphinLevel}! 🎉`, '✨');
+  }
+
   updateUI();
 };
 
@@ -146,33 +197,50 @@ function spawnFloatingText(x, y, text) {
   const el = document.createElement('div');
   el.className = 'floating-text';
   el.innerText = text;
-  el.style.left = `${x - 20}px`;
-  el.style.top = `${y - 20}px`;
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 650);
 }
 
+// 3. PROMPT 4: TIMER & BREEDING LOGIC (24-HOUR COUNTDOWN & OVERLAY)
 window.startBreeding = function() {
   const s = GameState;
-  if (s.isBreeding) return;
+  if (s.isBreeding) {
+    showToast('Breeding already in progress!', 'ℹ️');
+    return;
+  }
 
   s.isBreeding = true;
-  s.breedEndTime = Date.now() + 60 * 1000; // 1 minute demo countdown
+  s.breedEndTime = Date.now() + 24 * 3600 * 1000; // 24 Hours exact
 
   sfx.play('coin');
-  showToast('Breeding ritual initiated! (1m duration)', '❤️');
+  showToast('Breeding started! 24h countdown initiated. ❤️', '🎉');
   updateUI();
+};
+
+window.formatCountdown = function(msRemaining) {
+  if (msRemaining <= 0) return '00:00:00';
+  const totalSec = Math.floor(msRemaining / 1000);
+  const hours = Math.floor(totalSec / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
+  const secs = totalSec % 60;
+
+  const hh = hours < 10 ? '0' + hours : hours;
+  const mm = mins < 10 ? '0' + mins : mins;
+  const secsStr = secs < 10 ? '0' + secs : secs;
+  return `${hh}:${mm}:${secsStr}`;
 };
 
 window.toggleStaking = function() {
   const s = GameState;
   s.isStaked = !s.isStaked;
   sfx.play('coin');
-  showToast(s.isStaked ? 'Dolphin Staked! Earning passive DLP 👑' : 'Dolphin Unstaked.', '👑');
+  showToast(s.isStaked ? 'Dolphin Staked! Earning passive DLP yield 👑' : 'Dolphin Unstaked.', '👑');
   updateUI();
 };
 
-// 3. MERGE GRID LOGIC (7 Rows x 6 Columns = 42 Cells)
+// 4. MERGE GRID COMPONENT (7 Rows x 6 Columns = 42 Slots)
 function renderMergeGrid() {
   const gridEl = document.getElementById('mergeGridWrapper');
   if (!gridEl) return;
@@ -196,7 +264,6 @@ function renderMergeGrid() {
       cell.classList.add('selected');
     }
 
-    // Touch / Click Handler
     cell.addEventListener('click', () => handleGridCellClick(idx));
     gridEl.appendChild(cell);
   });
@@ -231,12 +298,12 @@ function handleGridCellClick(idx) {
     const target = s.gridArray[idx];
 
     if (!target) {
-      // Move to empty cell
+      // Move to empty slot
       s.gridArray[idx] = source;
       s.gridArray[fromIdx] = null;
       sfx.play('tap');
     } else if (source.level === target.level && source.level < 12) {
-      // MERGE LOGIC (source.level === target.level -> level + 1)
+      // Merge: if (source.level === target.level) -> level + 1
       console.log(`Merged to Level ${source.level + 1}`);
       s.gridArray[idx] = {
         id: 'shell_' + Date.now(),
@@ -248,13 +315,12 @@ function handleGridCellClick(idx) {
       sfx.play('merge', source.level);
       showToast(`Merged to Level ${source.level + 1} Sea Shell! ✨`, '🔮');
 
-      // Add visual glow animation to target
       setTimeout(() => {
         const targetEl = document.querySelector(`[data-index="${idx}"]`);
         if (targetEl) targetEl.classList.add('merge-glow');
       }, 20);
     } else {
-      // Swap
+      // Swap items
       s.gridArray[idx] = source;
       s.gridArray[fromIdx] = target;
       sfx.play('tap');
@@ -332,32 +398,46 @@ window.spinTideWheel = function() {
   updateUI();
 };
 
-// 4. UI REFRESH & TICKER
+// 5. UI REFRESH & TICKER
 function updateUI() {
   const s = window.GameState;
   const pEl = document.getElementById('pearlsTopDisplay');
   const stEl = document.getElementById('starsTopDisplay');
-  const eProg = document.getElementById('energyProgressFill');
-  const eText = document.getElementById('energyTextVal');
-  const breedBtn = document.getElementById('breedBtnText');
-  const stakeBtn = document.getElementById('stakeBtnText');
+  const lvlBadge = document.getElementById('cardLvlBadge');
+  const lvlText = document.getElementById('levelProgressText');
+  const lvlFill = document.getElementById('levelProgressFill');
+  const feedBtn = document.getElementById('feedActionButton');
+  const breedOverlay = document.getElementById('breedingOverlay');
+  const breedTimerText = document.getElementById('breedingTimerCountdown');
+  const breedBtn = document.getElementById('breedingTriggerBtn');
 
   if (pEl) pEl.innerText = s.pearlsBalance.toLocaleString();
   if (stEl) stEl.innerText = s.starsBalance.toLocaleString();
-  if (eProg) eProg.style.width = `${(s.dolphinEnergy / s.maxEnergy) * 100}%`;
-  if (eText) eText.innerText = `${s.dolphinEnergy} / ${s.maxEnergy}`;
+  if (lvlBadge) lvlBadge.innerText = `LVL ${s.dolphinLevel}`;
+  if (lvlText) lvlText.innerText = `Level ${s.dolphinLevel} (${s.levelProgress}%)`;
+  if (lvlFill) lvlFill.style.width = `${s.levelProgress}%`;
 
-  if (breedBtn) {
-    if (s.isBreeding) {
-      const rem = Math.max(0, Math.floor((s.breedEndTime - Date.now()) / 1000));
-      breedBtn.innerText = `BREEDING (${rem}s)`;
-    } else {
-      breedBtn.innerText = 'BREED (5/5)';
+  // Breeding state updates
+  if (s.isBreeding) {
+    const msLeft = Math.max(0, s.breedEndTime - Date.now());
+    if (breedOverlay) breedOverlay.classList.add('active');
+    if (breedTimerText) breedTimerText.innerText = formatCountdown(msLeft);
+    if (feedBtn) {
+      feedBtn.classList.add('disabled');
+      feedBtn.innerText = 'BREEDING IN PROGRESS (TAP LOCKED)';
     }
-  }
-
-  if (stakeBtn) {
-    stakeBtn.innerText = s.isStaked ? '⚡ STAKED' : '👑 START STAKING';
+    if (breedBtn) {
+      breedBtn.innerText = `BREEDING (${formatCountdown(msLeft)})`;
+    }
+  } else {
+    if (breedOverlay) breedOverlay.classList.remove('active');
+    if (feedBtn) {
+      feedBtn.classList.remove('disabled');
+      feedBtn.innerText = 'TAP TO FEED (Cost: 10 Pearls)';
+    }
+    if (breedBtn) {
+      breedBtn.innerText = '❤️ START BREEDING';
+    }
   }
 }
 
@@ -374,22 +454,21 @@ window.showToast = function(msg, icon = '✨') {
   }, 2200);
 };
 
-// 5. LIFECYCLE
+// 6. LIFECYCLE & COUNTDOWN TICKER
 document.addEventListener('DOMContentLoaded', () => {
   if (window.Telegram?.WebApp) {
     window.Telegram.WebApp.ready();
     window.Telegram.WebApp.expand();
   }
 
-  // Energy regeneration (10 energy every 3s)
+  // 1-second ticker for 24h countdown
   setInterval(() => {
-    if (GameState.dolphinEnergy < GameState.maxEnergy) {
-      GameState.dolphinEnergy = Math.min(GameState.maxEnergy, GameState.dolphinEnergy + 10);
-      updateUI();
-    }
-    if (GameState.isBreeding && Date.now() >= GameState.breedEndTime) {
-      GameState.isBreeding = false;
-      showToast('Breeding complete! Love Pearl ready. ❤️', '🎉');
+    if (GameState.isBreeding) {
+      if (Date.now() >= GameState.breedEndTime) {
+        GameState.isBreeding = false;
+        GameState.breedEndTime = null;
+        showToast('Breeding complete! Love Pearl ready. ❤️', '🎉');
+      }
       updateUI();
     }
   }, 1000);
