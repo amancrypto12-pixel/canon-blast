@@ -109,7 +109,7 @@
       name: 'Coral Clown Dolphin',
       rarity: 'COMMON',
       rate: 5.00,
-      sprite: 'assets/collections/06_Coral_Reef_Tropical/06_01_clownfish.png'
+      sprite: 'assets/collections/06_Coral_Reef_Tropical/06_01_clown.png'
     }
   ];
 
@@ -196,7 +196,7 @@
       const slide = document.createElement('div');
       slide.className = 'swiper-slide';
       slide.innerHTML = `
-        <img src="${col.sprite}" alt="${col.name}">
+        <img src="${col.sprite}" alt="${col.name}" onerror="this.onerror=null; this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'32\\\' height=\\\'32\\\' viewBox=\\\'0 0 32 32\\\'><text y=\\\'24\\\' font-size=\\\'22\\\'>🐬</text></svg>\';">
         <span class="deck-slot-num">SLOT ${idx + 1}</span>
       `;
       slide.onclick = () => selectDeckSlot(idx);
@@ -299,11 +299,11 @@
 
       if (cell) {
         const imgSrc = cell.tier <= 12 
-          ? `assets/eggs/pearl_t${cell.tier}.png`
+          ? `assets/pearl_t${cell.tier}.png`
           : `assets/special/egg_t${Math.min(cell.tier, 20)}_abyssal_dark_crystal.png`;
 
         cellDiv.innerHTML = `
-          <img src="${imgSrc}" alt="T${cell.tier}">
+          <img src="${imgSrc}" alt="T${cell.tier}" onerror="this.onerror=null; this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'32\\\' height=\\\'32\\\' viewBox=\\\'0 0 32 32\\\'><text y=\\\'24\\\' font-size=\\\'22\\\'>🥚</text></svg>\';">
           <span class="shell-lvl-badge">T${cell.tier}</span>
         `;
         cellDiv.onclick = () => handleCellMerge(idx);
@@ -374,7 +374,7 @@
       const card = document.createElement('div');
       card.className = 'market-item-card';
       card.innerHTML = `
-        <img src="${col.sprite}" alt="${col.name}">
+        <img src="${col.sprite}" alt="${col.name}" onerror="this.onerror=null; this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'32\\\' height=\\\'32\\\' viewBox=\\\'0 0 32 32\\\'><text y=\\\'24\\\' font-size=\\\'22\\\'>🐬</text></svg>\';">
         <div class="market-item-name">${col.name.split(' ')[0]}</div>
         <div class="market-item-price">${30000 + idx * 25000} 🐚</div>
       `;
@@ -397,7 +397,7 @@
       row.className = 'task-card-row';
       row.innerHTML = `
         <div class="task-left-meta">
-          <img src="${god.img}" class="task-icon-img" alt="${god.name}">
+          <img src="${god.img}" class="task-icon-img" alt="${god.name}" onerror="this.onerror=null; this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'32\\\' height=\\\'32\\\' viewBox=\\\'0 0 32 32\\\'><text y=\\\'24\\\' font-size=\\\'22\\\'>🔱</text></svg>\';">
           <div>
             <div class="task-title">${god.name}</div>
             <div class="task-reward">${god.yield}</div>
@@ -422,7 +422,7 @@
       div.className = 'task-card-row';
       div.innerHTML = `
         <div class="task-left-meta">
-          <img src="${q.icon}" class="task-icon-img" alt="${q.title}">
+          <img src="${q.icon}" class="task-icon-img" alt="${q.title}" onerror="this.onerror=null; this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'32\\\' height=\\\'32\\\' viewBox=\\\'0 0 32 32\\\'><text y=\\\'24\\\' font-size=\\\'22\\\'>🎁</text></svg>\';">
           <div>
             <div class="task-title">${q.title}</div>
             <div class="task-reward">${q.reward}</div>
