@@ -459,6 +459,37 @@
     window.closeModal('modal-streak');
   };
 
+  // --- TIDE WHEEL SPIN ---
+  window.spinTideWheel = function() {
+    if (state.currencies.pearlsBalance < 100) {
+      alert('Need 100 Blue Pearls to spin the Tide Wheel!');
+      return;
+    }
+    state.currencies.pearlsBalance -= 100;
+    updateHeader();
+
+    const wheel = document.getElementById('roulette-wheel-img');
+    const randomDeg = 1440 + Math.floor(Math.random() * 360);
+    if (wheel) {
+      wheel.style.transform = `rotate(${randomDeg}deg)`;
+    }
+    sound.playMergeChord(5);
+    setTimeout(() => {
+      sound.playCelebration();
+      const rewards = [
+        { type: 'pearls', amount: 500, label: '500 Blue Pearls' },
+        { type: 'stars', amount: 15, label: '15 Blue Stars' },
+        { type: 'booster', label: '2X Speed Booster' },
+        { type: 'egg', label: 'Mystic Sea Egg' }
+      ];
+      const win = rewards[Math.floor(Math.random() * rewards.length)];
+      if (win.type === 'pearls') state.currencies.pearlsBalance += win.amount;
+      if (win.type === 'stars') state.currencies.starsBalance += win.amount;
+      updateHeader();
+      alert(`🎉 Congratulations! You won: ${win.label}!`);
+    }, 3200);
+  };
+
   // --- INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {
     updateHeader();

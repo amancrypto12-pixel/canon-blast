@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Dolphin my Dolphin</title>
-  <link rel="stylesheet" href="styles.css?v=3.5">
+  <link rel="stylesheet" href="styles.css?v=4.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -39,16 +39,16 @@
             <!-- LEFT FLANKING PANEL -->
             <div class="side-panel left">
               <div class="side-action-btn" onclick="openModal('modal-pass')">
-                <span class="btn-emoji">🎫</span>
+                <img src="assets/ui/icon_dolphin_pass_ticket.png" class="side-icon-img" alt="Pass">
                 <span>PASS</span>
                 <span class="btn-badge">5D</span>
               </div>
               <div class="side-action-btn" onclick="openModal('modal-streak')">
-                <span class="btn-emoji">🔥</span>
+                <img src="assets/ui/icon_daily_streak_flame.png" class="side-icon-img" alt="Streak">
                 <span>STREAK</span>
               </div>
               <div class="side-action-btn" onclick="openModal('modal-booster')">
-                <span class="btn-emoji">⚡</span>
+                <img src="assets/ui/booster_2x_rocket.png" class="side-icon-img" alt="2X">
                 <span>2X</span>
               </div>
             </div>
@@ -120,15 +120,15 @@
             <!-- RIGHT FLANKING PANEL -->
             <div class="side-panel right">
               <div class="side-action-btn" onclick="openModal('modal-staking')">
-                <span class="btn-emoji">🏛️</span>
+                <img src="assets/ui/icon_staking_vault.png" class="side-icon-img" alt="Yield">
                 <span>YIELD</span>
               </div>
               <div class="side-action-btn" onclick="openModal('modal-duels')">
-                <span class="btn-emoji">⚔️</span>
+                <img src="assets/ui/icon_duels_tridents.png" class="side-icon-img" alt="Duels">
                 <span>DUELS</span>
               </div>
               <div class="side-action-btn" onclick="openModal('modal-energy')">
-                <span class="btn-emoji">🔋</span>
+                <img src="assets/ui/icon_energy_tank.png" class="side-icon-img" alt="Energy">
                 <span>0/2K</span>
               </div>
             </div>
@@ -228,27 +228,47 @@
           <h4 style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Community Quests</h4>
           
           <div class="task-card-row">
-            <div>
-              <div style="font-size: 11px; font-weight: 800;">Join Official Channel</div>
-              <div style="font-size: 9px; color: var(--neon-cyan);">+500 🔵 Blue Pearls</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="assets/ui/icon_task_telegram.png" class="task-icon-img" alt="TG">
+              <div>
+                <div style="font-size: 11px; font-weight: 800;">Join Official Channel</div>
+                <div style="font-size: 9px; color: var(--neon-cyan);">+500 🔵 Blue Pearls</div>
+              </div>
             </div>
             <button class="btn-claim-green" onclick="alert('Claimed 500 Pearls!')">CLAIM</button>
           </div>
 
           <div class="task-card-row">
-            <div>
-              <div style="font-size: 11px; font-weight: 800;">Follow on X (Twitter)</div>
-              <div style="font-size: 9px; color: var(--neon-cyan);">+500 🔵 Blue Pearls</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="assets/ui/icon_task_x_twitter.png" class="task-icon-img" alt="X">
+              <div>
+                <div style="font-size: 11px; font-weight: 800;">Follow on X (Twitter)</div>
+                <div style="font-size: 9px; color: var(--neon-cyan);">+500 🔵 Blue Pearls</div>
+              </div>
             </div>
             <button class="btn-claim-green" onclick="alert('Claimed 500 Pearls!')">CLAIM</button>
           </div>
 
           <div class="task-card-row">
-            <div>
-              <div style="font-size: 11px; font-weight: 800;">Feed Dolphins 5 Times</div>
-              <div style="font-size: 9px; color: var(--neon-cyan);">+5 <img src="assets/icon_user_star.png" class="inline-star-icon"> Blue Stars</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="assets/ui/icon_task_feeding.png" class="task-icon-img" alt="Feed">
+              <div>
+                <div style="font-size: 11px; font-weight: 800;">Feed Dolphins 5 Times</div>
+                <div style="font-size: 9px; color: var(--neon-cyan);">+5 <img src="assets/icon_user_star.png" class="inline-star-icon"> Blue Stars</div>
+              </div>
             </div>
             <button class="btn-claim-green" onclick="alert('Claimed 5 Stars!')">CLAIM</button>
+          </div>
+
+          <div class="task-card-row">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <img src="assets/ui/icon_task_merging.png" class="task-icon-img" alt="Merge">
+              <div>
+                <div style="font-size: 11px; font-weight: 800;">Merge 10 Sea Shells</div>
+                <div style="font-size: 9px; color: var(--neon-cyan);">+300 🔵 Blue Pearls</div>
+              </div>
+            </div>
+            <button class="btn-claim-green" onclick="alert('Claimed 300 Pearls!')">CLAIM</button>
           </div>
 
           <h4 style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-top: 6px;">Tiered Referral Engine</h4>
@@ -290,7 +310,23 @@
       </div>
     </nav>
 
-    <!-- 4. MODALS & EGG CRACKING RITUAL -->
+    <!-- 4. MODALS -->
+    <!-- TIDE WHEEL ROULETTE MODAL -->
+    <div id="modal-wheel" class="modal-backdrop">
+      <div class="modal-dialog">
+        <h3 style="font-size: 15px; font-weight: 800; color: var(--neon-gold);">🎡 TIDE WHEEL ROULETTE</h3>
+        <div style="position: relative; width: 190px; height: 190px; display: flex; align-items: center; justify-content: center; margin: 6px 0;">
+          <img src="assets/ui/tide_wheel_roulette.png" id="roulette-wheel-img" style="width: 180px; height: 180px; object-fit: contain; transition: transform 3s cubic-bezier(0.15, 0.9, 0.25, 1);" alt="Wheel">
+          <img src="assets/ui/tide_wheel_pointer.png" style="position: absolute; top: -8px; width: 28px; height: 28px; object-fit: contain; z-index: 10;" alt="Pointer">
+        </div>
+        <button class="btn-feed-action" style="background: linear-gradient(135deg, #FFD119 0%, #FF8800 100%); color: #000;" onclick="spinTideWheel()">
+          SPIN (100 🔵)
+        </button>
+        <button class="btn-breed-action" onclick="closeModal('modal-wheel')">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- EGG CRACKING RITUAL MODAL -->
     <div id="modal-egg-hatch" class="modal-backdrop">
       <div class="modal-dialog">
         <h3 style="font-size: 15px; font-weight: 800; color: var(--neon-cyan);">🥚 HATCH MYSTIC EGG</h3>
@@ -306,6 +342,7 @@
     <div id="modal-streak" class="modal-backdrop">
       <div class="modal-dialog">
         <h3 style="font-size: 15px; font-weight: 800; color: var(--neon-cyan);">🔥 Daily Login Streak</h3>
+        <img src="assets/ui/icon_daily_streak_flame.png" style="width: 70px; height: 70px; object-fit: contain;" alt="Flame">
         <p style="font-size: 11px; color: var(--text-muted);">Log in 7 days consecutively to claim the Mythic Sea Pearl!</p>
         <button class="btn-feed-action" onclick="claimDailyLogin()">CLAIM DAY 1 REWARD</button>
         <button class="btn-breed-action" onclick="closeModal('modal-streak')">CLOSE</button>
@@ -316,13 +353,36 @@
     <div id="modal-staking" class="modal-backdrop">
       <div class="modal-dialog">
         <h3 style="font-size: 15px; font-weight: 800; color: var(--neon-green);">🏛️ Ocean Staking Vault</h3>
+        <img src="assets/ui/icon_staking_vault.png" style="width: 75px; height: 75px; object-fit: contain;" alt="Vault">
         <p style="font-size: 11px; color: var(--text-muted);">Stake your dolphins to earn continuous passive Blue Pearls yield (+45% yield).</p>
         <button class="btn-feed-action" style="background: linear-gradient(135deg, #00FF88 0%, #009944 100%); color: #000;" onclick="alert('⚡ Staking yield activated (+45% APY)!'); closeModal('modal-staking');">STAKE ALL DOLPHINS</button>
         <button class="btn-breed-action" onclick="closeModal('modal-staking')">CLOSE</button>
       </div>
     </div>
+
+    <!-- BOOSTER MODAL -->
+    <div id="modal-booster" class="modal-backdrop">
+      <div class="modal-dialog">
+        <h3 style="font-size: 15px; font-weight: 800; color: var(--neon-cyan);">⚡ SPEED BOOSTERS</h3>
+        <div style="display: flex; gap: 8px; width: 100%; justify-content: center;">
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-cyan); border-radius: 12px; padding: 10px; width: 130px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <img src="assets/ui/booster_2x_rocket.png" style="width: 45px; height: 45px; object-fit: contain;" alt="2X">
+            <span style="font-size: 11px; font-weight: 800;">2X Speed (1h)</span>
+            <span style="font-size: 10px; color: var(--neon-cyan); font-weight: 700;">20 <img src="assets/icon_user_star.png" class="inline-star-icon"></span>
+            <button class="btn-feed-action" style="height: 26px; font-size: 10px; width: 100%; margin-top: 4px;" onclick="alert('Activated 2X Speed!'); closeModal('modal-booster');">BUY</button>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border: 1px solid var(--neon-purple); border-radius: 12px; padding: 10px; width: 130px; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <img src="assets/ui/booster_5x_lightning.png" style="width: 45px; height: 45px; object-fit: contain;" alt="5X">
+            <span style="font-size: 11px; font-weight: 800;">5X Surge (2h)</span>
+            <span style="font-size: 10px; color: var(--neon-purple); font-weight: 700;">50 <img src="assets/icon_user_star.png" class="inline-star-icon"></span>
+            <button class="btn-feed-action" style="height: 26px; font-size: 10px; width: 100%; margin-top: 4px; background: linear-gradient(135deg, #B25DFF 0%, #6815FF 100%);" onclick="alert('Activated 5X Surge!'); closeModal('modal-booster');">BUY</button>
+          </div>
+        </div>
+        <button class="btn-breed-action" onclick="closeModal('modal-booster')">CLOSE</button>
+      </div>
+    </div>
   </div>
 
-  <script src="game.js?v=3.5"></script>
+  <script src="game.js?v=4.0"></script>
 </body>
 </html>

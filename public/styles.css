@@ -242,6 +242,21 @@ body {
   border-radius: 6px;
 }
 
+.side-icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.task-icon-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.4));
+}
+
 /* 4. CENTRAL 4:3 DOLPHIN CARD (300x420px) */
 .dolphin-card {
   width: 290px;
