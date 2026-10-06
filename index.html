@@ -4,20 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Dolphin Pearls - Telegram Mini App</title>
-  <link rel="stylesheet" href="styles.css?v=3.5">
+  <link rel="stylesheet" href="styles.css?v=4.0">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div id="game-app">
-    <!-- TOP HEADER -->
+    
+    <!-- TOP BAR (AUTHENTIC DUCK MY DUCK 1:1) -->
     <header class="top-bar">
       <div class="user-badge" id="btn-user-profile" onclick="openUserProfileModal()">
         <div class="avatar-ring">
           <img src="assets/dolphins/mascot_dolphin_hero.png" id="user-avatar" class="user-avatar" alt="Avatar">
+          <div class="avatar-lvl-badge" id="avatar-lvl-txt">4</div>
         </div>
         <div class="user-meta">
           <div class="user-name" id="display-user-name">Captain Dolphin</div>
-          <div class="user-title">Abyss Master (Lvl <span id="hdr-lvl-txt">1</span>)</div>
+          <div class="user-pack-pill">PACK 92.9K</div>
         </div>
       </div>
 
@@ -25,19 +27,19 @@
         <!-- Blue Pearls -->
         <div class="header-pill pill-pearls" id="btn-buy-pearls" onclick="openShopModal('pearls')">
           <img src="assets/ui/currency_blue_pearl_3d.png" class="pill-icon" alt="Pearls">
-          <span id="header-pearls-val" class="pill-val">12,450</span>
+          <span id="header-pearls-val" class="pill-val">92,935</span>
           <button class="pill-plus-btn">+</button>
         </div>
         <!-- Gold Stars (Authentic Blue Asset) -->
         <div class="header-pill pill-stars" id="btn-buy-stars" onclick="openShopModal('stars')">
           <img src="assets/icon_user_star.png" class="pill-icon inline-star-icon" alt="Stars">
-          <span id="header-stars-val" class="pill-val">350</span>
+          <span id="header-stars-val" class="pill-val">50</span>
           <button class="pill-plus-btn">+</button>
         </div>
         <!-- Energy Tank -->
         <div class="header-pill pill-energy" id="btn-energy-modal" onclick="openEnergyModal()">
           <img src="assets/ui/icon_energy_tank.png" class="pill-icon" alt="Energy">
-          <span id="header-energy-val" class="pill-val">0 / 2 000</span>
+          <span id="header-energy-val" class="pill-val">470 / 2 000</span>
         </div>
       </div>
     </header>
@@ -45,137 +47,153 @@
     <!-- MAIN VIEWPORT TABS -->
     <main class="main-viewport">
       
-      <!-- TAB 1: DOLPHINS (Hero Stage & Deck) -->
+      <!-- TAB 1: DOLPHINS (HERO CLICKER & STAGE) -->
       <section id="tab-dolphins" class="tab-view active">
-        <!-- Side Flanking Action Panels -->
-        <div class="flanking-panel left-panel">
-          <button class="side-btn" id="btn-pass-modal" onclick="openPassModal()">
-            <img src="assets/ui/icon_dolphin_pass_ticket.png" class="side-icon-img" alt="Pass">
-            <span class="side-btn-label">PASS</span>
-            <span class="side-badge">5D</span>
-          </button>
-          <button class="side-btn" id="btn-streak-modal" onclick="openDailyStreakModal()">
-            <img src="assets/ui/icon_daily_streak_flame.png" class="side-icon-img" alt="Streak">
-            <span class="side-btn-label">STREAK</span>
-            <span class="side-badge">D3</span>
-          </button>
-          <button class="side-btn" id="btn-boosters-modal" onclick="openBoostersModal()">
-            <img src="assets/ui/booster_2x_rocket.png" class="side-icon-img" alt="Booster">
-            <span class="side-btn-label">2X SURGE</span>
-            <span class="side-badge" id="booster-status-badge">OFF</span>
-          </button>
+        
+        <!-- Flanking Side Floating Badges -->
+        <div class="side-floating-panel left-side">
+          <div class="circular-side-badge" id="btn-pass-modal" onclick="openPassModal()">
+            <div class="side-badge-icon-wrap">
+              <img src="assets/ui/icon_dolphin_pass_ticket.png" class="side-badge-img" alt="Pass">
+            </div>
+            <div class="side-badge-text-top">PASS</div>
+            <div class="side-badge-text-bot gold">5 DAYS</div>
+          </div>
+          
+          <div class="circular-side-badge" id="btn-streak-modal" onclick="openDailyStreakModal()">
+            <div class="side-badge-icon-wrap">
+              <img src="assets/ui/icon_daily_streak_flame.png" class="side-badge-img" alt="Streak">
+            </div>
+            <div class="side-badge-text-top">DAILY</div>
+            <div class="side-badge-text-bot">DAY 3</div>
+          </div>
+
+          <div class="circular-side-badge" id="btn-boosters-modal" onclick="openBoostersModal()">
+            <div class="side-badge-icon-wrap">
+              <img src="assets/ui/booster_2x_rocket.png" class="side-badge-img" alt="Booster">
+            </div>
+            <div class="side-badge-text-top">SURGE</div>
+            <div class="side-badge-text-bot cyan" id="booster-status-badge">X2</div>
+          </div>
         </div>
 
-        <div class="flanking-panel right-panel">
-          <button class="side-btn" id="btn-clans-modal" onclick="openClansModal()">
-            <img src="assets/special/clan_power_crystal.png" class="side-icon-img" alt="Clans">
-            <span class="side-btn-label">CLANS</span>
-            <span class="side-badge">NEW</span>
-          </button>
-          <button class="side-btn" id="btn-arena-modal" onclick="openArenaModal()">
-            <img src="assets/special/duel_versus_shield.png" class="side-icon-img" alt="Arena">
-            <span class="side-btn-label">ARENA</span>
-            <span class="side-badge">PVP</span>
-          </button>
-          <button class="side-btn" id="btn-lotto-modal" onclick="openLottoModal()">
-            <img src="assets/special/lotto_lucky_ticket.png" class="side-icon-img" alt="Lotto">
-            <span class="side-btn-label">LOTTO</span>
-            <span class="side-badge">WIN</span>
-          </button>
+        <div class="side-floating-panel right-side">
+          <div class="circular-side-badge" id="btn-clans-modal" onclick="openClansModal()">
+            <div class="side-badge-icon-wrap">
+              <img src="assets/special/clan_power_crystal.png" class="side-badge-img" alt="Clans">
+            </div>
+            <div class="side-badge-text-top">CLANS</div>
+            <div class="side-badge-text-bot">60.9K</div>
+          </div>
+
+          <div class="circular-side-badge" id="btn-arena-modal" onclick="openArenaModal()">
+            <div class="side-badge-icon-wrap">
+              <img src="assets/special/duel_versus_shield.png" class="side-badge-img" alt="Arena">
+            </div>
+            <div class="side-badge-text-top">ARENA</div>
+            <div class="side-badge-text-bot gold">12 QDD</div>
+          </div>
+
+          <div class="circular-side-badge" id="btn-lotto-modal" onclick="openLottoModal()">
+            <div class="side-badge-icon-wrap">
+              <img src="assets/special/lotto_lucky_ticket.png" class="side-badge-img" alt="Lotto">
+            </div>
+            <div class="side-badge-text-top">LOTTO</div>
+            <div class="side-badge-text-bot green">WIN</div>
+          </div>
         </div>
 
-        <!-- 320x450 Central Card -->
-        <div class="hero-stage-container">
-          <div class="card-4-3-wrapper" id="dolphin-mascot-card">
-            <!-- Rarity Top Badge -->
-            <div class="card-header-badge">
-              <span class="rarity-tag" id="current-slot-rarity">MYTHIC GOD</span>
-              <div class="card-level-tag">LVL <span id="current-slot-lvl">1</span></div>
-            </div>
+        <!-- HERO CLICKER CENTERPIECE -->
+        <div class="hero-clicker-stage">
+          
+          <!-- Top Hero Stats Floating Bar -->
+          <div class="hero-stat-floating-row">
+            <div class="hero-lvl-chip">LVL <span id="current-slot-lvl">4</span> XL</div>
+            <div class="hero-yield-big" id="stat-yield">183.35 <span class="yield-unit">🐚/h</span></div>
+            <div class="hero-rarity-chip mythic" id="current-slot-rarity">~MYTHIC</div>
+          </div>
 
-            <!-- Stage Podium Backdrop -->
-            <div class="stage-podium-wrap">
-              <img src="assets/special/stage_podium_pedestal.png" class="stage-podium-img" alt="Podium">
+          <!-- Central Mascot Stage & Pedestal -->
+          <div class="mascot-stage-platform" id="mascot-hitbox" onclick="handleFeedTap(event)">
+            <div class="stage-pedestal-backdrop">
+              <img src="assets/special/stage_podium_pedestal.png" class="pedestal-sprite" alt="Pedestal">
             </div>
-
-            <!-- Hero Mascot Sprite with Physics & Tap Ripple -->
-            <div class="mascot-touch-zone" id="mascot-hitbox" onclick="handleFeedTap(event)">
-              <img src="assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png" id="mascot-sprite" class="mascot-hero-img" alt="Poseidon Dolphin">
-            </div>
-
-            <!-- Level Progress Bar -->
-            <div class="hero-exp-bar-wrap">
-              <div class="hero-exp-bar-fill" id="hero-exp-fill" style="width: 35%;"></div>
-              <div class="hero-exp-text"><span id="hero-exp-cur">350</span> / <span id="hero-exp-max">1,000</span> EXP</div>
-            </div>
-
-            <!-- Floating Stats Footer -->
-            <div class="card-stats-trio">
-              <div class="stat-trio-item">
-                <span class="trio-label">PASSIVE YIELD</span>
-                <span class="trio-val" id="stat-yield">+45%</span>
-              </div>
-              <div class="stat-trio-item">
-                <span class="trio-label">SWIM SPEED</span>
-                <span class="trio-val" id="stat-speed">320 m/s</span>
-              </div>
-              <div class="stat-trio-item">
-                <span class="trio-label">FEED HARVEST</span>
-                <span class="trio-val" id="stat-harvest">+100 🐚</span>
-              </div>
-            </div>
-
-            <!-- Breeding Overlay -->
-            <div class="breeding-lock-overlay" id="breeding-overlay" style="display: none;">
-              <div class="breeding-lock-pulse"></div>
-              <div class="breeding-title">BREEDING IN PROGRESS</div>
-              <div class="breeding-timer" id="breeding-timer-txt">23:59:59</div>
-              <div class="breeding-sub">Tap-to-feed is locked until birth</div>
-              <button class="btn-primary btn-speedup-breed" onclick="speedUpBreeding()">SPEED UP (50 Stars)</button>
+            <div class="mascot-sprite-wrapper">
+              <img src="assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png" id="mascot-sprite" class="mascot-hero-sprite" alt="Hero Dolphin">
             </div>
           </div>
 
-          <!-- Central Action Buttons -->
-          <div class="stage-action-bar">
-            <button class="primary-action-btn feed-btn" id="btn-feed-action" onclick="handleFeedTap(event)">
-              <span class="btn-main-text">TAP TO FEED</span>
-              <span class="btn-sub-text">Cost: <span id="feed-cost-txt">10</span> Pearls</span>
+          <!-- Dynamic Level Progress Bar -->
+          <div class="hero-level-progress-wrap">
+            <div class="hero-level-progress-fill" id="hero-exp-fill" style="width: 45%;"></div>
+            <div class="hero-level-progress-text">
+              <span id="hero-exp-cur">450</span> / <span id="hero-exp-max">1,000</span> EXP
+            </div>
+          </div>
+
+          <!-- Massive TAP TO FEED & Countdown Button -->
+          <div class="feed-button-master" id="btn-feed-action" onclick="handleFeedTap(event)">
+            <div class="feed-main-title">
+              <img src="assets/ui/icon_task_feeding.png" class="feed-bowl-icon" alt="Feed">
+              <span>TAP TO FEED</span>
+            </div>
+            <div class="feed-reset-sub">
+              <span>RESET</span>
+              <span class="feed-countdown" id="feed-reset-timer">05:39:46</span>
+              <span class="feed-cost-badge">144 🐚</span>
+            </div>
+          </div>
+
+          <!-- Dual Secondary Action Row (BREED 4/5 & STAKE) -->
+          <div class="hero-dual-action-row">
+            <button class="hero-sub-action-btn breed-action" onclick="startBreedingRoutine()">
+              <span class="sub-act-title">BREED 4/5</span>
+              <span class="sub-act-sub">24h Incubation</span>
             </button>
-            <button class="primary-action-btn breed-btn" id="btn-breed-action" onclick="startBreedingRoutine()">
-              <span class="btn-main-text">START BREEDING</span>
-              <span class="btn-sub-text">24h Incubation</span>
+            <button class="hero-sub-action-btn stake-action" onclick="openClansModal()">
+              <span class="sub-act-title">STAKE POOL</span>
+              <span class="sub-act-sub">+45% Yield</span>
             </button>
           </div>
 
           <!-- Dynamic 11-Slot Deck Swapper -->
-          <div class="deck-carousel-container">
-            <div class="deck-carousel-label">ACTIVE POD DECK (11 SLOTS) — SWAP & EVOLVE</div>
-            <div class="deck-carousel-track" id="deck-slots-track">
+          <div class="deck-slider-container">
+            <div class="deck-slider-track" id="deck-slots-track">
               <!-- Rendered dynamically in JS -->
             </div>
           </div>
+
+          <!-- Breeding Overlay -->
+          <div class="breeding-lock-overlay" id="breeding-overlay" style="display: none;">
+            <div class="breeding-lock-pulse"></div>
+            <div class="breeding-title">BREEDING IN PROGRESS</div>
+            <div class="breeding-timer" id="breeding-timer-txt">23:59:59</div>
+            <div class="breeding-sub">Tap-to-feed is locked until birth</div>
+            <button class="btn-primary btn-speedup-breed" onclick="speedUpBreeding()">SPEED UP (50 Stars)</button>
+          </div>
+
         </div>
+
       </section>
 
-      <!-- TAB 2: SHELLS (42-Cell Merge Grid & Tide Wheel) -->
+      <!-- TAB 2: SHELLS (42-CELL MERGE GRID) -->
       <section id="tab-shells" class="tab-view">
         <div class="shells-header-bar">
           <div class="merge-summary">
             <div class="merge-title">SEA SHELL SANCTUARY</div>
-            <div class="merge-sub">Drag & drop or tap matching shells to evolve</div>
+            <div class="merge-sub">Merge matching shells to evolve higher tiers</div>
           </div>
           <div class="merge-actions">
             <button class="btn-util btn-wheel" onclick="openTideWheelModal()">
-              <img src="assets/ui/tide_wheel_roulette.png" class="btn-icon-xs" alt="Wheel"> TIDE WHEEL
+              <img src="assets/ui/tide_wheel_roulette.png" class="btn-icon-xs" alt="Wheel"> WHEEL
             </button>
             <button class="btn-util btn-auto" id="btn-auto-merge" onclick="triggerAutoMerge()">AUTO MERGE</button>
           </div>
         </div>
 
-        <!-- 7x6 42-Cell Glassmorphic Grid with Drag & Drop -->
         <div class="shells-grid-container">
           <div class="shells-grid-42" id="shells-board">
-            <!-- 42 Cells generated by game.js -->
+            <!-- 42 Cells -->
           </div>
         </div>
 
@@ -187,7 +205,7 @@
         </div>
       </section>
 
-      <!-- TAB 3: MARKET (Trading Orderbook & Rarity Collections) -->
+      <!-- TAB 3: MARKET -->
       <section id="tab-market" class="tab-view">
         <div class="market-chart-widget">
           <div class="chart-header">
@@ -196,7 +214,7 @@
               <span class="chart-tag live-tag">LIVE</span>
             </div>
             <div class="chart-price-wrap">
-              <span class="chart-price" id="market-live-price">$0.4285 TON</span>
+              <span class="chart-price">$0.4285 TON</span>
               <span class="chart-change positive">+18.4%</span>
             </div>
           </div>
@@ -214,24 +232,32 @@
           </div>
         </div>
 
-        <div class="market-collections-section">
-          <div class="section-title-bar">
-            <span class="section-title">FEATURED 10 THEMED DECKS</span>
-            <span class="section-badge">250 DOLPHINS</span>
-          </div>
-          <div class="market-cards-3col" id="market-collections-grid">
-            <!-- 10 Themed decks rendered via JS with click-to-inspect -->
-          </div>
+        <div class="market-ticker-banner">
+          <img src="assets/special/market_badge_hot_deal.png" class="ticker-fire-icon" alt="Hot">
+          <span>HOT MARKET ENDS IN <strong id="market-ticker-time">09:13</strong></span>
+        </div>
+
+        <div class="market-rarity-filter-row">
+          <button class="rarity-filter-chip active" onclick="filterMarket('ALL')">ALL</button>
+          <button class="rarity-filter-chip" onclick="filterMarket('COMMON')">COMMON</button>
+          <button class="rarity-filter-chip" onclick="filterMarket('RARE')">RARE</button>
+          <button class="rarity-filter-chip" onclick="filterMarket('EPIC')">EPIC</button>
+          <button class="rarity-filter-chip" onclick="filterMarket('LEGENDARY')">LEGENDARY</button>
+        </div>
+
+        <div class="market-cards-3col" id="market-collections-grid">
+          <!-- Rendered in JS -->
         </div>
       </section>
 
-      <!-- TAB 4: GODS (Mythic Poseidon NFTs & Clan Sanctum) -->
+      <!-- TAB 4: GODS -->
       <section id="tab-gods" class="tab-view">
         <div class="gods-hero-banner">
           <img src="assets/special/egg_t16_poseidon_sovereign_jewel.png" class="gods-egg-crest" alt="Poseidon Egg">
           <div class="gods-hero-meta">
-            <div class="god-hero-title">POSEIDON SOVEREIGN</div>
-            <div class="god-hero-sub">Mythic Passive Aura: +45% Yield Multiplier</div>
+            <div class="god-hero-title">DOLPHIN GODS IN YOUR WALLET</div>
+            <div class="god-hero-wallet">CONNECTED: <span>UQAVPXS...F_ELI</span></div>
+            <div class="god-hero-sub">Dolphin Breedings Yield up to: <strong>8,760 🐚/h</strong></div>
           </div>
         </div>
 
@@ -240,17 +266,17 @@
         </div>
       </section>
 
-      <!-- TAB 5: TASKS (Quests, Referral Tiers & Tournaments) -->
+      <!-- TAB 5: TASKS & FRIENDS -->
       <section id="tab-tasks" class="tab-view">
         <div class="tasks-tab-nav">
-          <button class="task-sub-tab active" onclick="switchTaskSubTab('quests')">OCEAN QUESTS</button>
-          <button class="task-sub-tab" onclick="switchTaskSubTab('referrals')">REFERRALS (4-TIER)</button>
-          <button class="task-sub-tab" onclick="switchTaskSubTab('tournaments')">TOURNAMENTS</button>
+          <button class="task-sub-tab active" onclick="switchTaskSubTab('quests')">TASKS</button>
+          <button class="task-sub-tab" onclick="switchTaskSubTab('referrals')">FRIENDS</button>
+          <button class="task-sub-tab" onclick="switchTaskSubTab('tournaments')">TOURNAMENT</button>
         </div>
 
         <div id="subtab-quests" class="subtab-content active">
           <div class="tasks-list" id="quests-container">
-            <!-- Quests with authentic icons rendered in JS -->
+            <!-- Quests rendered in JS -->
           </div>
         </div>
 
@@ -283,7 +309,7 @@
 
     </main>
 
-    <!-- BOTTOM NAVIGATION (5 TABS) -->
+    <!-- BOTTOM NAVIGATION (5 TABS EXACT DMD PARITY) -->
     <nav class="bottom-nav">
       <button class="nav-tab" data-tab="tab-market" onclick="switchTab('tab-market')">
         <span class="nav-icon">📊</span>
@@ -291,7 +317,7 @@
       </button>
       <button class="nav-tab" data-tab="tab-shells" onclick="switchTab('tab-shells')">
         <span class="nav-icon">🐚</span>
-        <span class="nav-label">SHELLS</span>
+        <span class="nav-label">EGGS</span>
       </button>
       <button class="nav-tab active" data-tab="tab-dolphins" onclick="switchTab('tab-dolphins')">
         <span class="nav-icon">🐬</span>
@@ -307,11 +333,7 @@
       </button>
     </nav>
 
-    <!-- ========================================== -->
-    <!-- MASTER MODALS SUITE -->
-    <!-- ========================================== -->
-
-    <!-- 1. User Profile Modal -->
+    <!-- ALL MODALS INGESTED -->
     <div class="modal-backdrop" id="modal-user-profile" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-user-profile')">×</button>
@@ -323,28 +345,15 @@
           <div class="profile-avatar-large">
             <img src="assets/dolphins/mascot_dolphin_hero.png" class="profile-large-img" alt="Avatar">
           </div>
-          <div class="profile-stat-row">
-            <span class="p-label">Rank:</span>
-            <span class="p-val" id="prof-rank">Abyss Master</span>
-          </div>
-          <div class="profile-stat-row">
-            <span class="p-label">Total Feeds:</span>
-            <span class="p-val" id="prof-total-feeds">1,420</span>
-          </div>
-          <div class="profile-stat-row">
-            <span class="p-label">Total Merges:</span>
-            <span class="p-val" id="prof-total-merges">584</span>
-          </div>
-          <div class="profile-stat-row">
-            <span class="p-label">Dolphins Unlocked:</span>
-            <span class="p-val" id="prof-unlocked">11 / 250</span>
-          </div>
+          <div class="profile-stat-row"><span class="p-label">Rank:</span><span class="p-val" id="prof-rank">Abyss Master</span></div>
+          <div class="profile-stat-row"><span class="p-label">Total Feeds:</span><span class="p-val" id="prof-total-feeds">1,420</span></div>
+          <div class="profile-stat-row"><span class="p-label">Total Merges:</span><span class="p-val" id="prof-total-merges">584</span></div>
+          <div class="profile-stat-row"><span class="p-label">Dolphins Unlocked:</span><span class="p-val" id="prof-unlocked">11 / 250</span></div>
         </div>
         <button class="primary-action-btn" onclick="closeModal('modal-user-profile')">CLOSE</button>
       </div>
     </div>
 
-    <!-- 2. Shop Pearls Modal -->
     <div class="modal-backdrop" id="modal-shop-pearls" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-shop-pearls')">×</button>
@@ -372,7 +381,6 @@
       </div>
     </div>
 
-    <!-- 3. Shop Stars Modal -->
     <div class="modal-backdrop" id="modal-shop-stars" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-shop-stars')">×</button>
@@ -400,13 +408,12 @@
       </div>
     </div>
 
-    <!-- 4. Energy Tank Refill Modal -->
     <div class="modal-backdrop" id="modal-energy-refill" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-energy-refill')">×</button>
         <div class="modal-header">
           <div class="modal-title">ENERGY TANK CYLINDER</div>
-          <div class="modal-sub">Current: <span id="modal-energy-txt">0 / 2 000</span></div>
+          <div class="modal-sub">Current: <span id="modal-energy-txt">470 / 2 000</span></div>
         </div>
         <div class="energy-tank-stage">
           <img src="assets/ui/booster_energy_cell.png" class="energy-cell-img" alt="Tank">
@@ -415,7 +422,6 @@
       </div>
     </div>
 
-    <!-- 5. 7-Day Daily Streak Modal -->
     <div class="modal-backdrop" id="modal-daily-streak" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-daily-streak')">×</button>
@@ -423,14 +429,11 @@
           <div class="modal-title">DAILY LOGIN REWARD</div>
           <div class="modal-sub">Day 3 of 7 Streak Active!</div>
         </div>
-        <div class="streak-grid-7" id="streak-grid">
-          <!-- 7 days rendered in JS -->
-        </div>
+        <div class="streak-grid-7" id="streak-grid"></div>
         <button class="primary-action-btn" id="btn-claim-streak" onclick="claimDailyStreakReward()">CLAIM DAY 3 (+300 Pearls)</button>
       </div>
     </div>
 
-    <!-- 6. Speed Boosters Modal -->
     <div class="modal-backdrop" id="modal-boosters" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-boosters')">×</button>
@@ -442,20 +445,14 @@
           <div class="task-card-row">
             <div class="task-left-meta">
               <img src="assets/ui/booster_2x_rocket.png" class="task-icon-img" alt="2X">
-              <div>
-                <div class="task-title">2X Speed Surge</div>
-                <div class="task-reward">+100% EXP per Feed (10m)</div>
-              </div>
+              <div><div class="task-title">2X Speed Surge</div><div class="task-reward">+100% EXP per Feed (10m)</div></div>
             </div>
             <button class="btn-claim-pill gold" onclick="activateBooster('2X')">ACTIVATE (50 🐚)</button>
           </div>
           <div class="task-card-row">
             <div class="task-left-meta">
               <img src="assets/ui/booster_5x_lightning.png" class="task-icon-img" alt="5X">
-              <div>
-                <div class="task-title">5X Lightning Surge</div>
-                <div class="task-reward">+400% EXP per Feed (10m)</div>
-              </div>
+              <div><div class="task-title">5X Lightning Surge</div><div class="task-reward">+400% EXP per Feed (10m)</div></div>
             </div>
             <button class="btn-claim-pill gold" onclick="activateBooster('5X')">ACTIVATE (150 🐚)</button>
           </div>
@@ -463,7 +460,6 @@
       </div>
     </div>
 
-    <!-- 7. Tide Wheel Modal -->
     <div class="modal-backdrop" id="modal-tide-wheel" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-tide-wheel')">×</button>
@@ -476,14 +472,11 @@
           <img src="assets/ui/tide_wheel_roulette.png" id="tide-wheel-disc" class="tide-wheel-disc-img" alt="Roulette Wheel">
         </div>
         <div class="tide-wheel-ctrl">
-          <button class="primary-action-btn" id="btn-spin-wheel-action" onclick="spinTideWheel()">
-            SPIN (Cost: 100 Pearls)
-          </button>
+          <button class="primary-action-btn" id="btn-spin-wheel-action" onclick="spinTideWheel()">SPIN (Cost: 100 Pearls)</button>
         </div>
       </div>
     </div>
 
-    <!-- 8. Egg Cracking 3-Tap Modal -->
     <div class="modal-backdrop" id="modal-egg-crack" style="display: none;">
       <div class="modal-card crack-modal-card">
         <div class="modal-header">
@@ -497,7 +490,6 @@
       </div>
     </div>
 
-    <!-- 9. Ocean Clans Modal -->
     <div class="modal-backdrop" id="modal-clans" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-clans')">×</button>
@@ -508,33 +500,23 @@
         <div class="clans-grid-list">
           <div class="clan-item-row">
             <img src="assets/special/clan_banner_poseidon.png" class="clan-crest-img" alt="Poseidon">
-            <div class="clan-meta">
-              <div class="clan-name">Poseidon Sovereign</div>
-              <div class="clan-desc">+15% Team Feed Yield • 1,240 Members</div>
-            </div>
+            <div class="clan-meta"><div class="clan-name">Poseidon Sovereign</div><div class="clan-desc">+15% Team Feed Yield • 1,240 Members</div></div>
             <button class="btn-claim-pill" onclick="joinClan('Poseidon Sovereign')">JOIN</button>
           </div>
           <div class="clan-item-row">
             <img src="assets/special/clan_banner_abyss_raiders.png" class="clan-crest-img" alt="Abyss">
-            <div class="clan-meta">
-              <div class="clan-name">Abyss Deep Raiders</div>
-              <div class="clan-desc">+10% Auto-Merge Speed • 850 Members</div>
-            </div>
+            <div class="clan-meta"><div class="clan-name">Abyss Deep Raiders</div><div class="clan-desc">+10% Auto-Merge Speed • 850 Members</div></div>
             <button class="btn-claim-pill" onclick="joinClan('Abyss Deep Raiders')">JOIN</button>
           </div>
           <div class="clan-item-row">
             <img src="assets/special/clan_banner_neon_syndicate.png" class="clan-crest-img" alt="Neon">
-            <div class="clan-meta">
-              <div class="clan-name">Cyber Neon Syndicate</div>
-              <div class="clan-desc">+20% PVP Crit Chance • 620 Members</div>
-            </div>
+            <div class="clan-meta"><div class="clan-name">Cyber Neon Syndicate</div><div class="clan-desc">+20% PVP Crit Chance • 620 Members</div></div>
             <button class="btn-claim-pill" onclick="joinClan('Cyber Neon Syndicate')">JOIN</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 10. PVP Arena Modal -->
     <div class="modal-backdrop" id="modal-arena" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-arena')">×</button>
@@ -545,7 +527,7 @@
         <div class="arena-matchup-stage">
           <div class="arena-player">
             <img src="assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png" class="arena-fighter-img" id="arena-player-sprite" alt="You">
-            <div class="fighter-name">You (Lvl <span id="arena-player-lvl">1</span>)</div>
+            <div class="fighter-name">You (Lvl <span id="arena-player-lvl">4</span>)</div>
           </div>
           <img src="assets/special/duel_versus_shield.png" class="arena-vs-img" alt="VS">
           <div class="arena-player">
@@ -557,7 +539,6 @@
       </div>
     </div>
 
-    <!-- 11. Lucky Lotto Modal -->
     <div class="modal-backdrop" id="modal-lotto" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-lotto')">×</button>
@@ -572,7 +553,6 @@
       </div>
     </div>
 
-    <!-- 12. Dolphin Pass Modal -->
     <div class="modal-backdrop" id="modal-pass" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-pass')">×</button>
@@ -600,7 +580,6 @@
       </div>
     </div>
 
-    <!-- 13. Market Inspect Modal -->
     <div class="modal-backdrop" id="modal-market-inspect" style="display: none;">
       <div class="modal-card">
         <button class="modal-close" onclick="closeModal('modal-market-inspect')">×</button>
@@ -622,6 +601,6 @@
 
   </div>
 
-  <script src="game.js?v=3.5"></script>
+  <script src="game.js?v=4.0"></script>
 </body>
 </html>

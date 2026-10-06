@@ -244,7 +244,7 @@
     el.deckSlotsTrack.innerHTML = '';
     COLLECTIONS.forEach((col, idx) => {
       const slotDiv = document.createElement('div');
-      slotDiv.className = `deck-slot-card ${idx === state.activeSlotIdx ? 'active' : ''}`;
+      slotDiv.className = `duck-slider--item ${idx === state.activeSlotIdx ? 'active' : ''}`;
       slotDiv.onclick = (e) => {
         e.stopPropagation();
         window.selectDeckSlot(idx);
