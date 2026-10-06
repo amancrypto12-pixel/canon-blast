@@ -1,6 +1,6 @@
 /* ==========================================================================
-   DOLPHIN PEARLS - MASTER GAME ARCHITECTURE (DARK OCEAN THEME #0B0C10)
-   Designed with 78 Years Game Director Experience & Pure WebGL Aesthetic
+   DOLPHIN PEARLS - MASTER GAME DIRECTOR CSS V3.5
+   Dark Ocean Theme (#0B0C10) with Bioluminescent Neon Accents
    ========================================================================== */
 
 :root {
@@ -53,7 +53,7 @@ html, body {
 }
 
 /* ==========================================================================
-   1. TOP BAR & USER HEADER
+   1. TOP BAR
    ========================================================================== */
 .top-bar {
   height: 62px;
@@ -124,7 +124,10 @@ html, body {
   padding: 3px 8px;
   font-size: 11px;
   font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease;
 }
+.header-pill:active { transform: scale(0.95); }
 
 .pill-icon {
   width: 16px;
@@ -148,8 +151,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   margin-left: 2px;
+  pointer-events: none;
 }
 
 /* ==========================================================================
@@ -433,6 +436,18 @@ html, body {
   font-size: 10px;
   color: var(--text-muted);
   margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+.btn-speedup-breed {
+  background: var(--mythic-gold);
+  color: #000;
+  border: none;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
 }
 
 /* Stage Action Buttons */
@@ -600,9 +615,13 @@ html, body {
   justify-content: center;
   position: relative;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
 .shell-cell:active { transform: scale(0.92); }
+.shell-cell.drag-over {
+  background: rgba(0, 242, 254, 0.3);
+  border-color: var(--cyan-glow);
+}
 
 .shell-item-img {
   width: 36px;
@@ -698,7 +717,10 @@ html, body {
   flex-direction: column;
   align-items: center;
   position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
+.market-item-card:active { transform: scale(0.95); }
 
 .market-item-img {
   width: 60px;
@@ -831,7 +853,7 @@ html, body {
 }
 
 /* ==========================================================================
-   7. MODALS
+   7. MODALS SUITE
    ========================================================================== */
 .modal-backdrop {
   position: absolute;
@@ -849,13 +871,17 @@ html, body {
 
 .modal-card {
   width: 340px;
+  max-height: 90vh;
+  overflow-y: auto;
   background: #121826;
   border: 2px solid var(--cyan-glow);
   border-radius: 20px;
   padding: 16px;
   position: relative;
   box-shadow: 0 0 30px rgba(0, 242, 254, 0.3);
+  scrollbar-width: none;
 }
+.modal-card::-webkit-scrollbar { display: none; }
 
 .modal-close {
   position: absolute;
@@ -871,6 +897,119 @@ html, body {
 
 .modal-title { font-size: 14px; font-weight: 900; color: #fff; margin-bottom: 2px; }
 .modal-sub { font-size: 9px; color: var(--text-muted); margin-bottom: 12px; }
+
+/* Profile Large Card */
+.profile-stats-card {
+  background: rgba(22, 29, 44, 0.8);
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.profile-avatar-large {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid var(--cyan-glow);
+  margin: 0 auto 10px auto;
+  overflow: hidden;
+}
+.profile-large-img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 11px;
+}
+.p-label { color: var(--text-muted); }
+.p-val { font-weight: 800; color: var(--cyan-glow); }
+
+/* Shop Grid */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.shop-item-card {
+  background: rgba(22, 29, 44, 0.8);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.shop-item-card:active { transform: scale(0.95); }
+
+.shop-item-img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  margin-bottom: 4px;
+}
+
+.shop-item-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+/* 7-Day Streak Grid */
+.streak-grid-7 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.streak-day-cell {
+  background: rgba(22, 29, 44, 0.8);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
+  padding: 6px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.streak-day-cell.active {
+  border-color: var(--cyan-glow);
+  background: rgba(0, 242, 254, 0.15);
+}
+.streak-day-label { font-size: 8px; font-weight: 800; color: var(--text-muted); }
+.streak-day-reward { font-size: 9px; font-weight: 900; color: var(--mythic-gold); margin-top: 2px; }
+
+/* Market Inspect */
+.market-inspect-stage {
+  width: 140px;
+  height: 140px;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.market-inspect-img { width: 100%; height: 100%; object-fit: contain; }
+
+.market-inspect-meta {
+  background: rgba(22, 29, 44, 0.8);
+  border-radius: 12px;
+  padding: 10px;
+  margin-bottom: 14px;
+}
+.market-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 4px 0;
+}
+.market-meta-row strong { color: var(--cyan-glow); }
 
 /* Tide Wheel */
 .tide-wheel-stage {
@@ -958,6 +1097,17 @@ html, body {
 .arena-fighter-img.enemy { transform: scaleX(-1); }
 .fighter-name { font-size: 10px; font-weight: 800; color: #fff; margin-top: 4px; }
 .arena-vs-img { width: 44px; height: 44px; object-fit: contain; }
+
+/* Energy Cell */
+.energy-tank-stage {
+  width: 120px;
+  height: 120px;
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.energy-cell-img { width: 100%; height: 100%; object-fit: contain; }
 
 /* Lotto Pot */
 .lotto-pot-stage {

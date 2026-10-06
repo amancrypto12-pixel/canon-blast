@@ -1,7 +1,7 @@
 /**
- * DOLPHIN PEARLS - GAME ENGINE V3.0
- * Authored with 78 Years of Master Game Director Experience
- * 1:1 Full Feature Parity with Duck My Duck
+ * DOLPHIN PEARLS - MASTER GAME ENGINE V3.5
+ * Designed by 78-Year Experienced Game Director
+ * Fully functional interactive mechanics, real drag-and-drop, full modals suite
  */
 
 (function() {
@@ -157,6 +157,11 @@
       energy: 0,
       maxEnergy: 2000
     },
+    stats: {
+      totalFeeds: 1420,
+      totalMerges: 584,
+      unlockedDolphins: 11
+    },
     activeSlotIdx: 0,
     currentLevel: 1,
     currentExp: 350,
@@ -165,6 +170,10 @@
     breedingEndTime: 0,
     isBreeding: false,
     crackTapsLeft: 3,
+    boosterMultiplier: 1,
+    boosterEndTime: 0,
+    draggedCellIdx: null,
+    selectedMarketItem: null,
     // 42 cells (7 rows x 6 cols)
     board: new Array(42).fill(null)
   };
@@ -175,12 +184,14 @@
   state.board[2] = { tier: 2 };
   state.board[6] = { tier: 3 };
   state.board[7] = { tier: 3 };
+  state.board[12] = { tier: 4 };
 
   // --- DOM REFERENCES ---
   const el = {
     pearlsVal: document.getElementById('header-pearls-val'),
     starsVal: document.getElementById('header-stars-val'),
     energyVal: document.getElementById('header-energy-val'),
+    hdrLvlTxt: document.getElementById('hdr-lvl-txt'),
     mascotSprite: document.getElementById('mascot-sprite'),
     rarityTag: document.getElementById('current-slot-rarity'),
     lvlTag: document.getElementById('current-slot-lvl'),
@@ -200,10 +211,12 @@
     questsContainer: document.getElementById('quests-container'),
     crackEggImg: document.getElementById('crack-egg-img'),
     crackTapsLeftTxt: document.getElementById('crack-taps-left'),
-    tideWheelDisc: document.getElementById('tide-wheel-disc')
+    tideWheelDisc: document.getElementById('tide-wheel-disc'),
+    boosterStatusBadge: document.getElementById('booster-status-badge'),
+    streakGrid: document.getElementById('streak-grid'),
+    modalEnergyTxt: document.getElementById('modal-energy-txt')
   };
 
-  // --- FORMATTERS ---
   function formatNum(n) {
     return Number(n).toLocaleString('en-US');
   }
@@ -222,6 +235,8 @@
     if (el.pearlsVal) el.pearlsVal.textContent = formatNum(state.currencies.pearlsBalance);
     if (el.starsVal) el.starsVal.textContent = formatNum(state.currencies.starsBalance);
     if (el.energyVal) el.energyVal.textContent = `${formatNum(state.currencies.energy)} / ${formatNum(state.currencies.maxEnergy)}`;
+    if (el.hdrLvlTxt) el.hdrLvlTxt.textContent = state.currentLevel;
+    if (el.modalEnergyTxt) el.modalEnergyTxt.textContent = `${formatNum(state.currencies.energy)} / ${formatNum(state.currencies.maxEnergy)}`;
   }
 
   function renderDeckSlots() {
@@ -230,7 +245,10 @@
     COLLECTIONS.forEach((col, idx) => {
       const slotDiv = document.createElement('div');
       slotDiv.className = `deck-slot-card ${idx === state.activeSlotIdx ? 'active' : ''}`;
-      slotDiv.onclick = () => selectDeckSlot(idx);
+      slotDiv.onclick = (e) => {
+        e.stopPropagation();
+        window.selectDeckSlot(idx);
+      };
       slotDiv.innerHTML = `
         <img src="${col.sprite}" class="deck-slot-img" alt="${col.name}">
         <span class="deck-slot-lvl">SLOT ${idx + 1}</span>
@@ -239,7 +257,7 @@
     });
   }
 
-  function selectDeckSlot(idx) {
+  window.selectDeckSlot = function(idx) {
     state.activeSlotIdx = idx;
     const active = COLLECTIONS[idx];
     if (el.mascotSprite) el.mascotSprite.src = active.sprite;
@@ -249,8 +267,9 @@
     if (el.statHarvest) el.statHarvest.textContent = active.harvest;
     AudioEngine.playTap();
     renderDeckSlots();
-  }
+  };
 
+  // --- 42-CELL DRAG AND DROP MERGING ---
   function renderShellsBoard() {
     if (!el.shellsBoard) return;
     el.shellsBoard.innerHTML = '';
@@ -259,32 +278,72 @@
       cellDiv.className = 'shell-cell';
       cellDiv.dataset.idx = idx;
 
+      // Drag and Drop Events
+      cellDiv.ondragover = (e) => {
+        e.preventDefault();
+        cellDiv.classList.add('drag-over');
+      };
+      cellDiv.ondragleave = () => cellDiv.classList.remove('drag-over');
+      cellDiv.ondrop = (e) => {
+        e.preventDefault();
+        cellDiv.classList.remove('drag-over');
+        handleCellDrop(state.draggedCellIdx, idx);
+      };
+
       if (cell) {
-        // High tier shells or eggs
         const imgSrc = cell.tier <= 12 
           ? `assets/eggs/pearl_t${cell.tier}.png`
           : `assets/special/egg_t${Math.min(cell.tier, 20)}_abyssal_dark_crystal.png`;
+
+        cellDiv.draggable = true;
+        cellDiv.ondragstart = () => {
+          state.draggedCellIdx = idx;
+        };
 
         cellDiv.innerHTML = `
           <img src="${imgSrc}" class="shell-item-img" alt="Shell Tier ${cell.tier}">
           <span class="shell-lvl-badge">T${cell.tier}</span>
         `;
-        cellDiv.onclick = () => handleCellClick(idx);
+        cellDiv.onclick = () => handleCellTapMerge(idx);
       }
       el.shellsBoard.appendChild(cellDiv);
     });
   }
 
-  function handleCellClick(idx) {
+  function handleCellDrop(fromIdx, toIdx) {
+    if (fromIdx === null || fromIdx === toIdx) return;
+    const fromItem = state.board[fromIdx];
+    const toItem = state.board[toIdx];
+
+    if (fromItem && toItem && fromItem.tier === toItem.tier) {
+      // Merge!
+      state.board[toIdx].tier += 1;
+      state.board[fromIdx] = null;
+      state.currencies.pearlsBalance += toItem.tier * 25;
+      state.stats.totalMerges += 1;
+      AudioEngine.playMerge();
+      updateHeader();
+      renderShellsBoard();
+    } else if (fromItem && !toItem) {
+      // Move to empty cell
+      state.board[toIdx] = fromItem;
+      state.board[fromIdx] = null;
+      AudioEngine.playTap();
+      renderShellsBoard();
+    }
+    state.draggedCellIdx = null;
+  }
+
+  function handleCellTapMerge(idx) {
     const item = state.board[idx];
     if (!item) return;
 
-    // Check adjacent for match to merge
     for (let i = 0; i < state.board.length; i++) {
       if (i !== idx && state.board[i] && state.board[i].tier === item.tier) {
         state.board[idx] = null;
         state.board[i].tier += 1;
         state.currencies.pearlsBalance += item.tier * 25;
+        state.stats.totalMerges += 1;
         AudioEngine.playMerge();
         updateHeader();
         renderShellsBoard();
@@ -297,14 +356,15 @@
   function renderMarketCards() {
     if (!el.marketCollectionsGrid) return;
     el.marketCollectionsGrid.innerHTML = '';
-    COLLECTIONS.slice(0, 9).forEach(col => {
+    COLLECTIONS.slice(0, 9).forEach((col, idx) => {
       const card = document.createElement('div');
       card.className = 'market-item-card';
+      card.onclick = () => openMarketInspect(col);
       card.innerHTML = `
         <img src="assets/special/market_badge_hot_deal.png" class="market-hot-seal" alt="HOT">
         <img src="${col.sprite}" class="market-item-img" alt="${col.name}">
         <div class="market-item-name">${col.name.split(' ')[0]}</div>
-        <div class="market-item-price">450 🐚</div>
+        <div class="market-item-price">${300 + idx * 50} 🐚</div>
       `;
       el.marketCollectionsGrid.appendChild(card);
     });
@@ -314,9 +374,9 @@
     if (!el.godsPantheonList) return;
     el.godsPantheonList.innerHTML = '';
     [
-      { name: 'Poseidon Sovereign', yield: '+45%', cost: '1,500 🐚', img: 'assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png' },
-      { name: 'Aura of the Abyss', yield: '+38%', cost: '1,200 🐚', img: 'assets/collections/02_Abyss_Deep_Ocean/02_01_angler.png' },
-      { name: 'Astral Supernova', yield: '+42%', cost: '1,400 🐚', img: 'assets/collections/05_Celestial_Astral/05_01_starlight.png' }
+      { name: 'Poseidon Sovereign', yield: '+45%', cost: 1500, img: 'assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png' },
+      { name: 'Aura of the Abyss', yield: '+38%', cost: 1200, img: 'assets/collections/02_Abyss_Deep_Ocean/02_01_angler.png' },
+      { name: 'Astral Supernova', yield: '+42%', cost: 1400, img: 'assets/collections/05_Celestial_Astral/05_01_starlight.png' }
     ].forEach(god => {
       const row = document.createElement('div');
       row.className = 'task-card-row';
@@ -328,7 +388,7 @@
             <div class="task-reward">Yield Multiplier: ${god.yield}</div>
           </div>
         </div>
-        <button class="btn-claim-pill gold">MINT (${god.cost})</button>
+        <button class="btn-claim-pill gold" onclick="mintGodNFT('${god.name}', ${god.cost})">MINT (${god.cost} 🐚)</button>
       `;
       el.godsPantheonList.appendChild(row);
     });
@@ -338,11 +398,11 @@
     if (!el.questsContainer) return;
     el.questsContainer.innerHTML = '';
     [
-      { title: 'Join Official Telegram Channel', reward: '+500 Blue Pearls', icon: 'assets/ui/icon_task_telegram.png' },
-      { title: 'Follow Dolphin Pearls on X / Twitter', reward: '+300 Blue Pearls', icon: 'assets/ui/icon_task_x_twitter.png' },
-      { title: 'Feed your Active Dolphin 20 Times', reward: '+150 Blue Pearls', icon: 'assets/ui/icon_task_feeding.png' },
-      { title: 'Merge 10 Sea Shells on Grid', reward: '+200 Blue Pearls', icon: 'assets/ui/icon_task_merging.png' },
-      { title: 'Invite 3 Sea Captains', reward: '+1,000 Blue Pearls', icon: 'assets/ui/icon_task_invite_friends.png' }
+      { title: 'Join Official Telegram Channel', reward: '+500 Blue Pearls', amount: 500, icon: 'assets/ui/icon_task_telegram.png' },
+      { title: 'Follow Dolphin Pearls on X / Twitter', reward: '+300 Blue Pearls', amount: 300, icon: 'assets/ui/icon_task_x_twitter.png' },
+      { title: 'Feed your Active Dolphin 20 Times', reward: '+150 Blue Pearls', amount: 150, icon: 'assets/ui/icon_task_feeding.png' },
+      { title: 'Merge 10 Sea Shells on Grid', reward: '+200 Blue Pearls', amount: 200, icon: 'assets/ui/icon_task_merging.png' },
+      { title: 'Invite 3 Sea Captains', reward: '+1,000 Blue Pearls', amount: 1000, icon: 'assets/ui/icon_task_invite_friends.png' }
     ].forEach(q => {
       const div = document.createElement('div');
       div.className = 'task-card-row';
@@ -354,9 +414,25 @@
             <div class="task-reward">${q.reward}</div>
           </div>
         </div>
-        <button class="btn-claim-pill" onclick="claimQuestReward(this, 300)">CLAIM</button>
+        <button class="btn-claim-pill" onclick="claimQuestReward(this, ${q.amount})">CLAIM</button>
       `;
       el.questsContainer.appendChild(div);
+    });
+  }
+
+  function renderStreakCalendar() {
+    if (!el.streakGrid) return;
+    el.streakGrid.innerHTML = '';
+    const rewards = [100, 200, 300, 450, 600, 800, 1500];
+    rewards.forEach((r, idx) => {
+      const day = idx + 1;
+      const cell = document.createElement('div');
+      cell.className = `streak-day-cell ${day === 3 ? 'active' : ''}`;
+      cell.innerHTML = `
+        <span class="streak-day-label">DAY ${day}</span>
+        <span class="streak-day-reward">+${r} 🐚</span>
+      `;
+      el.streakGrid.appendChild(cell);
     });
   }
 
@@ -395,8 +471,11 @@
       return;
     }
 
+    const expGained = 25 * state.boosterMultiplier;
     state.currencies.pearlsBalance -= state.feedCost;
-    state.currentExp += 25;
+    state.currentExp += expGained;
+    state.stats.totalFeeds += 1;
+
     if (state.currentExp >= state.maxExp) {
       state.currentLevel += 1;
       state.currentExp = 0;
@@ -405,12 +484,10 @@
       window.openModal('modal-egg-crack');
     }
 
-    // EXP Bar update
     if (el.expFill) el.expFill.style.width = `${(state.currentExp / state.maxExp) * 100}%`;
     if (el.expCur) el.expCur.textContent = state.currentExp;
     if (el.expMax) el.expMax.textContent = state.maxExp;
 
-    // Floating text FX
     const clientX = (e && e.clientX) ? e.clientX : 200;
     const clientY = (e && e.clientY) ? e.clientY : 400;
     const floatTxt = document.createElement('div');
@@ -423,7 +500,7 @@
     floatTxt.style.pointerEvents = 'none';
     floatTxt.style.zIndex = '999';
     floatTxt.style.transition = 'all 0.8s ease-out';
-    floatTxt.textContent = '+25 EXP';
+    floatTxt.textContent = `+${expGained} EXP`;
     document.body.appendChild(floatTxt);
 
     setTimeout(() => {
@@ -441,6 +518,19 @@
     state.breedingEndTime = Date.now() + 24 * 60 * 60 * 1000;
     if (el.breedingOverlay) el.breedingOverlay.style.display = 'flex';
     AudioEngine.playTap();
+  };
+
+  window.speedUpBreeding = function() {
+    if (state.currencies.starsBalance < 50) {
+      alert('Need 50 Blue Stars to speed up incubation!');
+      return;
+    }
+    state.currencies.starsBalance -= 50;
+    state.isBreeding = false;
+    if (el.breedingOverlay) el.breedingOverlay.style.display = 'none';
+    AudioEngine.playHatch();
+    updateHeader();
+    window.openModal('modal-egg-crack');
   };
 
   window.spawnPearlToBoard = function() {
@@ -469,16 +559,19 @@
           state.board[i].tier += 1;
           state.board[j] = null;
           merged = true;
+          state.stats.totalMerges += 1;
           break;
         }
       }
     }
     if (merged) {
       AudioEngine.playMerge();
+      updateHeader();
       renderShellsBoard();
     }
   };
 
+  // --- MODAL UTILITIES ---
   window.openModal = function(id) {
     const m = document.getElementById(id);
     if (m) m.style.display = 'flex';
@@ -490,13 +583,80 @@
     if (m) m.style.display = 'none';
   };
 
+  window.openUserProfileModal = function() {
+    document.getElementById('prof-total-feeds').textContent = formatNum(state.stats.totalFeeds);
+    document.getElementById('prof-total-merges').textContent = formatNum(state.stats.totalMerges);
+    window.openModal('modal-user-profile');
+  };
+
+  window.openShopModal = function(type) {
+    if (type === 'pearls') window.openModal('modal-shop-pearls');
+    else if (type === 'stars') window.openModal('modal-shop-stars');
+  };
+
+  window.openEnergyModal = function() { window.openModal('modal-energy-refill'); };
+  window.openDailyStreakModal = function() {
+    renderStreakCalendar();
+    window.openModal('modal-daily-streak');
+  };
+  window.openBoostersModal = function() { window.openModal('modal-boosters'); };
   window.openPassModal = function() { window.openModal('modal-pass'); };
-  window.openDailyStreakModal = function() { alert('Daily Streak: Day 3 Active! +150 Pearls Claimed!'); };
-  window.openBoostersModal = function() { alert('2X Speed Surge Activated for 10 minutes!'); };
   window.openClansModal = function() { window.openModal('modal-clans'); };
   window.openArenaModal = function() { window.openModal('modal-arena'); };
   window.openLottoModal = function() { window.openModal('modal-lotto'); };
   window.openTideWheelModal = function() { window.openModal('modal-tide-wheel'); };
+
+  // --- ACTIONS & SHOP PURCHASES ---
+  window.buyPearlsPack = function(amount, tonPrice) {
+    state.currencies.pearlsBalance += amount;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert(`🎉 Purchase Successful! +${formatNum(amount)} Blue Pearls added to wallet.`);
+    window.closeModal('modal-shop-pearls');
+  };
+
+  window.buyStarsPack = function(amount, tonPrice) {
+    state.currencies.starsBalance += amount;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert(`⭐ Purchase Successful! +${formatNum(amount)} Blue Stars added.`);
+    window.closeModal('modal-shop-stars');
+  };
+
+  window.refillEnergyTank = function() {
+    if (state.currencies.pearlsBalance < 50) {
+      alert('Need 50 Pearls to refill Energy Tank!');
+      return;
+    }
+    state.currencies.pearlsBalance -= 50;
+    state.currencies.energy = state.currencies.maxEnergy;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert('⚡ Energy Tank fully recharged to 2,000 / 2,000!');
+    window.closeModal('modal-energy-refill');
+  };
+
+  window.claimDailyStreakReward = function() {
+    state.currencies.pearlsBalance += 300;
+    updateHeader();
+    AudioEngine.playHatch();
+    const btn = document.getElementById('btn-claim-streak');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'CLAIMED TODAY';
+      btn.style.background = '#8e9aaf';
+    }
+    alert('🔥 Day 3 Streak Claimed! +300 Blue Pearls.');
+  };
+
+  window.activateBooster = function(type) {
+    state.boosterMultiplier = (type === '5X') ? 5 : 2;
+    state.boosterEndTime = Date.now() + 10 * 60 * 1000;
+    if (el.boosterStatusBadge) el.boosterStatusBadge.textContent = `${type} ON`;
+    AudioEngine.playHatch();
+    alert(`🚀 ${type} Speed Surge Active for 10 Minutes!`);
+    window.closeModal('modal-boosters');
+  };
 
   window.spinTideWheel = function() {
     if (state.currencies.pearlsBalance < 100) {
@@ -532,6 +692,12 @@
     }
   };
 
+  window.joinClan = function(clanName) {
+    AudioEngine.playHatch();
+    alert(`🛡️ Successfully Joined Syndicate: ${clanName}! Team Yield +15% Active.`);
+    window.closeModal('modal-clans');
+  };
+
   window.triggerPvpDuel = function() {
     AudioEngine.playTap();
     setTimeout(() => {
@@ -553,6 +719,58 @@
     AudioEngine.playTap();
     alert('🎟️ Ticket #7492 Purchased! Daily draw in 4 hours.');
     window.closeModal('modal-lotto');
+  };
+
+  window.claimPassVault = function(tier) {
+    if (tier === 'free') {
+      state.currencies.pearlsBalance += 250;
+      updateHeader();
+      AudioEngine.playHatch();
+      alert('🎁 Free Season Vault Claimed: +250 Blue Pearls!');
+      window.closeModal('modal-pass');
+    } else {
+      alert('💎 Upgrade to Dolphin Pass Season 1 to unlock Mythic Vaults!');
+    }
+  };
+
+  function openMarketInspect(col) {
+    state.selectedMarketItem = col;
+    document.getElementById('market-modal-title').textContent = col.name;
+    document.getElementById('market-modal-rarity').textContent = `${col.rarity} RARITY`;
+    document.getElementById('market-inspect-img').src = col.sprite;
+    document.getElementById('market-meta-yield').textContent = col.yieldBonus;
+    document.getElementById('market-meta-speed').textContent = col.speed;
+    window.openModal('modal-market-inspect');
+  }
+
+  window.executeMarketBuy = function() {
+    if (!state.selectedMarketItem) return;
+    if (state.currencies.pearlsBalance < 450) {
+      alert('Need 450 Blue Pearls to purchase this Dolphin NFT!');
+      return;
+    }
+    state.currencies.pearlsBalance -= 450;
+    state.stats.unlockedDolphins += 1;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert(`🎉 Purchased ${state.selectedMarketItem.name}! Swapping to active deck.`);
+    window.closeModal('modal-market-inspect');
+  };
+
+  window.mintGodNFT = function(godName, cost) {
+    if (state.currencies.pearlsBalance < cost) {
+      alert(`Need ${cost} Pearls to mint ${godName}!`);
+      return;
+    }
+    state.currencies.pearlsBalance -= cost;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert(`🔱 Mythic God NFT Minted: ${godName}! Passive Yield Multiplier boosted.`);
+  };
+
+  window.joinChampionshipTournament = function() {
+    AudioEngine.playTap();
+    alert('🏆 Entered Poseidon Grand Prix Season 1! Current Rank: #42');
   };
 
   window.claimQuestReward = function(btn, amount) {
@@ -578,7 +796,7 @@
     renderGodsList();
     renderQuestsList();
 
-    // Timer loop
+    // Game loop timers
     setInterval(() => {
       if (state.isBreeding && state.breedingEndTime > 0) {
         const remaining = state.breedingEndTime - Date.now();
@@ -587,6 +805,14 @@
           if (el.breedingOverlay) el.breedingOverlay.style.display = 'none';
         } else {
           if (el.breedingTimerTxt) el.breedingTimerTxt.textContent = formatTime(remaining);
+        }
+      }
+
+      if (state.boosterMultiplier > 1 && state.boosterEndTime > 0) {
+        if (Date.now() >= state.boosterEndTime) {
+          state.boosterMultiplier = 1;
+          state.boosterEndTime = 0;
+          if (el.boosterStatusBadge) el.boosterStatusBadge.textContent = 'OFF';
         }
       }
     }, 1000);
