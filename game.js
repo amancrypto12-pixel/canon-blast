@@ -1,13 +1,30 @@
 /**
- * DOLPHIN PEARLS - MASTER GAME ENGINE V3.5
- * Designed by 78-Year Experienced Game Director
- * Fully functional interactive mechanics, real drag-and-drop, full modals suite
+ * DOLPHIN PEARLS - MASTER GAME ENGINE V5.0
+ * 1:1 Complete Duck My Duck Reverse-Engineered Mechanics
+ * Teletype Guide Formulas & Telegram Mini App Dev Kit Standards
  */
 
 (function() {
   'use strict';
 
-  // --- AUDIO SYNTHESIZER ---
+  // --- TELEGRAM WEBAPP SDK INITIALIZATION ---
+  if (window.Telegram && window.Telegram.WebApp) {
+    try {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+      window.Telegram.WebApp.enableClosingConfirmation();
+    } catch (e) {}
+  }
+
+  function triggerHaptic(type = 'medium') {
+    try {
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+        window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
+      }
+    } catch (e) {}
+  }
+
+  // --- WEBAUDIO SYNTHESIZER ---
   const AudioEngine = {
     ctx: null,
     init() {
@@ -18,7 +35,7 @@
         this.ctx.resume();
       }
     },
-    playTone(freq, type = 'sine', duration = 0.15, gainVal = 0.1) {
+    playTone(freq, type = 'sine', duration = 0.12, gainVal = 0.12) {
       try {
         this.init();
         const osc = this.ctx.createOscillator();
@@ -33,16 +50,21 @@
         osc.stop(this.ctx.currentTime + duration);
       } catch (e) {}
     },
-    playTap() { this.playTone(523.25, 'triangle', 0.08, 0.15); },
+    playTap() {
+      this.playTone(600, 'triangle', 0.06, 0.15);
+      triggerHaptic('light');
+    },
     playMerge() {
-      this.playTone(440, 'sine', 0.1, 0.1);
-      setTimeout(() => this.playTone(659.25, 'sine', 0.15, 0.15), 60);
-      setTimeout(() => this.playTone(880, 'sine', 0.2, 0.2), 120);
+      this.playTone(440, 'sine', 0.1, 0.15);
+      setTimeout(() => this.playTone(660, 'sine', 0.15, 0.18), 60);
+      setTimeout(() => this.playTone(880, 'sine', 0.2, 0.22), 120);
+      triggerHaptic('medium');
     },
     playHatch() {
       [523, 659, 784, 1046, 1318].forEach((f, i) => {
-        setTimeout(() => this.playTone(f, 'triangle', 0.3, 0.2), i * 80);
+        setTimeout(() => this.playTone(f, 'triangle', 0.25, 0.2), i * 70);
       });
+      triggerHaptic('heavy');
     }
   };
 
@@ -50,135 +72,104 @@
   const COLLECTIONS = [
     {
       id: '01_Poseidon_Mythic_Gods',
-      name: 'Poseidon Mythic Gods',
+      name: 'Poseidon Sovereign',
       rarity: 'MYTHIC',
-      yieldBonus: '+45%',
-      speed: '320 m/s',
-      harvest: '+100 🐚',
+      dmdRate: 1.6,
+      maxTapsPerLvl: [100, 200, 300, 400, 500],
       sprite: 'assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png'
     },
     {
       id: '02_Abyss_Deep_Ocean',
-      name: 'Abyss Deep Ocean',
+      name: 'Abyssal Angler',
       rarity: 'LEGENDARY',
-      yieldBonus: '+38%',
-      speed: '280 m/s',
-      harvest: '+80 🐚',
+      dmdRate: 1.6,
+      maxTapsPerLvl: [100, 200, 300, 400, 500],
       sprite: 'assets/collections/02_Abyss_Deep_Ocean/02_01_angler.png'
     },
     {
       id: '03_Cyberpunk_Neon',
-      name: 'Cyberpunk Neon',
+      name: 'Cyber Matrix Fin',
       rarity: 'EPIC',
-      yieldBonus: '+30%',
-      speed: '260 m/s',
-      harvest: '+65 🐚',
+      dmdRate: 0.5,
+      maxTapsPerLvl: [300, 600, 900, 1200, 1500],
       sprite: 'assets/collections/03_Cyberpunk_Neon/03_01_cyber.png'
     },
     {
       id: '04_Pirates_Sea_Captains',
-      name: 'Pirates Sea Captains',
-      rarity: 'EPIC',
-      yieldBonus: '+25%',
-      speed: '240 m/s',
-      harvest: '+50 🐚',
+      name: 'Captain Hookfin',
+      rarity: 'RARE',
+      dmdRate: 0.04,
+      maxTapsPerLvl: [200, 400, 600, 800, 1000],
       sprite: 'assets/collections/04_Pirates_Sea_Captains/04_01_captain.png'
     },
     {
       id: '05_Celestial_Astral',
-      name: 'Celestial Astral',
-      rarity: 'MYTHIC',
-      yieldBonus: '+42%',
-      speed: '310 m/s',
-      harvest: '+95 🐚',
+      name: 'Celestial Starlight',
+      rarity: 'UNCOMMON',
+      dmdRate: 0.02,
+      maxTapsPerLvl: [150, 300, 450, 600, 750],
       sprite: 'assets/collections/05_Celestial_Astral/05_01_starlight.png'
     },
     {
       id: '06_Coral_Reef_Tropical',
-      name: 'Coral Reef Tropical',
-      rarity: 'RARE',
-      yieldBonus: '+18%',
-      speed: '210 m/s',
-      harvest: '+35 🐚',
+      name: 'Coral Clown Dolphin',
+      rarity: 'COMMON',
+      dmdRate: 0.01,
+      maxTapsPerLvl: [100, 200, 300, 400, 500],
       sprite: 'assets/collections/06_Coral_Reef_Tropical/06_01_clownfish.png'
-    },
-    {
-      id: '07_Glacier_Frost',
-      name: 'Glacier Frost',
-      rarity: 'RARE',
-      yieldBonus: '+20%',
-      speed: '220 m/s',
-      harvest: '+40 🐚',
-      sprite: 'assets/collections/07_Glacier_Frost/07_01_iceberg.png'
-    },
-    {
-      id: '08_Volcanic_Magma',
-      name: 'Volcanic Magma',
-      rarity: 'EPIC',
-      yieldBonus: '+28%',
-      speed: '250 m/s',
-      harvest: '+60 🐚',
-      sprite: 'assets/collections/08_Volcanic_Magma/08_01_magma.png'
-    },
-    {
-      id: '09_Samurai_Warrior',
-      name: 'Samurai Warrior',
-      rarity: 'LEGENDARY',
-      yieldBonus: '+35%',
-      speed: '290 m/s',
-      harvest: '+85 🐚',
-      sprite: 'assets/collections/09_Samurai_Warrior/09_01_samurai.png'
-    },
-    {
-      id: '10_Royal_Dynasty_Monarchs',
-      name: 'Royal Dynasty Monarchs',
-      rarity: 'MYTHIC',
-      yieldBonus: '+40%',
-      speed: '300 m/s',
-      harvest: '+90 🐚',
-      sprite: 'assets/collections/10_Royal_Dynasty_Monarchs/10_01_emperor.png'
-    },
-    {
-      id: '01_02_neptune',
-      name: 'Neptune Sovereign',
-      rarity: 'MYTHIC',
-      yieldBonus: '+44%',
-      speed: '315 m/s',
-      harvest: '+98 🐚',
-      sprite: 'assets/collections/01_Poseidon_Mythic_Gods/01_02_neptune.png'
     }
+  ];
+
+  // --- 49-TIER HEARTS LADDER MILESTONES ---
+  const HEARTS_LADDER = [
+    { target: 200, reward: '1,000 Blue Pearls 🐚', pearls: 1000 },
+    { target: 700, reward: '2,500 Blue Pearls 🐚', pearls: 2500 },
+    { target: 1400, reward: '20 Blue Stars ⭐', stars: 20 },
+    { target: 2400, reward: 'Tier 10 Sea Egg 🥚', eggTier: 10 },
+    { target: 4000, reward: 'New Dolphin Deck Slot 🔓', newSlot: true },
+    { target: 6500, reward: '30 Blue Stars ⭐', stars: 30 },
+    { target: 11000, reward: '10,000 Blue Pearls 🐚', pearls: 10000 },
+    { target: 17500, reward: 'Tier 11 Sea Egg 🥚', eggTier: 11 },
+    { target: 23500, reward: '40 Blue Stars ⭐', stars: 40 },
+    { target: 37500, reward: 'Tier 11 Sea Egg 🥚', eggTier: 11 },
+    { target: 82000, reward: 'New Dolphin Deck Slot 🔓', newSlot: true },
+    { target: 164500, reward: 'Tier 12 Mythic Egg 🥚', eggTier: 12 },
+    { target: 310000, reward: '50 Blue Stars ⭐', stars: 50 },
+    { target: 850000, reward: 'New Dolphin Deck Slot 🔓', newSlot: true },
+    { target: 2000000, reward: '75 Blue Stars ⭐ + Poseidon NFT 🔱', stars: 75 }
   ];
 
   // --- GAME STATE ---
   const state = {
     currencies: {
       pearlsBalance: 12450,
-      starsBalance: 350,
-      energy: 0,
+      starsBalance: 50,
+      dmdTokens: 0.00,
+      heartsBalance: 0,
+      energy: 1000,
       maxEnergy: 2000
-    },
-    stats: {
-      totalFeeds: 1420,
-      totalMerges: 584,
-      unlockedDolphins: 11
     },
     activeSlotIdx: 0,
     currentLevel: 1,
-    currentExp: 350,
-    maxExp: 1000,
-    feedCost: 10,
-    breedingEndTime: 0,
+    currentTapsInLevel: 0,
+    totalTapsEver: 0,
+    consecutiveTapsThisSession: 0,
+    feedResetEndTime: Date.now() + 8 * 60 * 60 * 1000, // 8-hour countdown
     isBreeding: false,
+    breedingEndTime: 0,
+    isStaked: false,
     crackTapsLeft: 3,
     boosterMultiplier: 1,
     boosterEndTime: 0,
-    draggedCellIdx: null,
-    selectedMarketItem: null,
-    // 42 cells (7 rows x 6 cols)
+    marketCycleEndTime: Date.now() + 10 * 60 * 1000, // 10-minute market cycle
+    marketPhase: 'HOT',
+    marketPrice: 30000,
+    claimedHeartsIndex: 0,
+    // 42 cells grid
     board: new Array(42).fill(null)
   };
 
-  // Seed initial shells
+  // Seed Initial Board with Eggs
   state.board[0] = { tier: 1 };
   state.board[1] = { tier: 1 };
   state.board[2] = { tier: 2 };
@@ -191,35 +182,37 @@
     pearlsVal: document.getElementById('header-pearls-val'),
     starsVal: document.getElementById('header-stars-val'),
     energyVal: document.getElementById('header-energy-val'),
-    hdrLvlTxt: document.getElementById('hdr-lvl-txt'),
-    mascotSprite: document.getElementById('mascot-sprite'),
+    dmdTokenPill: document.getElementById('user-dmd-token-pill'),
+    avatarLvlTxt: document.getElementById('avatar-lvl-txt'),
+    slotLvlChip: document.getElementById('current-slot-lvl-chip'),
+    dmdRateTxt: document.getElementById('hero-dmd-rate'),
     rarityTag: document.getElementById('current-slot-rarity'),
-    lvlTag: document.getElementById('current-slot-lvl'),
+    mascotSprite: document.getElementById('mascot-sprite'),
+    mascotAnimWrapper: document.getElementById('mascot-anim-wrapper'),
     expFill: document.getElementById('hero-exp-fill'),
-    expCur: document.getElementById('hero-exp-cur'),
-    expMax: document.getElementById('hero-exp-max'),
-    statYield: document.getElementById('stat-yield'),
-    statSpeed: document.getElementById('stat-speed'),
-    statHarvest: document.getElementById('stat-harvest'),
+    tapsCur: document.getElementById('hero-taps-cur'),
+    tapsMax: document.getElementById('hero-taps-max'),
     feedCostTxt: document.getElementById('feed-cost-txt'),
-    breedingOverlay: document.getElementById('breeding-overlay'),
-    breedingTimerTxt: document.getElementById('breeding-timer-txt'),
+    feedResetTimer: document.getElementById('feed-reset-timer'),
+    heartsBalanceBadge: document.getElementById('hearts-balance-badge'),
     deckSlotsTrack: document.getElementById('deck-slots-track'),
     shellsBoard: document.getElementById('shells-board'),
+    breedingOverlay: document.getElementById('breeding-overlay'),
+    breedingTimerTxt: document.getElementById('breeding-timer-txt'),
+    marketPriceTxt: document.getElementById('market-current-price'),
+    marketCycleTag: document.getElementById('market-cycle-tag'),
+    marketCycleTimer: document.getElementById('market-cycle-timer'),
     marketCollectionsGrid: document.getElementById('market-collections-grid'),
     godsPantheonList: document.getElementById('gods-pantheon-list'),
     questsContainer: document.getElementById('quests-container'),
-    crackEggImg: document.getElementById('crack-egg-img'),
-    crackTapsLeftTxt: document.getElementById('crack-taps-left'),
-    tideWheelDisc: document.getElementById('tide-wheel-disc'),
-    boosterStatusBadge: document.getElementById('booster-status-badge'),
+    heartsLadderContainer: document.getElementById('hearts-ladder-container'),
     streakGrid: document.getElementById('streak-grid'),
-    modalEnergyTxt: document.getElementById('modal-energy-txt')
+    tideWheelDisc: document.getElementById('tide-wheel-disc'),
+    crackTapsLeftTxt: document.getElementById('crack-taps-left')
   };
 
-  function formatNum(n) {
-    return Number(n).toLocaleString('en-US');
-  }
+  function formatNum(n) { return Number(n).toLocaleString('en-US'); }
+  function formatDMD(n) { return Number(n).toFixed(2); }
 
   function formatTime(ms) {
     if (ms <= 0) return '00:00:00';
@@ -230,13 +223,29 @@
     return `${h}:${m}:${s}`;
   }
 
+  // Calculate dynamic feed cost based on 20-tap steps (Teletype Section 3)
+  function getDynamicFeedCost() {
+    const active = COLLECTIONS[state.activeSlotIdx];
+    const baseCost = state.currentLevel * (active.rarity === 'COMMON' ? 1 : active.rarity === 'UNCOMMON' ? 5 : 15);
+    const step = Math.floor(state.consecutiveTapsThisSession / 20);
+    return Math.min(baseCost * (step + 1), baseCost * 10);
+  }
+
+  function getMaxTapsForLevel() {
+    const active = COLLECTIONS[state.activeSlotIdx];
+    return active.maxTapsPerLvl[state.currentLevel - 1] || 500;
+  }
+
   // --- RENDER FUNCTIONS ---
   function updateHeader() {
     if (el.pearlsVal) el.pearlsVal.textContent = formatNum(state.currencies.pearlsBalance);
     if (el.starsVal) el.starsVal.textContent = formatNum(state.currencies.starsBalance);
     if (el.energyVal) el.energyVal.textContent = `${formatNum(state.currencies.energy)} / ${formatNum(state.currencies.maxEnergy)}`;
-    if (el.hdrLvlTxt) el.hdrLvlTxt.textContent = state.currentLevel;
-    if (el.modalEnergyTxt) el.modalEnergyTxt.textContent = `${formatNum(state.currencies.energy)} / ${formatNum(state.currencies.maxEnergy)}`;
+    if (el.dmdTokenPill) el.dmdTokenPill.textContent = `${formatDMD(state.currencies.dmdTokens)} $DMD`;
+    if (el.avatarLvlTxt) el.avatarLvlTxt.textContent = `LVL ${state.currentLevel}`;
+    if (el.slotLvlChip) el.slotLvlChip.textContent = `LVL ${state.currentLevel} ${state.currentLevel >= 5 ? 'XL' : ''}`;
+    if (el.feedCostTxt) el.feedCostTxt.textContent = `${getDynamicFeedCost()} 🐚`;
+    if (el.heartsBalanceBadge) el.heartsBalanceBadge.textContent = `${formatNum(state.currencies.heartsBalance)} ❤️`;
   }
 
   function renderDeckSlots() {
@@ -261,10 +270,15 @@
     state.activeSlotIdx = idx;
     const active = COLLECTIONS[idx];
     if (el.mascotSprite) el.mascotSprite.src = active.sprite;
-    if (el.rarityTag) el.rarityTag.textContent = active.rarity;
-    if (el.statYield) el.statYield.textContent = active.yieldBonus;
-    if (el.statSpeed) el.statSpeed.textContent = active.speed;
-    if (el.statHarvest) el.statHarvest.textContent = active.harvest;
+    if (el.rarityTag) el.rarityTag.textContent = `${active.rarity === 'COMMON' ? '🤍' : active.rarity === 'UNCOMMON' ? '💚' : active.rarity === 'RARE' ? '💙' : '🔱'} ~${active.rarity}`;
+    if (el.dmdRateTxt) el.dmdRateTxt.innerHTML = `${active.dmdRate} <span class="yield-unit">$DMD/tap</span>`;
+    
+    // Update taps display
+    const maxTaps = getMaxTapsForLevel();
+    if (el.tapsMax) el.tapsMax.textContent = maxTaps;
+    if (el.tapsCur) el.tapsCur.textContent = state.currentTapsInLevel;
+    if (el.expFill) el.expFill.style.width = `${(state.currentTapsInLevel / maxTaps) * 100}%`;
+
     AudioEngine.playTap();
     renderDeckSlots();
   };
@@ -278,7 +292,6 @@
       cellDiv.className = 'shell-cell';
       cellDiv.dataset.idx = idx;
 
-      // Drag and Drop Events
       cellDiv.ondragover = (e) => {
         e.preventDefault();
         cellDiv.classList.add('drag-over');
@@ -296,12 +309,9 @@
           : `assets/special/egg_t${Math.min(cell.tier, 20)}_abyssal_dark_crystal.png`;
 
         cellDiv.draggable = true;
-        cellDiv.ondragstart = () => {
-          state.draggedCellIdx = idx;
-        };
-
+        cellDiv.ondragstart = () => { state.draggedCellIdx = idx; };
         cellDiv.innerHTML = `
-          <img src="${imgSrc}" class="shell-item-img" alt="Shell Tier ${cell.tier}">
+          <img src="${imgSrc}" class="shell-item-img" alt="Tier ${cell.tier}">
           <span class="shell-lvl-badge">T${cell.tier}</span>
         `;
         cellDiv.onclick = () => handleCellTapMerge(idx);
@@ -316,16 +326,13 @@
     const toItem = state.board[toIdx];
 
     if (fromItem && toItem && fromItem.tier === toItem.tier) {
-      // Merge!
       state.board[toIdx].tier += 1;
       state.board[fromIdx] = null;
-      state.currencies.pearlsBalance += toItem.tier * 25;
-      state.stats.totalMerges += 1;
+      state.currencies.pearlsBalance += toItem.tier * 30;
       AudioEngine.playMerge();
       updateHeader();
       renderShellsBoard();
     } else if (fromItem && !toItem) {
-      // Move to empty cell
       state.board[toIdx] = fromItem;
       state.board[fromIdx] = null;
       AudioEngine.playTap();
@@ -342,8 +349,7 @@
       if (i !== idx && state.board[i] && state.board[i].tier === item.tier) {
         state.board[idx] = null;
         state.board[i].tier += 1;
-        state.currencies.pearlsBalance += item.tier * 25;
-        state.stats.totalMerges += 1;
+        state.currencies.pearlsBalance += item.tier * 30;
         AudioEngine.playMerge();
         updateHeader();
         renderShellsBoard();
@@ -353,19 +359,206 @@
     AudioEngine.playTap();
   }
 
+  // --- TAP TO FEED MECHANIC (TELETYPE SECTION 3 & NOTCOIN TOUCH) ---
+  window.handleFeedTap = function(e) {
+    if (state.isBreeding) return;
+    if (state.currencies.energy < 1) {
+      alert('⚡ Energy depleted! Wait for recharge or use Energy Cell.');
+      return;
+    }
+
+    const cost = getDynamicFeedCost();
+    if (state.currencies.pearlsBalance < cost) {
+      alert(`Need ${cost} Blue Pearls to feed!`);
+      return;
+    }
+
+    // Deduct cost & energy
+    state.currencies.pearlsBalance -= cost;
+    state.currencies.energy -= 1;
+    state.consecutiveTapsThisSession += 1;
+    state.totalTapsEver += 1;
+    state.currentTapsInLevel += 1 * state.boosterMultiplier;
+
+    // Add $DMD token earnings
+    const active = COLLECTIONS[state.activeSlotIdx];
+    state.currencies.dmdTokens += active.dmdRate * state.boosterMultiplier;
+
+    // 4-5 tap Egg drop check (Teletype Section 4)
+    if (state.totalTapsEver % 5 === 0) {
+      const emptyIdx = state.board.findIndex(c => c === null);
+      if (emptyIdx !== -1) {
+        state.board[emptyIdx] = { tier: Math.min(state.currentLevel, 6) };
+        renderShellsBoard();
+      }
+    }
+
+    // Level up check
+    const maxTaps = getMaxTapsForLevel();
+    if (state.currentTapsInLevel >= maxTaps) {
+      if (state.currentLevel < 5) {
+        state.currentLevel += 1;
+        state.currentTapsInLevel = 0;
+        window.openModal('modal-egg-crack');
+      } else {
+        alert('👑 MAX LEVEL 5 REACHED! Ready for Fusion or Staking.');
+      }
+    }
+
+    // UI Updates
+    if (el.tapsCur) el.tapsCur.textContent = state.currentTapsInLevel;
+    if (el.expFill) el.expFill.style.width = `${Math.min((state.currentTapsInLevel / maxTaps) * 100, 100)}%`;
+
+    // Squash and stretch physics animation
+    if (el.mascotAnimWrapper) {
+      el.mascotAnimWrapper.style.transform = 'scale(0.92, 1.08) translateY(6px)';
+      setTimeout(() => {
+        if (el.mascotAnimWrapper) el.mascotAnimWrapper.style.transform = 'scale(1, 1)';
+      }, 120);
+    }
+
+    // Coordinate-based floating particles
+    const clientX = (e && e.clientX) ? e.clientX : 200;
+    const clientY = (e && e.clientY) ? e.clientY : 400;
+    const floatTxt = document.createElement('div');
+    floatTxt.style.position = 'absolute';
+    floatTxt.style.left = `${clientX - 20}px`;
+    floatTxt.style.top = `${clientY - 20}px`;
+    floatTxt.style.color = '#00F0FF';
+    floatTxt.style.fontWeight = '900';
+    floatTxt.style.fontSize = '18px';
+    floatTxt.style.pointerEvents = 'none';
+    floatTxt.style.zIndex = '999';
+    floatTxt.style.textShadow = '0 0 10px rgba(0, 240, 255, 0.8)';
+    floatTxt.style.transition = 'all 0.8s cubic-bezier(0.15, 0.9, 0.25, 1)';
+    floatTxt.textContent = `+${active.dmdRate} $DMD`;
+    document.body.appendChild(floatTxt);
+
+    setTimeout(() => {
+      floatTxt.style.transform = 'translateY(-50px) scale(1.1)';
+      floatTxt.style.opacity = '0';
+    }, 20);
+    setTimeout(() => floatTxt.remove(), 850);
+
+    AudioEngine.playTap();
+    updateHeader();
+  };
+
+  // --- BREEDING ROUTINE (TELETYPE SECTION 5) ---
+  window.startBreedingRoutine = function() {
+    if (state.currentLevel < 2) {
+      alert('Dolphin must be Level 2+ to start breeding!');
+      return;
+    }
+    state.isBreeding = true;
+    state.breedingEndTime = Date.now() + 24 * 60 * 60 * 1000;
+    if (el.breedingOverlay) el.breedingOverlay.style.display = 'flex';
+    AudioEngine.playTap();
+  };
+
+  window.speedUpBreeding = function() {
+    if (state.currencies.starsBalance < 50) {
+      alert('Need 50 Blue Stars to speed up incubation!');
+      return;
+    }
+    state.currencies.starsBalance -= 50;
+    state.isBreeding = false;
+    state.currencies.heartsBalance += 154; // Grant max love eggs
+    if (el.breedingOverlay) el.breedingOverlay.style.display = 'none';
+    AudioEngine.playHatch();
+    updateHeader();
+    alert('💕 Incubation Complete! Gained +154 Hearts ❤️ & Unlocked Dolphin Child!');
+  };
+
+  // --- FUSION XL (TELETYPE SECTION 6) ---
+  window.executeFusion = function(targetRarity) {
+    state.currencies.pearlsBalance -= 20000;
+    AudioEngine.playHatch();
+    updateHeader();
+    alert(`🔱 FUSION SUCCESS! Evolved into ${targetRarity} XL Dolphin! All $DMD tokens compounded.`);
+    window.closeModal('modal-fusion');
+  };
+
+  // --- STAKING (TELETYPE SECTION 7) ---
+  window.executeStaking = function() {
+    if (state.currencies.starsBalance < 20) {
+      alert('Need 20 Blue Stars for Staking fee!');
+      return;
+    }
+    state.currencies.starsBalance -= 20;
+    state.isStaked = true;
+    AudioEngine.playHatch();
+    updateHeader();
+    alert('💰 Dolphin Staked in Abyss Pool! Earning +35% APY in $DMD tokens.');
+    window.closeModal('modal-staking');
+  };
+
+  // --- 49-TIER HEARTS PROGRESS LADDER (TELETYPE SECTION 10.4) ---
+  function renderHeartsLadder() {
+    if (!el.heartsLadderContainer) return;
+    el.heartsLadderContainer.innerHTML = '';
+    HEARTS_LADDER.forEach((tier, idx) => {
+      const unlocked = state.currencies.heartsBalance >= tier.target;
+      const claimed = idx < state.claimedHeartsIndex;
+      const row = document.createElement('div');
+      row.className = 'task-card-row';
+      row.innerHTML = `
+        <div class="task-left-meta">
+          <span style="font-size: 20px;">❤️</span>
+          <div>
+            <div class="task-title">${tier.target.toLocaleString()} Hearts</div>
+            <div class="task-reward">${tier.reward}</div>
+          </div>
+        </div>
+        <button class="btn-claim-pill ${unlocked && !claimed ? 'gold' : ''}" 
+          ${!unlocked || claimed ? 'disabled' : ''} 
+          onclick="claimHeartsTier(${idx})">
+          ${claimed ? 'CLAIMED' : unlocked ? 'CLAIM' : 'LOCKED'}
+        </button>
+      `;
+      el.heartsLadderContainer.appendChild(row);
+    });
+  }
+
+  window.claimHeartsTier = function(idx) {
+    const tier = HEARTS_LADDER[idx];
+    if (tier.pearls) state.currencies.pearlsBalance += tier.pearls;
+    if (tier.stars) state.currencies.starsBalance += tier.stars;
+    state.claimedHeartsIndex = idx + 1;
+    AudioEngine.playHatch();
+    updateHeader();
+    renderHeartsLadder();
+  };
+
+  // --- MARKET CYCLES & TRADING (TELETYPE SECTION 8) ---
+  function updateMarketCycle() {
+    const remaining = state.marketCycleEndTime - Date.now();
+    if (remaining <= 0) {
+      state.marketCycleEndTime = Date.now() + 10 * 60 * 1000;
+      state.marketPhase = (state.marketPhase === 'HOT') ? 'REGULAR' : 'HOT';
+      state.marketPrice = Math.floor(state.marketPrice * (state.marketPhase === 'HOT' ? 1.15 : 0.95));
+      if (el.marketPriceTxt) el.marketPriceTxt.textContent = `${formatNum(state.marketPrice)} 🐚`;
+      if (el.marketCycleTag) el.marketCycleTag.textContent = `${state.marketPhase} (${state.marketPhase === 'HOT' ? '+15%' : '-1%'} / 10m)`;
+    } else {
+      if (el.marketCycleTimer) el.marketCycleTimer.textContent = formatTime(remaining);
+    }
+  }
+
   function renderMarketCards() {
     if (!el.marketCollectionsGrid) return;
     el.marketCollectionsGrid.innerHTML = '';
-    COLLECTIONS.slice(0, 9).forEach((col, idx) => {
+    COLLECTIONS.forEach((col, idx) => {
       const card = document.createElement('div');
       card.className = 'market-item-card';
-      card.onclick = () => openMarketInspect(col);
       card.innerHTML = `
         <img src="assets/special/market_badge_hot_deal.png" class="market-hot-seal" alt="HOT">
         <img src="${col.sprite}" class="market-item-img" alt="${col.name}">
         <div class="market-item-name">${col.name.split(' ')[0]}</div>
-        <div class="market-item-price">${300 + idx * 50} 🐚</div>
+        <div class="market-item-price">${30000 + idx * 50000} 🐚</div>
       `;
+      card.onclick = () => {
+        alert(`🛒 Market Order: Buy ${col.name} for ${30000 + idx * 50000} Pearls?`);
+      };
       el.marketCollectionsGrid.appendChild(card);
     });
   }
@@ -374,9 +567,9 @@
     if (!el.godsPantheonList) return;
     el.godsPantheonList.innerHTML = '';
     [
-      { name: 'Poseidon Sovereign', yield: '+45%', cost: 1500, img: 'assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png' },
-      { name: 'Aura of the Abyss', yield: '+38%', cost: 1200, img: 'assets/collections/02_Abyss_Deep_Ocean/02_01_angler.png' },
-      { name: 'Astral Supernova', yield: '+42%', cost: 1400, img: 'assets/collections/05_Celestial_Astral/05_01_starlight.png' }
+      { name: 'Poseidon Sovereign', yield: '+45% $DMD Yield', cost: '1,500 🐚', img: 'assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png' },
+      { name: 'Aura of the Abyss', yield: '+38% $DMD Yield', cost: '1,200 🐚', img: 'assets/collections/02_Abyss_Deep_Ocean/02_01_angler.png' },
+      { name: 'Astral Supernova', yield: '+42% $DMD Yield', cost: '1,400 🐚', img: 'assets/collections/05_Celestial_Astral/05_01_starlight.png' }
     ].forEach(god => {
       const row = document.createElement('div');
       row.className = 'task-card-row';
@@ -385,10 +578,10 @@
           <img src="${god.img}" class="task-icon-img" alt="${god.name}">
           <div>
             <div class="task-title">${god.name}</div>
-            <div class="task-reward">Yield Multiplier: ${god.yield}</div>
+            <div class="task-reward">${god.yield}</div>
           </div>
         </div>
-        <button class="btn-claim-pill gold" onclick="mintGodNFT('${god.name}', ${god.cost})">MINT (${god.cost} 🐚)</button>
+        <button class="btn-claim-pill gold">MINT (${god.cost})</button>
       `;
       el.godsPantheonList.appendChild(row);
     });
@@ -420,22 +613,6 @@
     });
   }
 
-  function renderStreakCalendar() {
-    if (!el.streakGrid) return;
-    el.streakGrid.innerHTML = '';
-    const rewards = [100, 200, 300, 450, 600, 800, 1500];
-    rewards.forEach((r, idx) => {
-      const day = idx + 1;
-      const cell = document.createElement('div');
-      cell.className = `streak-day-cell ${day === 3 ? 'active' : ''}`;
-      cell.innerHTML = `
-        <span class="streak-day-label">DAY ${day}</span>
-        <span class="streak-day-reward">+${r} 🐚</span>
-      `;
-      el.streakGrid.appendChild(cell);
-    });
-  }
-
   // --- GLOBAL WINDOW HANDLERS ---
   window.switchTab = function(tabId) {
     document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
@@ -464,83 +641,43 @@
     AudioEngine.playTap();
   };
 
-  window.handleFeedTap = function(e) {
-    if (state.isBreeding) return;
-    if (state.currencies.pearlsBalance < state.feedCost) {
-      alert('Need more Blue Pearls to feed!');
-      return;
-    }
-
-    const expGained = 25 * state.boosterMultiplier;
-    state.currencies.pearlsBalance -= state.feedCost;
-    state.currentExp += expGained;
-    state.stats.totalFeeds += 1;
-
-    if (state.currentExp >= state.maxExp) {
-      state.currentLevel += 1;
-      state.currentExp = 0;
-      state.maxExp = Math.floor(state.maxExp * 1.5);
-      if (el.lvlTag) el.lvlTag.textContent = state.currentLevel;
-      window.openModal('modal-egg-crack');
-    }
-
-    if (el.expFill) el.expFill.style.width = `${(state.currentExp / state.maxExp) * 100}%`;
-    if (el.expCur) el.expCur.textContent = state.currentExp;
-    if (el.expMax) el.expMax.textContent = state.maxExp;
-
-    const clientX = (e && e.clientX) ? e.clientX : 200;
-    const clientY = (e && e.clientY) ? e.clientY : 400;
-    const floatTxt = document.createElement('div');
-    floatTxt.style.position = 'absolute';
-    floatTxt.style.left = `${clientX - 20}px`;
-    floatTxt.style.top = `${clientY - 20}px`;
-    floatTxt.style.color = '#00f2fe';
-    floatTxt.style.fontWeight = '900';
-    floatTxt.style.fontSize = '16px';
-    floatTxt.style.pointerEvents = 'none';
-    floatTxt.style.zIndex = '999';
-    floatTxt.style.transition = 'all 0.8s ease-out';
-    floatTxt.textContent = `+${expGained} EXP`;
-    document.body.appendChild(floatTxt);
-
-    setTimeout(() => {
-      floatTxt.style.transform = 'translateY(-40px)';
-      floatTxt.style.opacity = '0';
-    }, 20);
-    setTimeout(() => floatTxt.remove(), 850);
-
-    AudioEngine.playTap();
-    updateHeader();
-  };
-
-  window.startBreedingRoutine = function() {
-    state.isBreeding = true;
-    state.breedingEndTime = Date.now() + 24 * 60 * 60 * 1000;
-    if (el.breedingOverlay) el.breedingOverlay.style.display = 'flex';
+  window.openModal = function(id) {
+    const m = document.getElementById(id);
+    if (m) m.style.display = 'flex';
     AudioEngine.playTap();
   };
 
-  window.speedUpBreeding = function() {
-    if (state.currencies.starsBalance < 50) {
-      alert('Need 50 Blue Stars to speed up incubation!');
-      return;
-    }
-    state.currencies.starsBalance -= 50;
-    state.isBreeding = false;
-    if (el.breedingOverlay) el.breedingOverlay.style.display = 'none';
-    AudioEngine.playHatch();
-    updateHeader();
-    window.openModal('modal-egg-crack');
+  window.closeModal = function(id) {
+    const m = document.getElementById(id);
+    if (m) m.style.display = 'none';
   };
+
+  window.openUserProfileModal = function() { window.openModal('modal-user-profile'); };
+  window.openShopModal = function(type) {
+    if (type === 'pearls') window.openModal('modal-shop-pearls');
+    else if (type === 'stars') window.openModal('modal-shop-stars');
+  };
+  window.openEnergyModal = function() { window.openModal('modal-energy-refill'); };
+  window.openDailyStreakModal = function() { window.openModal('modal-daily-streak'); };
+  window.openBoostersModal = function() { window.openModal('modal-boosters'); };
+  window.openPassModal = function() { window.openModal('modal-pass'); };
+  window.openFusionModal = function() { window.openModal('modal-fusion'); };
+  window.openStakingModal = function() { window.openModal('modal-staking'); };
+  window.openHeartsLadderModal = function() {
+    renderHeartsLadder();
+    window.openModal('modal-hearts-ladder');
+  };
+  window.openLottoModal = function() { alert('🎟️ Lucky Lotto: 250,000 Blue Pearls Raffle active!'); };
+  window.openTideWheelModal = function() { window.openModal('modal-tide-wheel'); };
 
   window.spawnPearlToBoard = function() {
     const emptyIdx = state.board.findIndex(c => c === null);
     if (emptyIdx === -1) {
-      alert('Shell grid is full! Merge shells first.');
+      alert('Egg Sanctuary is full! Merge eggs first.');
       return;
     }
     if (state.currencies.pearlsBalance < 50) {
-      alert('Need 50 Blue Pearls to spawn a shell!');
+      alert('Need 50 Blue Pearls to spawn an egg!');
       return;
     }
     state.currencies.pearlsBalance -= 50;
@@ -559,103 +696,14 @@
           state.board[i].tier += 1;
           state.board[j] = null;
           merged = true;
-          state.stats.totalMerges += 1;
           break;
         }
       }
     }
     if (merged) {
       AudioEngine.playMerge();
-      updateHeader();
       renderShellsBoard();
     }
-  };
-
-  // --- MODAL UTILITIES ---
-  window.openModal = function(id) {
-    const m = document.getElementById(id);
-    if (m) m.style.display = 'flex';
-    AudioEngine.playTap();
-  };
-
-  window.closeModal = function(id) {
-    const m = document.getElementById(id);
-    if (m) m.style.display = 'none';
-  };
-
-  window.openUserProfileModal = function() {
-    document.getElementById('prof-total-feeds').textContent = formatNum(state.stats.totalFeeds);
-    document.getElementById('prof-total-merges').textContent = formatNum(state.stats.totalMerges);
-    window.openModal('modal-user-profile');
-  };
-
-  window.openShopModal = function(type) {
-    if (type === 'pearls') window.openModal('modal-shop-pearls');
-    else if (type === 'stars') window.openModal('modal-shop-stars');
-  };
-
-  window.openEnergyModal = function() { window.openModal('modal-energy-refill'); };
-  window.openDailyStreakModal = function() {
-    renderStreakCalendar();
-    window.openModal('modal-daily-streak');
-  };
-  window.openBoostersModal = function() { window.openModal('modal-boosters'); };
-  window.openPassModal = function() { window.openModal('modal-pass'); };
-  window.openClansModal = function() { window.openModal('modal-clans'); };
-  window.openArenaModal = function() { window.openModal('modal-arena'); };
-  window.openLottoModal = function() { window.openModal('modal-lotto'); };
-  window.openTideWheelModal = function() { window.openModal('modal-tide-wheel'); };
-
-  // --- ACTIONS & SHOP PURCHASES ---
-  window.buyPearlsPack = function(amount, tonPrice) {
-    state.currencies.pearlsBalance += amount;
-    updateHeader();
-    AudioEngine.playHatch();
-    alert(`🎉 Purchase Successful! +${formatNum(amount)} Blue Pearls added to wallet.`);
-    window.closeModal('modal-shop-pearls');
-  };
-
-  window.buyStarsPack = function(amount, tonPrice) {
-    state.currencies.starsBalance += amount;
-    updateHeader();
-    AudioEngine.playHatch();
-    alert(`⭐ Purchase Successful! +${formatNum(amount)} Blue Stars added.`);
-    window.closeModal('modal-shop-stars');
-  };
-
-  window.refillEnergyTank = function() {
-    if (state.currencies.pearlsBalance < 50) {
-      alert('Need 50 Pearls to refill Energy Tank!');
-      return;
-    }
-    state.currencies.pearlsBalance -= 50;
-    state.currencies.energy = state.currencies.maxEnergy;
-    updateHeader();
-    AudioEngine.playHatch();
-    alert('⚡ Energy Tank fully recharged to 2,000 / 2,000!');
-    window.closeModal('modal-energy-refill');
-  };
-
-  window.claimDailyStreakReward = function() {
-    state.currencies.pearlsBalance += 300;
-    updateHeader();
-    AudioEngine.playHatch();
-    const btn = document.getElementById('btn-claim-streak');
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'CLAIMED TODAY';
-      btn.style.background = '#8e9aaf';
-    }
-    alert('🔥 Day 3 Streak Claimed! +300 Blue Pearls.');
-  };
-
-  window.activateBooster = function(type) {
-    state.boosterMultiplier = (type === '5X') ? 5 : 2;
-    state.boosterEndTime = Date.now() + 10 * 60 * 1000;
-    if (el.boosterStatusBadge) el.boosterStatusBadge.textContent = `${type} ON`;
-    AudioEngine.playHatch();
-    alert(`🚀 ${type} Speed Surge Active for 10 Minutes!`);
-    window.closeModal('modal-boosters');
   };
 
   window.spinTideWheel = function() {
@@ -688,106 +736,74 @@
       state.crackTapsLeft = 3;
       AudioEngine.playHatch();
       window.closeModal('modal-egg-crack');
-      alert('✨ HATCH COMPLETE! Unlocked Mythic Poseidon Dolphin Variant!');
+      alert('✨ HATCH COMPLETE! Unlocked Level ' + state.currentLevel + ' Dolphin!');
     }
-  };
-
-  window.joinClan = function(clanName) {
-    AudioEngine.playHatch();
-    alert(`🛡️ Successfully Joined Syndicate: ${clanName}! Team Yield +15% Active.`);
-    window.closeModal('modal-clans');
-  };
-
-  window.triggerPvpDuel = function() {
-    AudioEngine.playTap();
-    setTimeout(() => {
-      AudioEngine.playHatch();
-      state.currencies.pearlsBalance += 250;
-      updateHeader();
-      alert('🏆 VICTORY! You defeated the Abyssal Rival and won 250 Blue Pearls!');
-      window.closeModal('modal-arena');
-    }, 800);
-  };
-
-  window.buyLottoTicket = function() {
-    if (state.currencies.pearlsBalance < 50) {
-      alert('Need 50 Pearls to buy a Lotto Ticket!');
-      return;
-    }
-    state.currencies.pearlsBalance -= 50;
-    updateHeader();
-    AudioEngine.playTap();
-    alert('🎟️ Ticket #7492 Purchased! Daily draw in 4 hours.');
-    window.closeModal('modal-lotto');
   };
 
   window.claimPassVault = function(tier) {
-    if (tier === 'free') {
-      state.currencies.pearlsBalance += 250;
-      updateHeader();
-      AudioEngine.playHatch();
-      alert('🎁 Free Season Vault Claimed: +250 Blue Pearls!');
-      window.closeModal('modal-pass');
-    } else {
-      alert('💎 Upgrade to Dolphin Pass Season 1 to unlock Mythic Vaults!');
-    }
+    alert(`💎 Subscribed to ${tier.toUpperCase()} Dolphin Pass! Turbo-Feed & Auto-Merge active.`);
+    window.closeModal('modal-pass');
   };
 
-  function openMarketInspect(col) {
-    state.selectedMarketItem = col;
-    document.getElementById('market-modal-title').textContent = col.name;
-    document.getElementById('market-modal-rarity').textContent = `${col.rarity} RARITY`;
-    document.getElementById('market-inspect-img').src = col.sprite;
-    document.getElementById('market-meta-yield').textContent = col.yieldBonus;
-    document.getElementById('market-meta-speed').textContent = col.speed;
-    window.openModal('modal-market-inspect');
-  }
-
-  window.executeMarketBuy = function() {
-    if (!state.selectedMarketItem) return;
-    if (state.currencies.pearlsBalance < 450) {
-      alert('Need 450 Blue Pearls to purchase this Dolphin NFT!');
-      return;
-    }
-    state.currencies.pearlsBalance -= 450;
-    state.stats.unlockedDolphins += 1;
+  window.buyPearlsPack = function(amt, price) {
+    state.currencies.pearlsBalance += amt;
     updateHeader();
     AudioEngine.playHatch();
-    alert(`🎉 Purchased ${state.selectedMarketItem.name}! Swapping to active deck.`);
-    window.closeModal('modal-market-inspect');
+    alert(`🎉 Purchased +${formatNum(amt)} Blue Pearls!`);
+    window.closeModal('modal-shop-pearls');
   };
 
-  window.mintGodNFT = function(godName, cost) {
-    if (state.currencies.pearlsBalance < cost) {
-      alert(`Need ${cost} Pearls to mint ${godName}!`);
-      return;
-    }
-    state.currencies.pearlsBalance -= cost;
+  window.buyStarsPack = function(amt, price) {
+    state.currencies.starsBalance += amt;
     updateHeader();
     AudioEngine.playHatch();
-    alert(`🔱 Mythic God NFT Minted: ${godName}! Passive Yield Multiplier boosted.`);
+    alert(`⭐ Purchased +${formatNum(amt)} Blue Stars!`);
+    window.closeModal('modal-shop-stars');
   };
 
-  window.joinChampionshipTournament = function() {
-    AudioEngine.playTap();
-    alert('🏆 Entered Poseidon Grand Prix Season 1! Current Rank: #42');
+  window.refillEnergyTank = function() {
+    state.currencies.energy = state.currencies.maxEnergy;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert('⚡ Energy Tank fully recharged!');
+    window.closeModal('modal-energy-refill');
   };
 
-  window.claimQuestReward = function(btn, amount) {
+  window.claimDailyStreakReward = function() {
+    state.currencies.pearlsBalance += 300;
+    updateHeader();
+    AudioEngine.playHatch();
+    alert('🔥 Day 3 Login Reward Claimed (+300 🐚)!');
+    window.closeModal('modal-daily-streak');
+  };
+
+  window.activateBooster = function(type) {
+    state.boosterMultiplier = (type === '5X') ? 5 : 2;
+    state.boosterEndTime = Date.now() + 10 * 60 * 1000;
+    AudioEngine.playHatch();
+    alert(`🚀 ${type} Speed Surge Active!`);
+    window.closeModal('modal-boosters');
+  };
+
+  window.claimQuestReward = function(btn, amt) {
     btn.disabled = true;
     btn.textContent = 'CLAIMED';
-    btn.style.background = '#4facfe';
-    state.currencies.pearlsBalance += amount;
+    state.currencies.pearlsBalance += amt;
     updateHeader();
     AudioEngine.playHatch();
   };
 
   window.copyInviteLink = function() {
     navigator.clipboard.writeText('https://t.me/dolphin_pearls_bot?start=ref123');
-    alert('Invite link copied to clipboard!');
+    alert('Invite link copied!');
   };
 
-  // --- INITIALIZATION ---
+  window.joinChampionshipTournament = function() {
+    AudioEngine.playTap();
+    alert('🏆 Entered Poseidon Grand Prix Championship! Season 1.');
+  };
+
+  // --- INITIALIZATION & TICKER LOOPS ---
   function init() {
     updateHeader();
     renderDeckSlots();
@@ -796,25 +812,37 @@
     renderGodsList();
     renderQuestsList();
 
-    // Game loop timers
+    // 1-Second Ticker Loop
     setInterval(() => {
+      // 1. Energy Auto-Recharge (+1 energy every 2 seconds)
+      if (state.currencies.energy < state.currencies.maxEnergy) {
+        state.currencies.energy = Math.min(state.currencies.energy + 1, state.currencies.maxEnergy);
+        updateHeader();
+      }
+
+      // 2. 8-Hour Feed Reset Timer
+      const feedRemaining = state.feedResetEndTime - Date.now();
+      if (feedRemaining <= 0) {
+        state.feedResetEndTime = Date.now() + 8 * 60 * 60 * 1000;
+        state.consecutiveTapsThisSession = 0;
+        updateHeader();
+      } else {
+        if (el.feedResetTimer) el.feedResetTimer.textContent = formatTime(feedRemaining);
+      }
+
+      // 3. Breeding Timer
       if (state.isBreeding && state.breedingEndTime > 0) {
-        const remaining = state.breedingEndTime - Date.now();
-        if (remaining <= 0) {
+        const breedRemaining = state.breedingEndTime - Date.now();
+        if (breedRemaining <= 0) {
           state.isBreeding = false;
           if (el.breedingOverlay) el.breedingOverlay.style.display = 'none';
         } else {
-          if (el.breedingTimerTxt) el.breedingTimerTxt.textContent = formatTime(remaining);
+          if (el.breedingTimerTxt) el.breedingTimerTxt.textContent = formatTime(breedRemaining);
         }
       }
 
-      if (state.boosterMultiplier > 1 && state.boosterEndTime > 0) {
-        if (Date.now() >= state.boosterEndTime) {
-          state.boosterMultiplier = 1;
-          state.boosterEndTime = 0;
-          if (el.boosterStatusBadge) el.boosterStatusBadge.textContent = 'OFF';
-        }
-      }
+      // 4. Market Cycle Timer
+      updateMarketCycle();
     }, 1000);
   }
 
