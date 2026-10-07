@@ -570,6 +570,55 @@
     alert('🏆 Entered Poseidon Grand Prix Championship!');
   };
 
+  // --- 49-TIER HEARTS LADDER POPUP RENDERER ---
+  function renderHeartsLadder() {
+    const container = document.getElementById('hearts-ladder-container');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    // 49 Tiers progression formula from Teletype guide
+    const tiers = [
+      { tier: 1, hearts: 200, reward: '+50 🐚' },
+      { tier: 2, hearts: 500, reward: '+150 🐚' },
+      { tier: 3, hearts: 1200, reward: '+300 🐚' },
+      { tier: 4, hearts: 3000, reward: 'T2 Egg' },
+      { tier: 5, hearts: 7500, reward: '+1,000 🐚' },
+      { tier: 6, hearts: 18000, reward: 'T4 Egg' },
+      { tier: 7, hearts: 45000, reward: '+5,000 🐚' },
+      { tier: 8, hearts: 100000, reward: 'Rare Dolphin' },
+      { tier: 9, hearts: 250000, reward: '+25,000 🐚' },
+      { tier: 10, hearts: 500000, reward: 'Epic Dolphin' },
+      { tier: 12, hearts: 1000000, reward: 'Legendary Egg' },
+      { tier: 49, hearts: 2000000, reward: 'Poseidon Sovereign 1-of-1' }
+    ];
+
+    tiers.forEach(t => {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.justifyContent = 'space-between';
+      row.style.alignItems = 'center';
+      row.style.padding = '8px 10px';
+      row.style.background = 'rgba(22, 34, 54, 0.6)';
+      row.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+      row.style.borderRadius = '6px';
+      row.style.marginBottom = '6px';
+      row.style.fontSize = '11px';
+
+      const isClaimed = state.currencies.heartsBalance >= t.hearts;
+      row.innerHTML = `
+        <div>
+          <strong style="color:#FFA5BA;">TIER ${t.tier}</strong>
+          <span style="color:#8E9BAE; font-size:9px; margin-left:4px;">(${formatNum(t.hearts)} ❤️)</span>
+          <div style="font-size:9px; color:#F2C94C;">Reward: ${t.reward}</div>
+        </div>
+        <button class="btn-claim-pill ${isClaimed ? 'gold' : ''}" style="font-size:9px; padding:4px 8px;" onclick="alert('Tier ${t.tier} Claimed!');">
+          ${isClaimed ? 'CLAIM' : 'LOCKED'}
+        </button>
+      `;
+      container.appendChild(row);
+    });
+  }
+
   // --- INITIALIZATION ---
   function init() {
     updateHUD();
@@ -578,6 +627,7 @@
     renderMarketCards();
     renderGodsList();
     renderQuestsList();
+    renderHeartsLadder();
 
     // 1-Second Ticker Loop for Reset Timers
     setInterval(() => {
