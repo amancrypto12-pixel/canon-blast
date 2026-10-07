@@ -316,6 +316,14 @@
     const item = state.board[idx];
     if (!item) return;
 
+    // Trigger authentic eggSwing wobble animation on the tapped cell
+    const cellEl = document.querySelector(`.shell-cell[data-idx="${idx}"]`);
+    if (cellEl) {
+      cellEl.classList.remove('wobble');
+      void cellEl.offsetWidth; // force reflow
+      cellEl.classList.add('wobble');
+    }
+
     for (let i = 0; i < state.board.length; i++) {
       if (i !== idx && state.board[i] && state.board[i].tier === item.tier) {
         state.board[idx] = null;

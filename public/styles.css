@@ -3,6 +3,47 @@
    Design Tokens, Layered Game Panels, Tactile Physics & Swiper Coverflow 3D
    ========================================================================== */
 
+/* ==========================================================================
+   AUTHENTIC SCRAPED DUCK MY DUCK KEYFRAMES & ABILITY PLATES
+   ========================================================================== */
+
+@keyframes eggSwing {
+  0% { transform: rotate(0deg) scale(1); }
+  15% { transform: translate(3px, -2px) rotate(6deg) scale(1.05); }
+  30% { transform: translate(-3px, 1px) rotate(-6deg) scale(1.05); }
+  45% { transform: translate(2px, -1px) rotate(3deg) scale(1.02); }
+  60% { transform: translate(-2px, 0px) rotate(-3deg) scale(1.02); }
+  75% { transform: translate(1px, 0px) rotate(1deg); }
+  100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+}
+
+@keyframes flyParticle {
+  0% { transform: translate(0, 0) scale(0.8); opacity: 1; }
+  50% { transform: translate(var(--tx, 0px), -40px) scale(1.1); opacity: 0.9; }
+  100% { transform: translate(var(--tx, 0px), -80px) scale(1); opacity: 0; }
+}
+
+@keyframes abilityPlateGlow {
+  0% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), inset 0 0 5px rgba(0, 240, 255, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.6), inset 0 0 12px rgba(0, 240, 255, 0.4); }
+  100% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), inset 0 0 5px rgba(0, 240, 255, 0.2); }
+}
+
+.shell-cell.wobble img {
+  animation: eggSwing 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+}
+
+.ability-plate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 24, 38, 0.85);
+  border: 1px solid var(--accent-cyan);
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  animation: abilityPlateGlow 2.5s infinite ease-in-out;
+}
+
 :root {
   /* Color Palette Tokens */
   --bg-dark: #080B10;
