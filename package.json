@@ -1,0 +1,27 @@
+{
+  "name": "canon-blast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite", "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amancrypto12-pixel/canon-blast.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/amancrypto12-pixel/canon-blast/issues"
+  },
+  "homepage": "https://github.com/amancrypto12-pixel/canon-blast#readme",
+  "dependencies": {
+    "phaser": "^4.2.1"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}
