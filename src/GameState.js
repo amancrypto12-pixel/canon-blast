@@ -15,7 +15,7 @@ export class GameState {
 
         // Default State
         this.data = {
-            pearls: 1000,
+            pearls: 100000,
             dmdTokens: 0,
             heartPearls: 0,
             slots: [

@@ -37,20 +37,22 @@ export default class GameScene extends Phaser.Scene {
         this.rarityText = this.add.text(width / 2, 80, '', { ...textStyle, fontSize: '24px', fill: '#ffff00' }).setOrigin(0.5);
         this.stateText = this.add.text(width / 2, 110, '', { ...textStyle, fontSize: '18px', fill: '#00ffff' }).setOrigin(0.5);
 
+        const scaleRatio = Math.min(width / 600, 0.5);
+        
         // Dolphin Sprite
         this.dolphinSprite = this.add.sprite(width / 2, height / 2, 'common')
             .setInteractive({ useHandCursor: true })
-            .setScale(0.5);
+            .setScale(scaleRatio);
 
         // Progress UI
-        this.progressText = this.add.text(width / 2, height - 200, '', textStyle).setOrigin(0.5);
-        this.costText = this.add.text(width / 2, height - 170, '', { ...textStyle, fontSize: '18px', fill: '#ffaa00' }).setOrigin(0.5);
+        this.progressText = this.add.text(width / 2, height - 160, '', textStyle).setOrigin(0.5);
+        this.costText = this.add.text(width / 2, height - 130, '', { ...textStyle, fontSize: '18px', fill: '#ffaa00' }).setOrigin(0.5);
 
         // Slot Navigation
-        this.prevBtn = this.add.text(50, height / 2, '<', { fontSize: '64px', fill: '#fff', fontStyle: 'bold' })
-            .setOrigin(0.5).setInteractive({ useHandCursor: true });
-        this.nextBtn = this.add.text(width - 50, height / 2, '>', { fontSize: '64px', fill: '#fff', fontStyle: 'bold' })
-            .setOrigin(0.5).setInteractive({ useHandCursor: true });
+        this.prevBtn = this.add.text(40, height / 2, '<', { fontSize: '48px', fill: '#fff', fontStyle: 'bold' })
+            .setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(10);
+        this.nextBtn = this.add.text(width - 40, height / 2, '>', { fontSize: '48px', fill: '#fff', fontStyle: 'bold' })
+            .setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(10);
 
         // Action Buttons (Bottom)
         this.createBottomMenu(width, height);
@@ -67,21 +69,22 @@ export default class GameScene extends Phaser.Scene {
     }
 
     createBottomMenu(width, height) {
-        const btnY = height - 80;
+        const btnY = height - 60;
+        const iconScale = Math.min(width / 1500, 0.15); // scaled down more for 3 icons side-by-side
         
         // Hatch Button
-        const hatchBtn = this.add.sprite(width / 4, btnY, 'hatch').setScale(0.3).setInteractive({ useHandCursor: true });
-        this.add.text(width / 4, btnY + 40, 'Hatch', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+        const hatchBtn = this.add.sprite(width / 4, btnY, 'hatch').setScale(iconScale).setInteractive({ useHandCursor: true });
+        this.add.text(width / 4, btnY + 30, 'Hatch', { fontSize: '14px', fill: '#fff' }).setOrigin(0.5);
         hatchBtn.on('pointerdown', () => this.hatchAction());
 
         // Merge Button
-        const mergeBtn = this.add.sprite(width / 2, btnY, 'merge').setScale(0.3).setInteractive({ useHandCursor: true });
-        this.add.text(width / 2, btnY + 40, 'Merge', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+        const mergeBtn = this.add.sprite(width / 2, btnY, 'merge').setScale(iconScale).setInteractive({ useHandCursor: true });
+        this.add.text(width / 2, btnY + 30, 'Merge', { fontSize: '14px', fill: '#fff' }).setOrigin(0.5);
         mergeBtn.on('pointerdown', () => this.mergeAction());
 
         // Stake Button
-        const stakeBtn = this.add.sprite((width / 4) * 3, btnY, 'stake').setScale(0.3).setInteractive({ useHandCursor: true });
-        this.add.text((width / 4) * 3, btnY + 40, 'Stake', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
+        const stakeBtn = this.add.sprite((width / 4) * 3, btnY, 'stake').setScale(iconScale).setInteractive({ useHandCursor: true });
+        this.add.text((width / 4) * 3, btnY + 30, 'Stake', { fontSize: '14px', fill: '#fff' }).setOrigin(0.5);
         stakeBtn.on('pointerdown', () => this.stakeAction());
     }
 
@@ -321,6 +324,16 @@ export default class GameScene extends Phaser.Scene {
         const data = this.gameState.data;
         let earned = false;
         
+        // Passive pearl generation (1 per second) so player never gets completely stuck
+        if (!this.pearlTimer) this.pearlTimer = 0;
+        this.pearlTimer += delta;
+        if (this.pearlTimer > 1000) {
+            data.pearls += 1;
+            this.pearlsText.setText(`Pearls: ${data.pearls}`);
+            this.pearlTimer = 0;
+            earned = true;
+        }
+
         data.slots.forEach(dolphin => {
             if (dolphin.state === 'STAKING') {
                 let rType = RARITIES[dolphin.rarity];
