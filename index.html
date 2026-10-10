@@ -3,621 +3,188 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>🐬 Dolphin Pearls - Web3 Telegram Mini App HUD</title>
-  
-  <!-- Swiper.js CSS (Coverflow 3D effect) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-  
-  <!-- Google Fonts: Inter & Silkscreen / Orbitron -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Game HUD Master Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=6.0">
+  <title>Dolphin Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <!-- MOBILE-FIRST TELEGRAM MINI APP CONTAINER (390x844 max) -->
-  <div id="game-app-container">
+  <div class="app-container">
     
-    <!-- ==========================================================================
-         TOP BAR - COMPACT HUD RESOURCES
-         ========================================================================== -->
-    <header class="game-hud-topbar">
-      <!-- User Profile Badge -->
-      <div class="hud-profile-pill" onclick="window.openUserProfileModal()">
-        <div class="hud-avatar-ring">
-          <img src="assets/icon_user_star.png" class="hud-avatar-img" alt="Avatar" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>⭐</text></svg>';">
-          <span class="hud-lvl-tag" id="avatar-lvl-txt">LVL 5</span>
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="profile-section">
+        <div class="profile-pic">
+          <img src="assets/heart pearl/20261003_155838_0000.png" alt="Profile">
         </div>
-        <div class="hud-user-info">
-          <span class="hud-username" id="top-username">@AYANOKOJI_SEED</span>
-          <span class="hud-title-badge">DOLPHIN MASTER</span>
-        </div>
+        <div class="pack-badge">PACK</div>
       </div>
-
-      <!-- Resource Balances -->
-      <div class="hud-resources-group">
-        <!-- Blue Pearls -->
-        <div class="hud-res-pill pearls-pill" onclick="window.openShopModal('pearls')">
-          <img src="assets/ui/currency_blue_pearl_3d.png" class="hud-res-icon" alt="Pearls" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🐚</text></svg>';">
-          <span class="hud-res-val" id="header-pearls-val">5,673</span>
-          <span class="hud-plus-btn">+</span>
+      <div class="balance-section">
+        <div class="balance-item">
+          <span class="val" id="main-balance">12856</span>
+          <img src="assets/pearls/20261003_155838_0012.png" alt="Coin">
         </div>
-
-        <!-- Blue Stars (Authentic Provided Asset) -->
-        <div class="hud-res-pill stars-pill" onclick="window.openShopModal('stars')">
-          <img src="assets/icon_user_star.png" class="hud-res-icon star-icon" alt="Stars" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>⭐</text></svg>';">
-          <span class="hud-res-val" id="header-stars-val">30</span>
-          <span class="hud-plus-btn">+</span>
+        <div class="balance-item">
+          <span class="val">38</span>
+          <span class="star-icon">⭐</span>
         </div>
       </div>
     </header>
 
-    <!-- ==========================================================================
-         MAIN GAME VIEW AREA (5 TABS)
-         ========================================================================== -->
-    <main class="game-main-canvas">
-
-      <!-- ====================================================================
-           TAB 1: DOLPHINS (HERO CHARACTER DOMINATES SCREEN)
-           ==================================================================== -->
-      <section id="tab-dolphins" class="tab-view active">
+    <!-- Main Content Area -->
+    <main class="content-area">
+      
+      <!-- DOLPHINS TAB -->
+      <section id="tab-dolphins" class="tab-content active">
         
-        <!-- Top Rate Banner & Rarity Chip -->
-        <div class="hero-header-meta">
-          <div class="hero-token-badge">
-            <span class="token-title">DOLPHIN PASS TICKET</span>
-            <div class="token-val-row">
-              <img src="assets/ui/icon_dolphin_pass_ticket.png" class="hud-ticket-icon" alt="Ticket" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🎫</text></svg>';">
-              <span class="token-rate-num" id="hero-dmd-rate">99.68</span>
-              <span class="token-currency-unit">$DMD</span>
-            </div>
+        <div class="token-balance-big">
+          <img src="assets/pearls/20261003_155838_0015.png" alt="Token">
+          <span>238.10</span>
+        </div>
+        
+        <div class="energy-widget">
+          <div class="energy-icon">⚡</div>
+          <div class="energy-val">0 / 2000</div>
+          <div class="energy-time">13:49:29</div>
+        </div>
+        
+        <div class="character-card">
+          <div class="card-header">
+            <span class="level">LVL 3</span>
+            <span class="rarity">COMMON</span>
           </div>
-          <div class="hero-slot-chips">
-            <span class="hud-chip lvl-chip" id="current-slot-lvl-chip">LVL 5 XL</span>
-            <span class="hud-chip rarity-chip" id="current-slot-rarity">~UNCOMMON</span>
+          <div class="character-image" onclick="feedDolphin(event)">
+            <img src="assets/Dolphin_Game_NFT_Assets_50-20261010T081020Z-1-001/Dolphin_Game_NFT_Assets/01.png" alt="Dolphin">
           </div>
+          <button class="feed-button" onclick="feedDolphin(event)">
+            TAP TO FEED <span class="feed-cost">84</span>
+          </button>
+          <div class="feed-timer">READY IN 7:53:44</div>
         </div>
-
-        <!-- Flanking Secondary Action Badges (Floating edge controls) -->
-        <div class="floating-flank-controls left-flank">
-          <button class="edge-circle-btn" onclick="window.openPassModal()">
-            <img src="assets/ui/icon_dolphin_pass_ticket.png" alt="Pass" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🎫</text></svg>';">
-            <span class="btn-micro-label">PASS 5D</span>
-          </button>
-          <button class="edge-circle-btn" onclick="window.openDailyStreakModal()">
-            <img src="assets/ui/icon_daily_streak_flame.png" alt="Streak" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🔥</text></svg>';">
-            <span class="btn-micro-label">STREAK</span>
-          </button>
-          <button class="edge-circle-btn" onclick="window.openBoostersModal()">
-            <img src="assets/ui/booster_2x_rocket.png" alt="Booster" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🚀</text></svg>';">
-            <span class="btn-micro-label">X2 SPEED</span>
-          </button>
-        </div>
-
-        <div class="floating-flank-controls right-flank">
-          <button class="edge-circle-btn" onclick="window.openModal('modal-clans')">
-            <img src="assets/special/clan_banner_poseidon.png" alt="Clans" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🛡️</text></svg>';">
-            <span class="btn-micro-label">CLANS</span>
-          </button>
-          <button class="edge-circle-btn" onclick="window.openModal('modal-duels')">
-            <img src="assets/special/duel_versus_shield.png" alt="Arena" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>⚔️</text></svg>';">
-            <span class="btn-micro-label">ARENA</span>
-          </button>
-          <button class="edge-circle-btn" onclick="window.openHeartsLadderModal()">
-            <span class="edge-emoji-icon">❤️</span>
-            <span class="btn-micro-label" id="hearts-balance-badge">0 ❤️</span>
-          </button>
-        </div>
-
-        <!-- CENTER HERO CHARACTER STAGE (DOMINATES SCREEN) -->
-        <div class="center-mascot-stage" id="mascot-stage-container" onclick="window.handleFeedTap(event)">
-          <!-- Glowing Stage Pedestal -->
-          <img src="assets/special/stage_podium_pedestal.png" class="stage-pedestal-img" alt="Pedestal" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'40\' viewBox=\'0 0 200 40\'><ellipse cx=\'100\' cy=\'20\' rx=\'90\' ry=\'15\' fill=\'%2300F0FF\' opacity=\'0.3\'/></svg>';">
-          
-          <!-- Tactile Mascot Character with Physics -->
-          <div class="mascot-motion-wrapper" id="mascot-anim-wrapper">
-            <img src="assets/collections/01_Poseidon_Mythic_Gods/01_01_poseidon.png" id="mascot-sprite" class="hero-mascot-sprite" alt="Active Dolphin" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'><text y=\'90\' font-size=\'80\'>🐬</text></svg>';">
+        
+        <div class="progress-track">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: 15%"></div>
+          </div>
+          <div class="progress-nodes">
+            <div class="node active"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node"></div>
+            <div class="node crown">👑</div>
           </div>
         </div>
-
-        <!-- EXP PROGRESS BAR -->
-        <div class="hero-exp-container">
-          <div class="exp-meta-row">
-            <span class="exp-label">EXP PROGRESS</span>
-            <span class="exp-numbers"><span id="hero-taps-cur">0</span> / <span id="hero-taps-max">500</span> TAPS</span>
+        
+        <div class="bottom-actions">
+          <div class="breed-progress">
+            <div class="breed-circle">3</div>
+            <div class="breed-bar"><div class="fill" style="width: 60%"></div></div>
           </div>
-          <div class="exp-bar-track">
-            <div class="exp-bar-fill" id="hero-exp-fill" style="width: 25%;"></div>
-          </div>
-        </div>
-
-        <!-- PRIMARY ACTION - MASSIVE DOMINANT TAP TO FEED BUTTON -->
-        <div class="primary-action-wrapper">
-          <button class="btn-primary-feed" id="btn-tap-feed" onclick="window.handleFeedTap(event)">
-            <div class="feed-btn-content">
-              <img src="assets/ui/icon_task_feeding.png" class="feed-bowl-icon" alt="Feed" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🥣</text></svg>';">
-              <div class="feed-text-group">
-                <span class="feed-main-title">TAP TO FEED</span>
-                <span class="feed-cost-badge" id="feed-cost-txt">30 🐚</span>
-              </div>
-            </div>
-            <div class="feed-reset-subtext">
-              RESET IN <span id="feed-reset-timer">07:05:00</span>
-            </div>
-          </button>
-        </div>
-
-        <!-- DUAL BREED & STAKE BUTTONS -->
-        <div class="deck-actions-dual-row">
-          <button class="btn-subaction breed-btn" onclick="window.startBreedingRoutine()">
-            <span>💕 BREED 5/5</span>
-          </button>
-          <button class="btn-subaction stake-btn" onclick="window.openStakingModal()">
-            <span>💰 STAKE POOL</span>
-          </button>
-        </div>
-
-        <!-- SWIPER.JS COVERFLOW 3D CAROUSEL (11-SLOT DECK) -->
-        <div class="deck-carousel-section">
-          <div class="swiper mySwiper">
-            <div class="swiper-wrapper" id="swiper-deck-wrapper">
-              <!-- Rendered dynamically -->
-            </div>
-            <div class="swiper-pagination"></div>
-          </div>
+          <button class="action-btn">BREED 3/5</button>
+          <button class="action-btn">STAKE</button>
         </div>
 
       </section>
 
-      <!-- ====================================================================
-           TAB 2: SHELLS (42-CELL MERGE GRID SANCTUARY)
-           ==================================================================== -->
-      <section id="tab-shells" class="tab-view">
-        <div class="shells-header-bar">
-          <button class="btn-shells-control spin-btn" onclick="window.openTideWheelModal()">
-            <img src="assets/ui/tide_wheel_roulette.png" class="btn-icon-tiny" alt="Spin" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🎡</text></svg>';">
-            TIDE WHEEL
-          </button>
-          <button class="btn-shells-control merge-btn" onclick="window.triggerAutoMerge()">
-            ⚡ AUTO MERGE
-          </button>
-          <button class="btn-shells-control spawn-btn" onclick="window.spawnPearlToBoard()">
-            + SPAWN EGG (50 🐚)
-          </button>
-        </div>
-
-        <div class="shells-grid-wrapper">
-          <div class="shells-board-42" id="shells-board">
-            <!-- 7x6 42 cells rendered dynamically -->
+      <!-- MARKET TAB -->
+      <section id="tab-market" class="tab-content">
+        <h2>MARKET</h2>
+        <div class="list-container">
+          <div class="list-item">
+            <span>MY DOLPHINS</span>
+            <span class="arrow">></span>
+          </div>
+          <div class="list-header">DOLPHIN TRADER 👑</div>
+          <div class="list-item">
+            <span>SMART SELL</span>
+            <span class="arrow">></span>
+          </div>
+          <div class="list-item">
+            <span>SMART BUY</span>
+            <span class="arrow">></span>
+          </div>
+          <div class="list-item">
+            <span>PUSH NOTIFICATIONS</span>
+            <span class="arrow">></span>
           </div>
         </div>
       </section>
 
-      <!-- ====================================================================
-           TAB 3: MARKET (TRADING & DEALS)
-           ==================================================================== -->
-      <section id="tab-market" class="tab-view">
-        <div class="market-header-card">
-          <div class="market-cycle-badge">
-            <span class="badge-title">CYCLE PHASE</span>
-            <span class="badge-highlight" id="market-cycle-tag">HOT (+15% / 10m)</span>
+      <!-- EGGS TAB -->
+      <section id="tab-eggs" class="tab-content">
+        <h2>EGGS</h2>
+        <div class="eggs-container">
+          <div class="egg-item">
+            <img src="assets/heart pearl/20261003_155838_0005.png" alt="Egg">
+            <button class="action-btn">INCUBATE</button>
           </div>
-          <div class="market-price-badge">
-            <span class="badge-title">INDEX PRICE</span>
-            <span class="price-val" id="market-current-price">30,000 🐚</span>
-          </div>
-          <div class="market-timer-badge">
-            <span class="badge-title">CLOSING IN</span>
-            <span class="timer-val" id="market-cycle-timer">09:13</span>
-          </div>
-        </div>
-
-        <div class="market-items-grid" id="market-collections-grid">
-          <!-- Market items rendered dynamically -->
         </div>
       </section>
 
-      <!-- ====================================================================
-           TAB 4: GODS (PANTHEON & WEB3 MINT)
-           ==================================================================== -->
-      <section id="tab-gods" class="tab-view">
+      <!-- GODS TAB -->
+      <section id="tab-gods" class="tab-content">
+        <div class="gods-header">
+          <h2>DOLPHIN GODS</h2>
+          <p>Trade NFT for power and wealth beyond what others can dream of.</p>
+        </div>
         <div class="gods-banner">
-          <h3>🔱 OCEAN GODS PANTHEON</h3>
-          <p>Mint Mythic NFT Dolphins to amplify passive yield across all tabs!</p>
+          <img src="assets/Dolphin_Game_Mega_NFTs_50-20261010T081022Z-1-001/Dolphin_Game_Mega_NFTs/01.png" alt="Gods">
         </div>
-        <div class="gods-list-container" id="gods-pantheon-list">
-          <!-- Gods rendered dynamically -->
-        </div>
+        <button class="mint-btn">MINT NFT</button>
+        <button class="rent-btn">TRY RENTING</button>
       </section>
 
-      <!-- ====================================================================
-           TAB 5: TASKS & FRIENDS
-           ==================================================================== -->
-      <section id="tab-tasks" class="tab-view">
-        <div class="tasks-subtab-nav">
-          <button class="task-sub-tab active" onclick="window.switchTaskSubTab('quests')">QUESTS</button>
-          <button class="task-sub-tab" onclick="window.switchTaskSubTab('friends')">FRIENDS</button>
-          <button class="task-sub-tab" onclick="window.switchTaskSubTab('tournament')">TOURNAMENT</button>
+      <!-- TASKS TAB -->
+      <section id="tab-tasks" class="tab-content">
+        <h2>TASKS</h2>
+        <div class="tasks-tabs">
+          <span class="active">Tournament</span>
+          <span>Ads</span>
+          <span>Partners</span>
         </div>
-
-        <div id="subtab-quests" class="subtab-content active">
-          <div class="tasks-list" id="quests-container">
-            <!-- Quests rendered dynamically -->
+        <div class="task-card">
+          <div class="task-info">
+            <h4>Duelist's Kit</h4>
+            <p>Buy roulette upgrades and get extra prizes as a gift!</p>
           </div>
+          <button class="claim-btn">⭐ 49</button>
         </div>
-
-        <div id="subtab-friends" class="subtab-content">
-          <div class="friends-referral-card">
-            <h4>🤝 4-TIER REFERRAL NETWORK</h4>
-            <p>Earn 2.0% on Level 1, 0.5% on Level 2, 0.1% on Level 3, 0.0025% on Level 4!</p>
-            <button class="btn-claim-pill gold" onclick="window.copyInviteLink()">COPY INVITE LINK</button>
-          </div>
-        </div>
-
-        <div id="subtab-tournament" class="subtab-content">
-          <div class="friends-referral-card">
-            <h4>🏆 POSEIDON GRAND PRIX</h4>
-            <p>Top 100 players split the 500,000 $DMD Championship Pool!</p>
-            <button class="btn-claim-pill" onclick="window.joinChampionshipTournament()">ENTER ARENA</button>
+        <div class="task-card">
+          <div class="task-info">
+            <h4>Honor Rewards</h4>
+            <p>You've received honor letters for every Show and Sabotage letter...</p>
           </div>
         </div>
       </section>
 
     </main>
 
-    <!-- ==========================================================================
-         BOTTOM GAME NAVIGATION BAR (GAME HUD, NOT APP TABS)
-         ========================================================================== -->
-    <nav class="game-bottom-navbar">
-      <button class="nav-game-tab" data-tab="tab-market" onclick="window.switchTab('tab-market')">
-        <div class="nav-icon-box">🛒</div>
-        <span class="nav-label">MARKET</span>
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-item" onclick="switchTab('market')">
+        <span class="nav-icon">📈</span>
+        <span>MARKET</span>
       </button>
-
-      <button class="nav-game-tab" data-tab="tab-shells" onclick="window.switchTab('tab-shells')">
-        <div class="nav-icon-box">🥚</div>
-        <span class="nav-label">SHELLS</span>
+      <button class="nav-item" onclick="switchTab('eggs')">
+        <span class="nav-icon">🥚</span>
+        <span>EGGS</span>
       </button>
-
-      <button class="nav-game-tab active" data-tab="tab-dolphins" onclick="window.switchTab('tab-dolphins')">
-        <div class="nav-icon-box mascot-nav-box">🐬</div>
-        <span class="nav-label">DOLPHINS</span>
+      <button class="nav-item active" onclick="switchTab('dolphins')">
+        <span class="nav-icon">🐬</span>
+        <span>DOLPHINS</span>
       </button>
-
-      <button class="nav-game-tab" data-tab="tab-gods" onclick="window.switchTab('tab-gods')">
-        <div class="nav-icon-box">🔱</div>
-        <span class="nav-label">GODS</span>
+      <button class="nav-item" onclick="switchTab('gods')">
+        <span class="nav-icon">🗿</span>
+        <span>GODS</span>
       </button>
-
-      <button class="nav-game-tab" data-tab="tab-tasks" onclick="window.switchTab('tab-tasks')">
-        <div class="nav-icon-box">📋</div>
-        <span class="nav-label">TASKS</span>
+      <button class="nav-item" onclick="switchTab('tasks')">
+        <span class="nav-icon">✓</span>
+        <span>TASKS</span>
       </button>
     </nav>
 
-    
-    <!-- ==========================================================================
-         13 MASTER GAME MODALS & INTERACTIVE RITUALS (DUCK MY DUCK EXACT PARITY)
-         ========================================================================== -->
-    
-    <!-- 1. USER PROFILE MODAL -->
-    <div id="modal-user-profile" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🌊 CAPTAIN PROFILE & STATS</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-user-profile')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-            <div class="hud-avatar-ring" style="width:48px; height:48px;">
-              <img src="assets/icon_user_star.png" style="width:30px; height:30px;" alt="Star" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>⭐</text></svg>';">
-              <span class="hud-lvl-tag">LVL 5</span>
-            </div>
-            <div>
-              <div style="font-size:14px; font-weight:900; color:#00F0FF;">@AYANOKOJI_SEED</div>
-              <div style="font-size:10px; color:#8E9BAE;">Poseidon Master Harvester</div>
-            </div>
-          </div>
-          <div style="background:rgba(22,34,54,0.7); padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); font-size:11px; display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
-            <div>🐚 Total Pearls: <strong style="color:#00F0FF;">124,500</strong></div>
-            <div>⭐ Total Stars: <strong style="color:#F2C94C;">30</strong></div>
-            <div>⚡ $DMD Rate: <strong style="color:#00F0FF;">99.68/tap</strong></div>
-            <div>🤝 Ref Level: <strong style="color:#A855F7;">Tier 4 (2.0%)</strong></div>
-          </div>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.copyInviteLink()">SHARE PROFILE & INVITE (+500 🐚)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. PEARLS SHOP MODAL -->
-    <div id="modal-shop-pearls" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🐚 BLUE PEARLS TON VAULT</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-shop-pearls')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="shop-pack-item" onclick="window.buyPearlsPack(5000, 0.5)">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/ui/currency_blue_pearl_3d.png" style="width:24px; height:24px;" alt="Pearls">
-              <div>
-                <strong style="color:#00F0FF;">Pouch of Pearls</strong>
-                <div style="font-size:9px; color:#8E9BAE;">+5,000 Blue Pearls</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">0.5 TON</button>
-          </div>
-          <div class="shop-pack-item" onclick="window.buyPearlsPack(25000, 2.0)">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/ui/currency_blue_pearl_3d.png" style="width:24px; height:24px;" alt="Pearls">
-              <div>
-                <strong style="color:#00F0FF;">Chest of Pearls</strong>
-                <div style="font-size:9px; color:#8E9BAE;">+25,000 Blue Pearls (Popular)</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">2.0 TON</button>
-          </div>
-          <div class="shop-pack-item" onclick="window.buyPearlsPack(100000, 7.0)">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/ui/currency_blue_pearl_3d.png" style="width:24px; height:24px;" alt="Pearls">
-              <div>
-                <strong style="color:#00F0FF;">Poseidon Treasure Vault</strong>
-                <div style="font-size:9px; color:#8E9BAE;">+100,000 Blue Pearls (Best Value)</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">7.0 TON</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. STARS SHOP MODAL -->
-    <div id="modal-shop-stars" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>⭐ BLUE STARS TELEGRAM SHOP</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-shop-stars')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="shop-pack-item" onclick="window.buyStarsPack(50, 1.0)">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/icon_user_star.png" style="width:24px; height:24px;" alt="Stars">
-              <div>
-                <strong style="color:#F2C94C;">Star Satchel</strong>
-                <div style="font-size:9px; color:#8E9BAE;">+50 Blue Stars</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">1.0 TON</button>
-          </div>
-          <div class="shop-pack-item" onclick="window.buyStarsPack(250, 4.5)">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/icon_user_star.png" style="width:24px; height:24px;" alt="Stars">
-              <div>
-                <strong style="color:#F2C94C;">Star Constellation</strong>
-                <div style="font-size:9px; color:#8E9BAE;">+250 Blue Stars (+10% Bonus)</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">4.5 TON</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. DAILY STREAK MODAL -->
-    <div id="modal-daily-streak" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🔥 7-DAY HARVEST STREAK</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-daily-streak')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:12px;">
-            <div style="background:rgba(0,240,255,0.15); border:1px solid #00F0FF; padding:6px; border-radius:6px; text-align:center; font-size:9px;">
-              <div>Day 1</div><strong style="color:#00F0FF;">+100 🐚</strong><div>✅</div>
-            </div>
-            <div style="background:rgba(0,240,255,0.15); border:1px solid #00F0FF; padding:6px; border-radius:6px; text-align:center; font-size:9px;">
-              <div>Day 2</div><strong style="color:#00F0FF;">+200 🐚</strong><div>✅</div>
-            </div>
-            <div style="background:rgba(242,201,76,0.25); border:1px solid #F2C94C; padding:6px; border-radius:6px; text-align:center; font-size:9px;">
-              <div>Day 3</div><strong style="color:#F2C94C;">+300 🐚</strong><div>🎁 ACTIVE</div>
-            </div>
-            <div style="background:rgba(22,34,54,0.6); border:1px solid rgba(255,255,255,0.05); padding:6px; border-radius:6px; text-align:center; font-size:9px; color:#5A6678;">
-              <div>Day 4</div><strong>+500 🐚</strong><div>🔒</div>
-            </div>
-          </div>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.claimDailyStreakReward()">CLAIM DAY 3 REWARD (+300 🐚)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. BOOSTERS MODAL -->
-    <div id="modal-boosters" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🚀 SPEED BOOSTERS & ELIXIRS</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-boosters')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="shop-pack-item" onclick="window.activateBooster('2X')">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/ui/booster_2x_rocket.png" style="width:24px; height:24px;" alt="2X">
-              <div>
-                <strong style="color:#00F0FF;">2X Turbo Surge (10 Min)</strong>
-                <div style="font-size:9px; color:#8E9BAE;">Doubles $DMD feed production</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">ACTIVATE</button>
-          </div>
-          <div class="shop-pack-item" onclick="window.activateBooster('5X')">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="assets/ui/booster_5x_lightning.png" style="width:24px; height:24px;" alt="5X" onerror="this.onerror=null; this.src='assets/ui/booster_2x_rocket.png';">
-              <div>
-                <strong style="color:#F2C94C;">5X Lightning Overdrive</strong>
-                <div style="font-size:9px; color:#8E9BAE;">5x multi-touch yield surge</div>
-              </div>
-            </div>
-            <button class="btn-claim-pill gold">50 ⭐</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. DOLPHIN PASS MODAL -->
-    <div id="modal-pass" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🎫 SEASON 1 DOLPHIN PASS</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-pass')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div class="shop-pack-item" onclick="window.claimPassVault('Prince')">
-            <div>
-              <strong style="color:#00F0FF;">👑 Prince Pass</strong>
-              <div style="font-size:9px; color:#8E9BAE;">• Turbo-Feed ×10 • 50% Breeding Speed</div>
-            </div>
-            <button class="btn-claim-pill gold">299 ⭐</button>
-          </div>
-          <div class="shop-pack-item" onclick="window.claimPassVault('King')">
-            <div>
-              <strong style="color:#F2C94C;">🔱 King Sovereign Pass</strong>
-              <div style="font-size:9px; color:#8E9BAE;">• Turbo-Feed ×30 • Auto-Merge Shells • Mythic Aura</div>
-            </div>
-            <button class="btn-claim-pill gold">499 ⭐</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 7. STAKING POOL MODAL -->
-    <div id="modal-staking" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>💰 ABYSS STAKING SANCTUARY</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-staking')">✕</button>
-        </div>
-        <div class="modal-body text-center">
-          <div style="font-size:24px; font-weight:900; color:#00F0FF; margin-bottom:4px;">+35.0% APY</div>
-          <p style="font-size:11px; color:#8E9BAE; margin-bottom:12px;">Lock your Level 5 Dolphin into the Abyss Vault to earn daily passive $DMD yield rewards.</p>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.executeStaking()">STAKE ACTIVE DOLPHIN (Fee: 20 ⭐)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 8. HEARTS LADDER MODAL -->
-    <div id="modal-hearts-ladder" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>❤️ 49-TIER HEARTS PROGRESSION</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-hearts-ladder')">✕</button>
-        </div>
-        <div class="modal-body" id="hearts-ladder-container" style="max-height: 280px; overflow-y: auto;">
-          <!-- 49 Tiers rendered dynamically -->
-        </div>
-      </div>
-    </div>
-
-    <!-- 9. TIDE WHEEL ROULETTE MODAL -->
-    <div id="modal-tide-wheel" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🎡 POSEIDON TIDE WHEEL</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-tide-wheel')">✕</button>
-        </div>
-        <div class="modal-body text-center">
-          <div class="wheel-stage-box">
-            <img src="assets/ui/tide_wheel_roulette.png" id="tide-wheel-disc" class="tide-wheel-disc-img" alt="Wheel" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'120\' viewBox=\'0 0 120 120\'><text y=\'90\' font-size=\'80\'>🎡</text></svg>';">
-            <img src="assets/ui/tide_wheel_pointer.png" class="tide-wheel-pointer-img" alt="Pointer" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'32\' height=\'32\' viewBox=\'0 0 32 32\'><text y=\'24\' font-size=\'22\'>🔻</text></svg>';">
-          </div>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.spinTideWheel()">SPIN TIDE WHEEL (100 🐚)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 10. CLANS / SYNDICATE MODAL -->
-    <div id="modal-clans" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🛡️ OCEAN CLANS & SYNDICATES</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-clans')">✕</button>
-        </div>
-        <div class="modal-body">
-          <div style="display:flex; align-items:center; gap:10px; background:rgba(22,34,54,0.7); padding:10px; border-radius:8px; margin-bottom:10px;">
-            <img src="assets/special/clan_banner_poseidon.png" style="width:36px; height:36px;" alt="Banner">
-            <div>
-              <strong style="color:#00F0FF;">Poseidon Knights</strong>
-              <div style="font-size:9px; color:#8E9BAE;">Level 8 Guild • 45/50 Members • +12% Team APY</div>
-            </div>
-          </div>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.closeModal('modal-clans'); alert('🛡️ Contributed 100 Blue Pearls to Poseidon Knights!');">DONATE CRYSTAL (+100 🐚)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 11. DUELS / ARENA MODAL -->
-    <div id="modal-duels" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>⚔️ ARENA DUELS & TOURNAMENT</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-duels')">✕</button>
-        </div>
-        <div class="modal-body text-center">
-          <div style="display:flex; justify-content:space-around; align-items:center; margin-bottom:14px;">
-            <div>
-              <div style="font-size:11px; font-weight:900; color:#00F0FF;">YOU</div>
-              <div style="font-size:9px; color:#8E9BAE;">Power: 1,450</div>
-            </div>
-            <img src="assets/special/duel_versus_shield.png" style="width:36px; height:36px;" alt="VS">
-            <div>
-              <div style="font-size:11px; font-weight:900; color:#FF3366;">RIVAL</div>
-              <div style="font-size:9px; color:#8E9BAE;">Power: 1,320</div>
-            </div>
-          </div>
-          <button class="btn-claim-pill" style="width:100%; height:36px;" onclick="window.closeModal('modal-duels'); alert('⚔️ Victory! You defeated the rival and earned +500 Blue Pearls!');">START MATCHMAKING (Cost: 50 🐚)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 12. BREEDING SANCTUARY MODAL -->
-    <div id="modal-breeding" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>💕 BREEDING & INCUBATION</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-breeding')">✕</button>
-        </div>
-        <div class="modal-body text-center">
-          <p style="font-size:11px; color:#8E9BAE; margin-bottom:10px;">Pair two level 5 Dolphins to incubate high-tier Love Eggs every 4 hours.</p>
-          <div style="background:rgba(255,51,102,0.15); border:1px solid #FF3366; padding:8px; border-radius:8px; font-size:12px; font-weight:800; color:#FFA5BA; margin-bottom:12px;">
-            INCUBATION READY: 5/5 SLOTS
-          </div>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.startBreedingRoutine(); window.closeModal('modal-breeding');">START INCUBATION (Cost: 100 ❤️)</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 13. MARKET ORDER MODAL -->
-    <div id="modal-market-order" class="game-modal-overlay">
-      <div class="game-modal-box">
-        <div class="modal-header">
-          <h3>🛒 PLACE MARKET ORDER</h3>
-          <button class="modal-close-x" onclick="window.closeModal('modal-market-order')">✕</button>
-        </div>
-        <div class="modal-body">
-          <p style="font-size:11px; color:#8E9BAE; margin-bottom:8px;">Instant market order matches the highest buy queue in the current 10-minute cycle.</p>
-          <div style="background:rgba(22,34,54,0.7); padding:10px; border-radius:8px; margin-bottom:12px; font-size:11px;">
-            <div>Asset: <strong style="color:#00F0FF;" id="order-asset-name">Poseidon Sovereign</strong></div>
-            <div>Current Index: <strong style="color:#F2C94C;" id="order-asset-price">30,000 🐚</strong></div>
-          </div>
-          <button class="btn-claim-pill gold" style="width:100%; height:36px;" onclick="window.closeModal('modal-market-order'); alert('🎉 Market Order filled successfully!');">CONFIRM ORDER</button>
-        </div>
-      </div>
-    </div>
-
-  <!-- Swiper.js Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <!-- Game HUD Master Engine -->
-  <script src="game.js?v=6.0"></script>
+  </div>
+  
+  <script src="game.js"></script>
 </body>
 </html>
