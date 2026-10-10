@@ -1,0 +1,146 @@
+﻿[gd_scene load_steps=3 format=3 uid="uid://cy8j7k6l5m4n"]
+
+[ext_resource type="Script" path="res://scripts/UIManager.gd" id="1_uimgr"]
+[ext_resource type="Script" path="res://scripts/DolphinCharacter.gd" id="2_dolphy"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uimgr")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0431373, 0.054902, 0.0862745, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -100.0
+
+[node name="TopHUD" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="BalanceLabel" type="Label" parent="VBoxContainer/TopHUD"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "0.00 DMD
+1000 Corn"
+horizontal_alignment = 1
+
+[node name="Tabs" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabDolphins" type="CenterContainer" parent="VBoxContainer/Tabs"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="DolphinCharacter" type="TextureButton" parent="VBoxContainer/Tabs/TabDolphins"]
+custom_minimum_size = Vector2(400, 400)
+layout_mode = 2
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("2_dolphy")
+
+[node name="TabMarket" type="CenterContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/TabMarket"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "MARKET"
+
+[node name="TabEggs" type="CenterContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/TabEggs"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "EGGS"
+
+[node name="TabGods" type="CenterContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/TabGods"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "GODS"
+
+[node name="TabTasks" type="CenterContainer" parent="VBoxContainer/Tabs"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="VBoxContainer/Tabs/TabTasks"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "TASKS"
+
+[node name="BottomNav" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -100.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BtnMarket" type="Button" parent="BottomNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MARKET"
+
+[node name="BtnEggs" type="Button" parent="BottomNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "EGGS"
+
+[node name="BtnDolphins" type="Button" parent="BottomNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DOLPHINS"
+
+[node name="BtnGods" type="Button" parent="BottomNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "GODS"
+
+[node name="BtnTasks" type="Button" parent="BottomNav"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TASKS"
+
+[connection signal="pressed" from="BottomNav/BtnMarket" to="." method="_on_nav_pressed" binds= ["MARKET"]]
+[connection signal="pressed" from="BottomNav/BtnEggs" to="." method="_on_nav_pressed" binds= ["EGGS"]]
+[connection signal="pressed" from="BottomNav/BtnDolphins" to="." method="_on_nav_pressed" binds= ["DOLPHINS"]]
+[connection signal="pressed" from="BottomNav/BtnGods" to="." method="_on_nav_pressed" binds= ["GODS"]]
+[connection signal="pressed" from="BottomNav/BtnTasks" to="." method="_on_nav_pressed" binds= ["TASKS"]]
